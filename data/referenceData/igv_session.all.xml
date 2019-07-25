@@ -1,0 +1,809 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Session genome="E:\Chris_UM\Database\A_Nidulans\A_nidulans_FGSC_A4_version_s10-m04-r03_chromosomes.fasta" hasGeneTrack="false" hasSequenceTrack="true" locus="ChrIII_A_nidulans_FGSC_A4:850400-881466" nextAutoscaleGroup="2" path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\igv_session.all.xml" version="8">
+    <Resources>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10021_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7072_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN4837_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7923_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\apdR_sCopy_OE_16h_polII_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8509_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10300_sCopy_OE_20h_FLAG_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7919_mCopy_OE_16h_polII_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7921_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3269_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8391_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7513_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN4562_sCopy_OE_16h_HA_ChIPMix46_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3502_sCopy_OE_16h_polII_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN4933_sCopy_OE_16h_HA_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2026_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6790_mCopy_OE_TSA_16h_FLAG_ChIPMix19_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN0533_sCopy_OE_16h_HIS_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3501_mCopy_OE_16h_polII_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN0153_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7513_sCopy_OE_16h_HA_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7896_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN4933_sCopy_OE_16h_polII_ChIPMix56_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3501_mCopy_OE_16h_HIS_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10021_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3501_sCopy_OE_16h_HA_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2553_mCopy_OE_16h_HIS_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7820_sCopy_OE_16h_HA_ChIPMix55_3_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8509_sCopy_OE_16h_HA_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\hepA_del_16h_polII_ChIPMix56_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8902_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10300_sCopy_OE_60h_FLAG_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2241_sCopy_OE_16h_polII_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2026_sCopy_OE_16h_HA_ChIPMix46_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3269_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN1678_sCopy_OE_16h_HIS_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2025_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8509_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10295_mCopy_OE_16h_HA_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6430_sCopy_OE_16h_HA_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6790_sCopy_OE_16h_FLAG_ChIPMix36_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8251_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN0533_sCopy_OE_16h_HIS_ChIPMix36_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3502_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\MH11036_TSA_16h_polII_ChIPMix19_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7896_sCopy_OE_16h_HA_ChIPMix55_3_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7061_sCopy_OE_16h_HA_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10491_sCopy_OE_16h_HA_ChIPMix46_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7820_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\MH11036_16h_polII_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8902_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Database\A_Nidulans\new_SM_clusters.bed"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10491_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6788_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN0533_mCopy_OE_16h_polII_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8251_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8645_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7923_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8251_sCopy_OE_16h_polII_ChIPMix56_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN4562_sCopy_OE_16h_polII_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7513_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN1029_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7923_sCopy_OE_16h_HA_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2025_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10294_sCopy_OE_16h_polII_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN4837_sCopy_OE_16h_HA_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2026_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN9013_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10600_sCopy_OE_16h_HA_ChIPMix46_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10021_sCopy_OE_16h_HA_ChIPMix36_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6788_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10491_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8111_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10300_sCopy_OE_16h_polII_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10295_sCopy_OE_16h_HA_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN4933_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10295_DBD_sCopy_OE_16h_HA_ChIPMix36_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN0533_mCopy_OE_16h_HIS_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3911_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8251_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN4837_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7872_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Database\A_Nidulans\A_nidulans_FGSC_A4_version_s10-m04-r03_features.gff"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN9013_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\MH11036_no_Xyl_16h_polII_ChIPMix56_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN1678_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN0148_sCopy_OE_16h_HA_ChIPMix46_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10600_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6788_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6790_mCopy_OE_TSA_16h_polII_ChIPMix19_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN1029_sCopy_OE_16h_HA_ChIPMix46_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN0153_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2241_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10600_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8111_sCopy_OE_16h_HA_ChIPMix36_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3391_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7919_sCopy_OE_16h_HA_ChIPMix36_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN0153_sCopy_OE_16h_HA_ChIPMix46_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7921_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8506_mCopy_OE_16h_FLAG_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3502_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7820_sCopy_OE_16h_polII_ChIPMix56_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN4562_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7820_sCopy_OE_no_Xyl_16h_H3K27Ac_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN0148_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8509_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\apdR_mCopy_OE_16h_polII_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\MH11036_16h_polII_ChIPMix19_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN9013_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3391_mCopy_OE_16h_HA_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7923_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\apdR_mCopy_OE_16h_FLAG_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\WT_48h_H3K27Ac_ChIPMix56_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10294_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8391_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3501_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10295_del_16h_polII_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10295_sCopy_OE_16h_HA_ChIPMix36_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN5609_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10300_sCopy_OE_16h_input_FLAG_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10491_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7820_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7820_sCopy_OE_no_Xyl_16h_polII_ChIPMix56_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10300_sCopy_OE_spore_FLAG_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7820_sCopy_OE_16h_H3K27Ac_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10300_sCopy_OE_16h_input_FLAG_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10600_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10295_sCopy_OE_96h_polII_ChIPMix34_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7896_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\apdR_sCopy_OE_16h_FLAG_ChIPMix36_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7919_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN5609_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10300_sCopy_OE_16h_FLAG_ChIPMix46_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6788_sCopy_OE_16h_HA_ChIPMix36_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN0153_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3502_sCopy_OE_16h_HA_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN9013_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7073_sCopy_OE_16h_HIS_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN1599_sCopy_OE_16h_HA_ChIPMix46_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10295_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN1599_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\areA_del_NH4_16h_H3K27Ac_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10295_sCopy_OE_96h_H3_ChIPMix34_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3280_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7061_sCopy_OE_16h_polII_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10021_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN1678_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8902_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8902_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7072_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN1599_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7872_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN5609_sCopy_OE_16h_polII_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8645_sCopy_OE_16h_HA_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6790_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN1029_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\cpcA_16h_HA_ChIPMix34_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6430_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3391_sCopy_OE_16h_HA_ChIPMix36_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN0533_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10300_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3280_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10295_mCopy_OE_TSA_16h_HA_ChIPMix19_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8506_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8506_sCopy_OE_16h_FLAG_ChIPMix36_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2553_mCopy_OE_16h_polII_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN4562_sCopy_OE_16h_polII_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10300_sCopy_OE_16h_FLAG_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8111_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10295_DBD_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7896_sCopy_OE_16h_HA_ChIPMix36_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7072_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7919_mCopy_OE_16h_HA_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7872_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8506_mCopy_OE_16h_polII_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7820_sCopy_OE_16h_HA_ChIPMix36_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6790_mCopy_OE_16h_polII_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6430_sCopy_OE_16h_polII_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7061_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8111_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8645_sCopy_OE_16h_polII_ChIPMix56_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10294_sCopy_OE_16h_HA_ChIPMix46_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3391_mCopy_OE_16h_polII_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\areA_del_NF_16h_H3K27Ac_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6790_mCopy_OE_16h_FLAG_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7072_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10294_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3501_sCopy_OE_16h_HIS_ChIPMix36_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10300_sCopy_OE_16h_FLAG_ChIPMix46_3_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN1678_sCopy_OE_16h_HIS_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3280_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3269_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2241_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10295_mCopy_OE_16h_polII_ChIPMix17_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2025_sCopy_OE_16h_polII_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7921_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3911_sCopy_OE_16h_FLAG_ChIPMix36_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7921_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2553_sCopy_OE_16h_HIS_ChIPMix36_2_normalized.bw"/>
+        <Resource path="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\referenceData\IGV_attributes.txt"/>
+    </Resources>
+    <Panel height="185" name="DataPanel" width="1901">
+        <Track altColor="255,0,51" clazz="org.broad.igv.track.FeatureTrack" color="255,0,51" fontSize="10" id="E:\Chris_UM\Database\A_Nidulans\new_SM_clusters.bed" name="new_SM_clusters.bed" visible="true"/>
+        <Track altColor="0,0,178" clazz="org.broad.igv.track.FeatureTrack" color="0,0,0" colorScale="ContinuousColorScale;0.0;169.0;255,255,255;0,0,178" displayMode="EXPANDED" fontSize="10" id="E:\Chris_UM\Database\A_Nidulans\A_nidulans_FGSC_A4_version_s10-m04-r03_features.gff" name="A_nidulans_FGSC_A4_version_s10-m04-r03_features.gff" visible="true"/>
+    </Panel>
+    <Panel height="7880" name="FeaturePanel" width="1901">
+        <Track clazz="org.broad.igv.track.SequenceTrack" fontSize="10" id="Reference sequence" name="Reference sequence" visible="true"/>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN0148_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw" name="AN0148_sCopy_OE_16h_polII_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="14.9732" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN0148_sCopy_OE_16h_HA_ChIPMix46_1_normalized.bw" name="AN0148_sCopy_OE_16h_HA_ChIPMix46_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="12.733" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN0153_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw" name="AN0153_sCopy_OE_16h_polII_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="22.14" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN0153_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN0153_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="13.603867" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN0153_sCopy_OE_16h_HA_ChIPMix46_1_normalized.bw" name="AN0153_sCopy_OE_16h_HA_ChIPMix46_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="164.688" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN0153_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw" name="AN0153_sCopy_OE_16h_HA_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="103.306" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN0533_mCopy_OE_16h_polII_ChIPMix17_1_normalized.bw" name="AN0533_mCopy_OE_16h_polII_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="12.167" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN0533_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN0533_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="19.35" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN0533_mCopy_OE_16h_HIS_ChIPMix17_1_normalized.bw" name="AN0533_mCopy_OE_16h_HIS_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="47.064" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN0533_sCopy_OE_16h_HIS_ChIPMix55_1_normalized.bw" name="AN0533_sCopy_OE_16h_HIS_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="72.21" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN0533_sCopy_OE_16h_HIS_ChIPMix36_2_normalized.bw" name="AN0533_sCopy_OE_16h_HIS_ChIPMix36_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="103.519066" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10021_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw" name="AN10021_sCopy_OE_16h_polII_ChIPMix60_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="19.385881" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10021_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN10021_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="11.592" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10021_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw" name="AN10021_sCopy_OE_16h_HA_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="20.979143" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10021_sCopy_OE_16h_HA_ChIPMix36_2_normalized.bw" name="AN10021_sCopy_OE_16h_HA_ChIPMix36_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="16.617502" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN1029_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw" name="AN1029_sCopy_OE_16h_polII_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="13.846" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN1029_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw" name="AN1029_sCopy_OE_16h_HA_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="25.53" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN1029_sCopy_OE_16h_HA_ChIPMix46_2_normalized.bw" name="AN1029_sCopy_OE_16h_HA_ChIPMix46_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="22.516" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10294_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw" name="AN10294_sCopy_OE_16h_polII_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="11.154834" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10294_sCopy_OE_16h_polII_ChIPMix55_2_normalized.bw" name="AN10294_sCopy_OE_16h_polII_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="17.052" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10294_sCopy_OE_16h_HA_ChIPMix46_1_normalized.bw" name="AN10294_sCopy_OE_16h_HA_ChIPMix46_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="22.902727" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10294_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw" name="AN10294_sCopy_OE_16h_HA_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="99.18" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10295_mCopy_OE_16h_polII_ChIPMix17_1_normalized.bw" name="AN10295_mCopy_OE_16h_polII_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="19.08" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10295_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN10295_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="16.014444" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10295_sCopy_OE_96h_polII_ChIPMix34_1_normalized.bw" name="AN10295_sCopy_OE_96h_polII_ChIPMix34_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="36.045" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10295_mCopy_OE_16h_HA_ChIPMix17_1_normalized.bw" name="AN10295_mCopy_OE_16h_HA_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="60.3" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10295_mCopy_OE_TSA_16h_HA_ChIPMix19_1_normalized.bw" name="AN10295_mCopy_OE_TSA_16h_HA_ChIPMix19_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="14.136" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10295_sCopy_OE_16h_HA_ChIPMix55_1_normalized.bw" name="AN10295_sCopy_OE_16h_HA_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="1.0" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10295_sCopy_OE_16h_HA_ChIPMix36_2_normalized.bw" name="AN10295_sCopy_OE_16h_HA_ChIPMix36_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="30.912165" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10295_sCopy_OE_96h_H3_ChIPMix34_1_normalized.bw" name="AN10295_sCopy_OE_96h_H3_ChIPMix34_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="28.16" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10295_DBD_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw" name="AN10295_DBD_sCopy_OE_16h_HA_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="17.931" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10295_DBD_sCopy_OE_16h_HA_ChIPMix36_2_normalized.bw" name="AN10295_DBD_sCopy_OE_16h_HA_ChIPMix36_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="15.6" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10295_del_16h_polII_ChIPMix55_1_normalized.bw" name="AN10295_del_16h_polII_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="12.831" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10300_sCopy_OE_16h_input_FLAG_ChIPMix55_1_normalized.bw" name="AN10300_sCopy_OE_16h_input_FLAG_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="13.58" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10300_sCopy_OE_16h_input_FLAG_ChIPMix55_2_normalized.bw" name="AN10300_sCopy_OE_16h_input_FLAG_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="16.016" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10300_sCopy_OE_16h_polII_ChIPMix36_1_normalized.bw" name="AN10300_sCopy_OE_16h_polII_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="13.508001" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10300_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN10300_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="28.595" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10300_sCopy_OE_16h_FLAG_ChIPMix36_1_normalized.bw" name="AN10300_sCopy_OE_16h_FLAG_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="12.144" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10300_sCopy_OE_16h_FLAG_ChIPMix46_2_normalized.bw" name="AN10300_sCopy_OE_16h_FLAG_ChIPMix46_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="13.962" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10300_sCopy_OE_16h_FLAG_ChIPMix46_3_normalized.bw" name="AN10300_sCopy_OE_16h_FLAG_ChIPMix46_3" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="14.784" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10300_sCopy_OE_20h_FLAG_ChIPMix55_1_normalized.bw" name="AN10300_sCopy_OE_20h_FLAG_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="19.944" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10300_sCopy_OE_60h_FLAG_ChIPMix55_1_normalized.bw" name="AN10300_sCopy_OE_60h_FLAG_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="20.646156" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10300_sCopy_OE_spore_FLAG_ChIPMix55_1_normalized.bw" name="AN10300_sCopy_OE_spore_FLAG_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="22.91" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10491_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw" name="AN10491_sCopy_OE_16h_polII_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="12.0" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10491_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN10491_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="11.96" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10491_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw" name="AN10491_sCopy_OE_16h_HA_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="62.525" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10491_sCopy_OE_16h_HA_ChIPMix46_2_normalized.bw" name="AN10491_sCopy_OE_16h_HA_ChIPMix46_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="183.0" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10600_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw" name="AN10600_sCopy_OE_16h_polII_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="134.73581" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10600_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN10600_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="104.0" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10600_sCopy_OE_16h_HA_ChIPMix46_1_normalized.bw" name="AN10600_sCopy_OE_16h_HA_ChIPMix46_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="2653.824" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN10600_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw" name="AN10600_sCopy_OE_16h_HA_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="3487.975" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN1599_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw" name="AN1599_sCopy_OE_16h_polII_ChIPMix60_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="17.416666" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN1599_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw" name="AN1599_sCopy_OE_16h_HA_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="16.059555" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN1599_sCopy_OE_16h_HA_ChIPMix46_2_normalized.bw" name="AN1599_sCopy_OE_16h_HA_ChIPMix46_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="42.066" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN1678_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw" name="AN1678_sCopy_OE_16h_polII_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="20.069" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN1678_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN1678_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="7.21" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN1678_sCopy_OE_16h_HIS_ChIPMix36_1_normalized.bw" name="AN1678_sCopy_OE_16h_HIS_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="378.444" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN1678_sCopy_OE_16h_HIS_ChIPMix55_2_normalized.bw" name="AN1678_sCopy_OE_16h_HIS_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="465.008" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2025_sCopy_OE_16h_polII_ChIPMix36_1_normalized.bw" name="AN2025_sCopy_OE_16h_polII_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="13.14" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2025_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN2025_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="12.079" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2025_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw" name="AN2025_sCopy_OE_16h_HA_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="12.064" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2026_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw" name="AN2026_sCopy_OE_16h_polII_ChIPMix60_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="41.252" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2026_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN2026_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="13.392" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2026_sCopy_OE_16h_HA_ChIPMix46_1_normalized.bw" name="AN2026_sCopy_OE_16h_HA_ChIPMix46_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="13.8" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2241_sCopy_OE_16h_polII_ChIPMix36_1_normalized.bw" name="AN2241_sCopy_OE_16h_polII_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="9.831" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2241_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN2241_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="9.824143" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2241_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw" name="AN2241_sCopy_OE_16h_HA_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="18.56" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2553_mCopy_OE_16h_polII_ChIPMix17_1_normalized.bw" name="AN2553_mCopy_OE_16h_polII_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="14.224" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2553_mCopy_OE_16h_HIS_ChIPMix17_1_normalized.bw" name="AN2553_mCopy_OE_16h_HIS_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="39.636" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN2553_sCopy_OE_16h_HIS_ChIPMix36_2_normalized.bw" name="AN2553_sCopy_OE_16h_HIS_ChIPMix36_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="11.092" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3269_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw" name="AN3269_sCopy_OE_16h_polII_ChIPMix60_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="12.389223" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3269_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw" name="AN3269_sCopy_OE_16h_HA_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="15.57" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3269_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw" name="AN3269_sCopy_OE_16h_HA_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="23.4" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3280_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw" name="AN3280_sCopy_OE_16h_polII_ChIPMix60_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="16.4" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3280_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw" name="AN3280_sCopy_OE_16h_HA_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="13.464" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3280_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw" name="AN3280_sCopy_OE_16h_HA_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="35.189667" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3391_mCopy_OE_16h_polII_ChIPMix17_1_normalized.bw" name="AN3391_mCopy_OE_16h_polII_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="20.448" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3391_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN3391_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="17.898" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3391_mCopy_OE_16h_HA_ChIPMix17_1_normalized.bw" name="AN3391_mCopy_OE_16h_HA_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="14.16" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3391_sCopy_OE_16h_HA_ChIPMix36_2_normalized.bw" name="AN3391_sCopy_OE_16h_HA_ChIPMix36_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="14.43" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3501_mCopy_OE_16h_polII_ChIPMix17_1_normalized.bw" name="AN3501_mCopy_OE_16h_polII_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="16.191" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3501_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN3501_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="15.616" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3501_mCopy_OE_16h_HIS_ChIPMix17_1_normalized.bw" name="AN3501_mCopy_OE_16h_HIS_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="50.541" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3501_sCopy_OE_16h_HIS_ChIPMix36_2_normalized.bw" name="AN3501_sCopy_OE_16h_HIS_ChIPMix36_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="10.455" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3501_sCopy_OE_16h_HA_ChIPMix55_1_normalized.bw" name="AN3501_sCopy_OE_16h_HA_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="84.925" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3502_sCopy_OE_16h_polII_ChIPMix17_1_normalized.bw" name="AN3502_sCopy_OE_16h_polII_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="12.33" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3502_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN3502_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="10.2" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3502_sCopy_OE_16h_HA_ChIPMix17_1_normalized.bw" name="AN3502_sCopy_OE_16h_HA_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="30.8625" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3502_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw" name="AN3502_sCopy_OE_16h_HA_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="30.717564" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3911_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw" name="AN3911_sCopy_OE_16h_polII_ChIPMix60_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="9.975" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN3911_sCopy_OE_16h_FLAG_ChIPMix36_1_normalized.bw" name="AN3911_sCopy_OE_16h_FLAG_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="16.2" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN4562_sCopy_OE_16h_polII_ChIPMix36_1_normalized.bw" name="AN4562_sCopy_OE_16h_polII_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="17.501713" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN4562_sCopy_OE_16h_polII_ChIPMix55_2_normalized.bw" name="AN4562_sCopy_OE_16h_polII_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="15.486" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN4562_sCopy_OE_16h_HA_ChIPMix46_1_normalized.bw" name="AN4562_sCopy_OE_16h_HA_ChIPMix46_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="19.592" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN4562_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw" name="AN4562_sCopy_OE_16h_HA_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="1.0" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN4837_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw" name="AN4837_sCopy_OE_16h_polII_ChIPMix60_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="11.456301" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN4837_sCopy_OE_16h_HA_ChIPMix55_1_normalized.bw" name="AN4837_sCopy_OE_16h_HA_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="59.2" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN4837_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw" name="AN4837_sCopy_OE_16h_HA_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="73.76" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN4933_sCopy_OE_16h_polII_ChIPMix56_1_normalized.bw" name="AN4933_sCopy_OE_16h_polII_ChIPMix56_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="14.5945" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN4933_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN4933_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="41.678997" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN4933_sCopy_OE_16h_HA_ChIPMix55_1_normalized.bw" name="AN4933_sCopy_OE_16h_HA_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="142.692" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN5609_sCopy_OE_16h_polII_ChIPMix36_1_normalized.bw" name="AN5609_sCopy_OE_16h_polII_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="11.137" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN5609_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN5609_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="18.203077" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN5609_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw" name="AN5609_sCopy_OE_16h_HA_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="23.712" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6430_sCopy_OE_16h_polII_ChIPMix17_1_normalized.bw" name="AN6430_sCopy_OE_16h_polII_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="12.279118" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6430_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN6430_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="14.31" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6430_sCopy_OE_16h_HA_ChIPMix17_1_normalized.bw" name="AN6430_sCopy_OE_16h_HA_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="56.347" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6788_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw" name="AN6788_sCopy_OE_16h_polII_ChIPMix60_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="14.652" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6788_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN6788_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="13.806" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6788_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw" name="AN6788_sCopy_OE_16h_HA_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="16.213" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6788_sCopy_OE_16h_HA_ChIPMix36_2_normalized.bw" name="AN6788_sCopy_OE_16h_HA_ChIPMix36_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="11.5244" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6790_mCopy_OE_16h_polII_ChIPMix17_1_normalized.bw" name="AN6790_mCopy_OE_16h_polII_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="14.742" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6790_mCopy_OE_TSA_16h_polII_ChIPMix19_1_normalized.bw" name="AN6790_mCopy_OE_TSA_16h_polII_ChIPMix19_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="10.175" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6790_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN6790_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="19.368" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6790_mCopy_OE_16h_FLAG_ChIPMix17_1_normalized.bw" name="AN6790_mCopy_OE_16h_FLAG_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="36.314133" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6790_mCopy_OE_TSA_16h_FLAG_ChIPMix19_1_normalized.bw" name="AN6790_mCopy_OE_TSA_16h_FLAG_ChIPMix19_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="16.672" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN6790_sCopy_OE_16h_FLAG_ChIPMix36_2_normalized.bw" name="AN6790_sCopy_OE_16h_FLAG_ChIPMix36_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="16.060823" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7061_sCopy_OE_16h_polII_ChIPMix17_1_normalized.bw" name="AN7061_sCopy_OE_16h_polII_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="9.032" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7061_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN7061_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="14.905" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7061_sCopy_OE_16h_HA_ChIPMix17_1_normalized.bw" name="AN7061_sCopy_OE_16h_HA_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="31.472002" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7072_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw" name="AN7072_sCopy_OE_16h_polII_ChIPMix60_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="14.628" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7072_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN7072_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="20.72" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7072_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw" name="AN7072_sCopy_OE_16h_HA_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="16.912" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7072_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw" name="AN7072_sCopy_OE_16h_HA_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="24.158" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7073_sCopy_OE_16h_HIS_ChIPMix36_1_normalized.bw" name="AN7073_sCopy_OE_16h_HIS_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="18.28" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7513_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw" name="AN7513_sCopy_OE_16h_polII_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="39.408" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7513_sCopy_OE_16h_HA_ChIPMix55_1_normalized.bw" name="AN7513_sCopy_OE_16h_HA_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="28.6" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7513_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw" name="AN7513_sCopy_OE_16h_HA_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="44.055" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7820_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw" name="AN7820_sCopy_OE_16h_polII_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="26.64" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7820_sCopy_OE_no_Xyl_16h_polII_ChIPMix56_1_normalized.bw" name="AN7820_sCopy_OE_no_Xyl_16h_polII_ChIPMix56_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="14.455" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7820_sCopy_OE_16h_polII_ChIPMix56_2_normalized.bw" name="AN7820_sCopy_OE_16h_polII_ChIPMix56_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="14.616" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7820_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw" name="AN7820_sCopy_OE_16h_HA_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="42.914665" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7820_sCopy_OE_16h_HA_ChIPMix36_2_normalized.bw" name="AN7820_sCopy_OE_16h_HA_ChIPMix36_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="57.837177" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7820_sCopy_OE_16h_HA_ChIPMix55_3_normalized.bw" name="AN7820_sCopy_OE_16h_HA_ChIPMix55_3" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="53.578" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7820_sCopy_OE_16h_H3K27Ac_ChIPMix55_1_normalized.bw" name="AN7820_sCopy_OE_16h_H3K27Ac_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="25.232" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7820_sCopy_OE_no_Xyl_16h_H3K27Ac_ChIPMix55_1_normalized.bw" name="AN7820_sCopy_OE_no_Xyl_16h_H3K27Ac_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="21.16" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7872_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw" name="AN7872_sCopy_OE_16h_polII_ChIPMix60_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="17.85" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7872_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN7872_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="22.270771" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7872_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw" name="AN7872_sCopy_OE_16h_HA_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="13.99525" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7896_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw" name="AN7896_sCopy_OE_16h_polII_ChIPMix60_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="13.197" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7896_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw" name="AN7896_sCopy_OE_16h_HA_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="23.484" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7896_sCopy_OE_16h_HA_ChIPMix36_2_normalized.bw" name="AN7896_sCopy_OE_16h_HA_ChIPMix36_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="32.487" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7896_sCopy_OE_16h_HA_ChIPMix55_3_normalized.bw" name="AN7896_sCopy_OE_16h_HA_ChIPMix55_3" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="32.800003" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7919_mCopy_OE_16h_polII_ChIPMix17_1_normalized.bw" name="AN7919_mCopy_OE_16h_polII_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="13.25" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7919_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN7919_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="13.209001" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7919_mCopy_OE_16h_HA_ChIPMix17_1_normalized.bw" name="AN7919_mCopy_OE_16h_HA_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="48.698" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7919_sCopy_OE_16h_HA_ChIPMix36_2_normalized.bw" name="AN7919_sCopy_OE_16h_HA_ChIPMix36_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="18.881462" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7921_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw" name="AN7921_sCopy_OE_16h_polII_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="11.946" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7921_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN7921_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="12.0285" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7921_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw" name="AN7921_sCopy_OE_16h_HA_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="24.784124" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7921_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw" name="AN7921_sCopy_OE_16h_HA_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="31.766666" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7923_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw" name="AN7923_sCopy_OE_16h_polII_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="18.357" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7923_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN7923_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="49.812" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7923_sCopy_OE_16h_HA_ChIPMix55_1_normalized.bw" name="AN7923_sCopy_OE_16h_HA_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="52.065" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN7923_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw" name="AN7923_sCopy_OE_16h_HA_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="30.32" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8111_sCopy_OE_16h_polII_ChIPMix60_1_normalized.bw" name="AN8111_sCopy_OE_16h_polII_ChIPMix60_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="11.193" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8111_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN8111_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="14.3148985" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8111_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw" name="AN8111_sCopy_OE_16h_HA_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="14.0373335" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8111_sCopy_OE_16h_HA_ChIPMix36_2_normalized.bw" name="AN8111_sCopy_OE_16h_HA_ChIPMix36_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="12.744" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8251_sCopy_OE_16h_polII_ChIPMix56_1_normalized.bw" name="AN8251_sCopy_OE_16h_polII_ChIPMix56_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="15.385" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8251_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN8251_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="22.927" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8251_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw" name="AN8251_sCopy_OE_16h_HA_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="28.424" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8251_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw" name="AN8251_sCopy_OE_16h_HA_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="23.278" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8391_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw" name="AN8391_sCopy_OE_16h_HA_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="78.057" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8391_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw" name="AN8391_sCopy_OE_16h_HA_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="100.17878" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8506_mCopy_OE_16h_polII_ChIPMix17_1_normalized.bw" name="AN8506_mCopy_OE_16h_polII_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="8.704" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8506_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN8506_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="11.47" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8506_mCopy_OE_16h_FLAG_ChIPMix17_1_normalized.bw" name="AN8506_mCopy_OE_16h_FLAG_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="76.490234" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8506_sCopy_OE_16h_FLAG_ChIPMix36_2_normalized.bw" name="AN8506_sCopy_OE_16h_FLAG_ChIPMix36_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="21.728" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8509_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw" name="AN8509_sCopy_OE_16h_polII_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="16.399" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8509_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN8509_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="19.404" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8509_sCopy_OE_16h_HA_ChIPMix55_1_normalized.bw" name="AN8509_sCopy_OE_16h_HA_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="28.454" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8509_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw" name="AN8509_sCopy_OE_16h_HA_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="23.394" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8645_sCopy_OE_16h_polII_ChIPMix56_1_normalized.bw" name="AN8645_sCopy_OE_16h_polII_ChIPMix56_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="18.543" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8645_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN8645_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="9.52" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8645_sCopy_OE_16h_HA_ChIPMix55_1_normalized.bw" name="AN8645_sCopy_OE_16h_HA_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="29.575" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8902_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw" name="AN8902_sCopy_OE_16h_polII_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="22.624" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8902_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN8902_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="17.108" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8902_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw" name="AN8902_sCopy_OE_16h_HA_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="64.416" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN8902_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw" name="AN8902_sCopy_OE_16h_HA_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="30.981833" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN9013_sCopy_OE_16h_polII_ChIPMix55_1_normalized.bw" name="AN9013_sCopy_OE_16h_polII_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="14.081307" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN9013_sCopy_OE_16h_polII_ChIPMix60_2_normalized.bw" name="AN9013_sCopy_OE_16h_polII_ChIPMix60_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="18.778" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN9013_sCopy_OE_16h_HA_ChIPMix36_1_normalized.bw" name="AN9013_sCopy_OE_16h_HA_ChIPMix36_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="17.892778" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\AN9013_sCopy_OE_16h_HA_ChIPMix55_2_normalized.bw" name="AN9013_sCopy_OE_16h_HA_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="19.764" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\apdR_mCopy_OE_16h_polII_ChIPMix17_1_normalized.bw" name="apdR_mCopy_OE_16h_polII_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="11.42" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\apdR_sCopy_OE_16h_polII_ChIPMix55_2_normalized.bw" name="apdR_sCopy_OE_16h_polII_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="15.6" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\apdR_mCopy_OE_16h_FLAG_ChIPMix17_1_normalized.bw" name="apdR_mCopy_OE_16h_FLAG_ChIPMix17_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="41.995" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\apdR_sCopy_OE_16h_FLAG_ChIPMix36_2_normalized.bw" name="apdR_sCopy_OE_16h_FLAG_ChIPMix36_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="12.363" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\areA_del_NF_16h_H3K27Ac_ChIPMix55_1_normalized.bw" name="areA_del_NF_16h_H3K27Ac_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="36.9" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\areA_del_NH4_16h_H3K27Ac_ChIPMix55_1_normalized.bw" name="areA_del_NH4_16h_H3K27Ac_ChIPMix55_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="27.716" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\cpcA_16h_HA_ChIPMix34_1_normalized.bw" name="cpcA_16h_HA_ChIPMix34_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="28.558" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\hepA_del_16h_polII_ChIPMix56_2_normalized.bw" name="hepA_del_16h_polII_ChIPMix56_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="15.96" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\MH11036_16h_polII_ChIPMix19_1_normalized.bw" name="MH11036_16h_polII_ChIPMix19_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="11.340889" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\MH11036_TSA_16h_polII_ChIPMix19_1_normalized.bw" name="MH11036_TSA_16h_polII_ChIPMix19_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="9.504" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\MH11036_no_Xyl_16h_polII_ChIPMix56_1_normalized.bw" name="MH11036_no_Xyl_16h_polII_ChIPMix56_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="11.700001" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track altColor="204,51,0" autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" color="204,51,0" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\MH11036_16h_polII_ChIPMix55_2_normalized.bw" name="MH11036_16h_polII_ChIPMix55_2" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="20.586176" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track autoScale="true" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="E:\Chris_UM\Analysis\23_Shuhui_SM_OE_project\data\bw_files\WT_48h_H3K27Ac_ChIPMix56_1_normalized.bw" name="WT_48h_H3K27Ac_ChIPMix56_1" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="22.518" minimum="0.0" type="LINEAR"/>
+        </Track>
+    </Panel>
+    <PanelLayout dividerFractions="0.22263681592039802"/>
+    <HiddenAttributes>
+        <Attribute name="DATA FILE"/>
+        <Attribute name="DATA TYPE"/>
+        <Attribute name="NAME"/>
+    </HiddenAttributes>
+</Session>
