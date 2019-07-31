@@ -187,12 +187,12 @@ apdR_mCopy_OE_16h_FLAG_ChIPMix17_1	AN8414	16h	FLAG	.	narrow
 apdR_mCopy_OE_16h_polII_ChIPMix17_1	AN8414	16h	polII	.	.
 apdR_sCopy_OE_16h_FLAG_ChIPMix36_2	AN8414	16h	FLAG	.	narrow
 apdR_sCopy_OE_16h_polII_ChIPMix55_2	AN8414	16h	polII	.	.
-areA_del_NF_16h_H3K27Ac_ChIPMix55_1		16h	H3K27Ac	.	.
-areA_del_NH4_16h_H3K27Ac_ChIPMix55_1		16h	H3K27Ac	.	.
-cpcA_16h_HA_ChIPMix34_1		16h	HA	.	narrow
-hepA_del_16h_polII_ChIPMix56_2		16h	polII	.	.
-MH11036_16h_polII_ChIPMix19_1		16h	polII	.	.
-MH11036_16h_polII_ChIPMix55_2		16h	polII	.	.
-MH11036_no_Xyl_16h_polII_ChIPMix56_1		16h	polII	.	.
-MH11036_TSA_16h_polII_ChIPMix19_1		16h	polII	.	.
-WT_48h_H3K27Ac_ChIPMix56_1		48h	H3K27Ac	.	.
+areA_del_NF_16h_H3K27Ac_ChIPMix55_1	NA	16h	H3K27Ac	.	.
+areA_del_NH4_16h_H3K27Ac_ChIPMix55_1	NA	16h	H3K27Ac	.	.
+cpcA_16h_HA_ChIPMix34_1	NA	16h	HA	.	narrow
+hepA_del_16h_polII_ChIPMix56_2	NA	16h	polII	.	.
+MH11036_16h_polII_ChIPMix19_1	NA	16h	polII	.	.
+MH11036_16h_polII_ChIPMix55_2	NA	16h	polII	.	.
+MH11036_no_Xyl_16h_polII_ChIPMix56_1	NA	16h	polII	.	.
+MH11036_TSA_16h_polII_ChIPMix19_1	NA	16h	polII	.	.
+WT_48h_H3K27Ac_ChIPMix56_1	NA	48h	H3K27Ac	.	.
