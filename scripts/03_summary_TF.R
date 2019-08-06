@@ -2,7 +2,6 @@ library(chipmine)
 library(org.Anidulans.eg.db)
 library(TxDb.Anidulans.AspGD.GFF)
 library(here)
-library(ggridges)
 library(ggbeeswarm)
 library(ggpubr)
 library(ggrepel)
@@ -17,7 +16,7 @@ rm(list = ls())
 
 ##################################################################################
 analysisName <- "TF_ChIP_summary"
-outDir <- here::here("analysis", "03_QC_TF")
+outDir <- here::here("analysis", "02_QC_TF")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
 file_exptInfo <- here::here("data", "referenceData/sample_info.txt")
@@ -37,20 +36,6 @@ down <- 2000
 body <- 0
 bin <- 10
 matrixDim = c(c(up, body, down)/bin, bin)
-
-geneSet <- data.table::fread(file = file_genes, header = F,
-                             col.names = c("chr", "start", "end", "geneId", "score", "strand")) %>%
-  dplyr::select(-score) %>%
-  dplyr::mutate(length = end - start)
-
-geneSet <- GenomicFeatures::genes(x = txDb, columns = c("gene_id", "tx_id", "tx_name"),
-                                  filter = list(gene_id = geneSet$geneId)) %>% 
-  as.data.frame() %>% 
-  dplyr::select(geneId = gene_id, chr = seqnames, start, end, strand)
-
-geneDesc <- AnnotationDbi::select(x = orgDb, keys = geneSet$geneId, columns = "DESCRIPTION", keytype = "GID")
-
-geneSet <- dplyr::left_join(x = geneSet, y = geneDesc, by = c("geneId" = "GID"))
 
 
 smGenes <- suppressMessages(
@@ -75,223 +60,59 @@ tfInfo <- get_sample_information(
 tfInfoList <- purrr::transpose(tfInfo)  %>% 
   purrr::set_names(nm = purrr::map(., "sampleId"))
 
-theme_scatter <- theme_bw() +
-  theme(
-    axis.title.x = element_blank(),
-    axis.title = element_text(size = 14),
-    axis.text = element_text(size = 14),
-    panel.grid = element_blank()
-  )
 
 allPlotData <- NULL
 
 pdf(file = paste(outPrefix, ".macs2.pdf", sep = ""), width = 10, height = 12, onefile = TRUE)
 
-i <- 98
+i <- 2
 
 for (i in 1:nrow(tfInfo)) {
   
   print(tfInfo$sampleId[i])
   
-  ## annotate peaks and prepare gene level annotation file
   peakType <- dplyr::case_when(
     tfInfo$peakType[i] == "narrow" ~ "narrowPeak",
     tfInfo$peakType[i] == "broad" ~ "broadPeak"
   )
   
-  peaksGr <- rtracklayer::import(con = tfInfo$peakFile[i], format = peakType)
   
-  if (file.exists(tfInfo$peakAnno[i])) {
-    
-    backboneGene <- tfInfo$SM_TF[i]
-    
-    ## few TFs are mapped to multiple SM clusters. So preparing the list of SM tf data
-    smTfInfo <- suppressMessages(
-      AnnotationDbi::select(
-        x = orgDb,
-        keys = na.omit(backboneGene),
-        columns = c("SM_GENE", "SM_CLUSTER", "SM_ID"),
-        keytype = "GID")) %>% 
-      dplyr::filter(!is.na(SM_ID))
-    
-    clusterGenes <- suppressMessages(
-      AnnotationDbi::select(x = orgDb,
-                            keys = smTfInfo$SM_ID,
-                            columns = c("GID", "SM_GENE"),
-                            keytype = "SM_ID")
-    )
-    
-    genesToMark <- list(
-      SM_cluster = clusterGenes$SM_GENE,
-      other_SM_genes = setdiff(smGenes$SM_GENE, clusterGenes$SM_GENE)
-    )
-    
-    markingPreference <- tibble(geneType = c(names(genesToMark), "peaks"),
-                                drawOrder = 1:(length(genesToMark)+1))
-    
-    peakMarkDf <- purrr::map_dfr(
-      .x = genesToMark,
-      .f = function(x){data.frame(geneId = x, stringsAsFactors = F)},
-      .id = "geneType")
-    
-    ## import peak data with annotation
-    peakAnno <- import_peak_annotation(sampleId = tfInfo$sampleId[i],
-                                       peakAnnoFile = tfInfo$peakAnno[i],
-                                       renameColumn = FALSE)
-    
-    
-    ## add target gene type information if points need to be colored
-    peakAnno <- dplyr::left_join(x = peakAnno, y = peakMarkDf, by = c("geneId" = "geneId")) %>% 
-      tidyr::replace_na(replace = list(geneType = "peaks")) %>% 
-      dplyr::left_join(y = markingPreference, by = c("geneType" = "geneType"))
-    
-    ## for each peak, select one gene. preference is decided by order of names in genesToMark list
-    plotData <- dplyr::group_by(peakAnno, peakId) %>% 
-      dplyr::arrange(drawOrder) %>% 
-      dplyr::slice(1L) %>%
-      dplyr::ungroup() %>% 
-      dplyr::distinct() %>% 
-      dplyr::mutate(sampleId = tfInfo$sampleId[i])
-    
-    plotData$geneType <- factor(x = plotData$geneType,
-                                levels = markingPreference$geneType,
-                                ordered = TRUE)
-    
-    
-    ## summary table
-    summaryTable <- purrr::map_dfr(
-      .x = structure(c("peakEnrichment", "peakPval", "peakQval"),
-                     names = c("peakEnrichment", "peakPval", "peakQval")),
-      .f = function(x){
-        as.list(summary(plotData[[x]]))
-      },
-      .id = "metric")
-    
-    gg_stable <- ggtexttable(summaryTable, rows = NULL, 
-                             theme = ttheme("mOrange"))
-    
-    
-    ## set outliers to 99.5 quantile
-    if(nrow(plotData) > 20){
-      plotData$peakEnrichment <- pmin(plotData$peakEnrichment, quantile(plotData$peakEnrichment, 0.995))
-      plotData$peakPval <- pmin(plotData$peakPval, quantile(plotData$peakPval, 0.99))
-    }
-    
-    allPlotData <- dplyr::bind_rows(allPlotData, plotData)
-    
-    quantile(plotData$peakEnrichment,
-             c(seq(0, 0.9, by = 0.1), 0.95, 0.99, 0.992, 0.995, 0.999, 0.9999, 1), na.rm = T)
-    
-    quantile(plotData$peakPval,
-             c(seq(0, 0.9, by = 0.1), 0.95, 0.99, 0.992, 0.995, 0.999, 0.9999, 1), na.rm = T)
-    
-    pointColor <- structure(c("red", "blue", "grey"), names = markingPreference$geneType)
-    pointAlpha <- structure(c(1, 0.5, 0.5), names = markingPreference$geneType)
-    
-    
-    ## macs2 fold-enrichment density scatter plot
-    gg_dot_enrichment <- ggplot(
-      data = plotData,
-      mapping = aes(x = tfInfo$sampleId[i], y = peakEnrichment)) +
-      geom_quasirandom(mapping = aes(color = geneType, alpha = geneType)) +
-      geom_boxplot(width=0.1, fill = NA, outlier.colour = NA, color = alpha("black", 0.7)) +
-      scale_color_manual(name = "Peak annotations",
-                         values = pointColor) +
-      scale_alpha_manual(values = pointAlpha) +
-      labs(title = "macs2 fold enrichment distribution",
-           y = "peak enrichment") +
-      guides(alpha = FALSE,
-             color = guide_legend(override.aes = list(size = 4))) +
-      theme_scatter
-    
-    
-    
-    ## macs2 p-value density scatter plot
-    gg_dot_pval <- ggplot(
-      data = plotData,
-      mapping = aes(x = tfInfo$sampleId[i], y = peakPval)) +
-      geom_quasirandom(mapping = aes(color = geneType, alpha = geneType)) +
-      geom_boxplot(width=0.1, fill = NA, outlier.colour = NA, color = alpha("black", 0.7)) +
-      scale_color_manual(name = "Peak annotations",
-                         values = pointColor) +
-      scale_alpha_manual(values = pointAlpha) +
-      labs(title = "macs2 p-value distribution",
-           y = "-log10(p-value)") +
-      guides(alpha = FALSE,
-             color = guide_legend(override.aes = list(size = 4))) +
-      theme_scatter
-    
-
-    ## peak annotation pie chart
-    peakAnSummary <- dplyr::group_by(peakAnno, peakType) %>% 
-      dplyr::summarise(count = n()) %>% 
-      dplyr::mutate(label = round(count / sum(count), digits = 4)) %>% 
-      dplyr::mutate(
-        peakType = factor(peakType,
-                          levels = c("upstream", "promoter", "include_tx", "5UTR", "tx_start",
-                                     "EXON", "INTRON", "tx_end", "3UTR", "intergenic"))
-      )
-    
-    peakTypeCol <- c("upstream" = "#a6cee3", "promoter" = "#1f78b4", "include_tx" = "#b2df8a",
-                     "5UTR" = "#fb9a99", "tx_start" = "#e31a1c", "EXON" = "#ff7f00",
-                     "INTRON" = "#fdbf6f", "tx_end" = "#cab2d6", "3UTR" = "#6a3d9a",
-                     "intergenic" = "#b15928")
-    
-    
-    gg_pie_peakAn <- ggplot(data = peakAnSummary,
-                            mapping = aes(x = 1, y = count, fill = peakType)) +
-      geom_bar(color = "black", stat = "identity") +
-      coord_polar(theta = "y", start = 0, direction = -1) +
-      geom_label_repel(mapping = aes(x = 1.4, label = scales::percent(label)),
-                       position = position_stack(vjust = 0.5),
-                       size = 5, show.legend = FALSE) +
-      scale_fill_manual(
-        name = "Peak annotations",
-        values = peakTypeCol
-      ) +
-      labs(title = "Peak annotation distribution") +
-      theme_bw() +
-      theme(
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank(),
-        panel.border = element_blank(),
-        panel.grid=element_blank(),
-        axis.ticks = element_blank(),
-        axis.text = element_blank(),
-        plot.title=element_text(size=14, face="bold")
-      )
-    
-    
-    ## combine plots + table to make a summary figure
-    summaryFig <- ggarrange(
-      gg_stable,
-      ggarrange(gg_dot_enrichment, gg_dot_pval,
-                nrow = 1, ncol = 2, legend = "bottom", common.legend = TRUE),
-      gg_pie_peakAn,
-      nrow = 3,
-      legend = "right",
-      heights = c(1, 4, 4)
-    )
-    
-    
-    summaryFig <- annotate_figure(
-      p = summaryFig,
-      top = text_grob(label = paste(tfInfo$sampleId[i], "ChIPseq summary\n#peaks=",length(peaksGr)),
-                      size = 16, face = "bold")
-    )
-    
-  } else{
-    
-    summaryFig <- annotate_figure(
-      p = ggplot() + geom_text(mapping = aes(x = 0.5, y = 0.5), label = "No data", size = 30) +
-        theme_void(),
-      top = text_grob(label = paste(tfInfo$sampleId[i], "ChIPseq summary\n#peaks =",length(peaksGr)),
-                      size = 16, face = "bold")
-    )
-    
-  }
+  backboneGene <- tfInfo$SM_TF[i]
   
-  plot(summaryFig)
+  ## few TFs are mapped to multiple SM clusters. So preparing the list of SM tf data
+  smTfInfo <- suppressMessages(
+    AnnotationDbi::select(
+      x = orgDb,
+      keys = na.omit(backboneGene),
+      columns = c("SM_GENE", "SM_CLUSTER", "SM_ID"),
+      keytype = "GID")) %>% 
+    dplyr::filter(!is.na(SM_ID))
+  
+  clusterGenes <- suppressMessages(
+    AnnotationDbi::select(x = orgDb,
+                          keys = smTfInfo$SM_ID,
+                          columns = c("GID", "SM_GENE"),
+                          keytype = "SM_ID")
+  )
+  
+  genesToMark <- list(
+    SM_cluster = clusterGenes$SM_GENE,
+    other_SM_genes = setdiff(smGenes$SM_GENE, clusterGenes$SM_GENE)
+  )
+  
+  chipSummary <- chip_summary(
+    sampleId = tfInfo$sampleId[i], peakAnnotation = tfInfo$peakAnno[i],
+    peakFile = tfInfo$peakFile[i], peakType = peakType,
+    markTargets = genesToMark,
+    pointColor = structure(c("red", "blue"), names = names(genesToMark)),
+    pointAlpha = structure(c(1, 0.5), names = names(genesToMark))
+  )
+  
+  
+  allPlotData <- dplyr::bind_rows(allPlotData, chipSummary$data)
+  
+  plot(chipSummary$figure)
+  
 }
 
 dev.off()
@@ -315,7 +136,7 @@ theme_plot_matrix <- theme_bw() +
 ## combined summary plot matrix: peak enrichment
 gg_all_enrichment <- ggplot(
   data = allPlotData,
-  mapping = aes(x = sampleId[i], y = peakEnrichment)) +
+  mapping = aes(x = sampleId, y = peakEnrichment)) +
   geom_quasirandom(color = "#bf9a2d") +
   geom_boxplot(width=0.1, fill = NA, outlier.colour = NA, color = alpha("black", 1)) +
   geom_hline(yintercept = 3, color = "blue") +
@@ -331,7 +152,7 @@ dev.off()
 ## combined summary plot matrix: peak p-value
 gg_all_pval <- ggplot(
   data = allPlotData,
-  mapping = aes(x = sampleId[i], y = peakPval)) +
+  mapping = aes(x = sampleId, y = peakPval)) +
   geom_quasirandom(color = "#567a0f") +
   geom_boxplot(width=0.1, fill = NA, outlier.colour = NA, color = alpha("black", 1)) +
   geom_hline(yintercept = 20, color = "red") +
