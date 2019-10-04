@@ -63,7 +63,8 @@ tfInfoList <- purrr::transpose(tfInfo)  %>%
 
 allPlotData <- NULL
 
-pdf(file = paste(outPrefix, ".macs2.pdf", sep = ""), width = 10, height = 12, onefile = TRUE)
+pdf(file = paste(outPrefix, ".macs2.pdf", sep = ""), width = 15, height = 10,
+    onefile = TRUE, pointsize = 10)
 
 i <- 2
 
@@ -96,22 +97,24 @@ for (i in 1:nrow(tfInfo)) {
   )
   
   genesToMark <- list(
-    SM_cluster = clusterGenes$SM_GENE,
+    SM_cluster = unique(clusterGenes$SM_GENE),
     other_SM_genes = setdiff(smGenes$SM_GENE, clusterGenes$SM_GENE)
   )
   
   chipSummary <- chip_summary(
-    sampleId = tfInfo$sampleId[i], peakAnnotation = tfInfo$peakAnno[i],
-    peakFile = tfInfo$peakFile[i], peakType = peakType,
+    sampleId = tfInfo$sampleId[i],
+    peakAnnotation = tfInfo$peakAnno[i],
+    peakFile = tfInfo$peakFile[i],
+    peakType = peakType,
     markTargets = genesToMark,
     pointColor = structure(c("red", "blue"), names = names(genesToMark)),
     pointAlpha = structure(c(1, 0.5), names = names(genesToMark))
   )
   
   
-  allPlotData <- dplyr::bind_rows(allPlotData, chipSummary$data)
-  
   plot(chipSummary$figure)
+  
+  allPlotData <- dplyr::bind_rows(allPlotData, chipSummary$data)
   
 }
 
@@ -163,6 +166,23 @@ gg_all_pval <- ggplot(
 # pdf(file = paste(outPrefix, ".macs2_enrichment.pdf", sep = ""), width = 16, height = 16, onefile = TRUE)
 png(filename = paste(outPrefix, ".macs2_pval.png", sep = ""), width = 15000, height = 10000, res = 350)
 gg_all_pval
+dev.off()
+
+
+## combined summary plot matrix: peak width
+gg_all_width <- ggplot(
+  data = allPlotData,
+  mapping = aes(x = sampleId, y = peakWidth)) +
+  geom_quasirandom(color = "#372b60") +
+  geom_boxplot(width=0.1, fill = NA, outlier.colour = NA, color = alpha("black", 1)) +
+  geom_hline(yintercept = 300, color = "red") +
+  labs(title = "macs2 peak width distribution") +
+  facet_wrap(facets = ~ sampleId, ncol = 14, scales = "free") +
+  theme_plot_matrix
+
+# pdf(file = paste(outPrefix, ".peak_width.png", sep = ""), width = 16, height = 16, onefile = TRUE)
+png(filename = paste(outPrefix, ".peak_width.png", sep = ""), width = 15000, height = 10000, res = 350)
+gg_all_width
 dev.off()
 
 

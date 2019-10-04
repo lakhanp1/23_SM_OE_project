@@ -52,16 +52,18 @@ replicatePairs <- suppressMessages(readr::read_tsv(file = file_replicates))
 
 plotListAll <- list()
 plotList_pval_distibution <- list()
-i <- 5
+i <- 2
 
 for (i in 1:nrow(replicatePairs)) {
   print(replicatePairs$rep1[i])
   
   repInfo <- dplyr::filter(tfInfo, sampleId %in% c(replicatePairs$rep1[i], replicatePairs$rep2[i]))
   
-  plots_pval <- tf_replicate_plots(sampleInfo = repInfo, compare = "pvalue", title = "set1")
+  plots_pval <- tf_replicate_plots(sampleInfo = repInfo, compare = "pvalue",
+                                   title = "set1", yintercept = 20)
   
-  plots_enrichment <- tf_replicate_plots(sampleInfo = repInfo, compare = "enrichment", title = "set1")
+  plots_enrichment <- tf_replicate_plots(sampleInfo = repInfo, compare = "enrichment",
+                                         title = "set1", yintercept = 3)
   
   ## all plots combined in a row for a replicate
   repPlot <- ggarrange(
