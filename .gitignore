@@ -10,8 +10,9 @@
 *.pptx
 *.xlsx
 *.docx
+*.xml
+sample_info.txt
 /data/*
-#/data/
 !/data/referenceData/
 /analysis
 /reports
