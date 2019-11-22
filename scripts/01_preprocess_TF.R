@@ -1,7 +1,7 @@
 library(chipmine)
 library(org.Anidulans.FGSCA4.eg.db)
-library(TxDb.Anidulans.AspGD.GFF)
-library(BSgenome.Anidulans.AspGD.FGSCA4)
+library(TxDb.Anidulans.FGSCA4.AspGD.GFF)
+library(BSgenome.Anidulans.FGSCA4.AspGD)
 library(here)
 
 
@@ -10,17 +10,13 @@ library(here)
 
 rm(list = ls())
 
-# cl <- makeCluster(4) #not to overload your computer
-# registerDoParallel(cl)
-
 ##################################################################################
-
 
 file_exptInfo <- here::here("data", "referenceData/sample_info.txt")
 
 file_genes <- here::here("data", "referenceData/AN_genes_for_polII.bed")
 orgDb <- org.Anidulans.FGSCA4.eg.db
-txDb <- TxDb.Anidulans.AspGD.GFF
+txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
 
 TF_dataPath <- here::here("data", "TF_data")
 polII_dataPath <- here::here("data", "polII_data")
@@ -39,17 +35,21 @@ matrixDim = c(c(up, body, down)/bin, bin)
 
 geneSet <- data.table::fread(file = file_genes, header = F,
                              col.names = c("chr", "start", "end", "geneId", "score", "strand")) %>%
-  dplyr::select(-score) %>%
-  dplyr::mutate(length = end - start)
-
-geneSet <- GenomicFeatures::genes(x = txDb, columns = c("gene_id", "tx_id", "tx_name"),
-                                  filter = list(gene_id = geneSet$geneId)) %>% 
-  as.data.frame() %>% 
-  dplyr::select(geneId = gene_id, chr = seqnames, start, end, strand)
+  dplyr::select(geneId)
 
 geneDesc <- AnnotationDbi::select(x = orgDb, keys = geneSet$geneId, columns = "DESCRIPTION", keytype = "GID")
 
 geneSet <- dplyr::left_join(x = geneSet, y = geneDesc, by = c("geneId" = "GID"))
+
+txInfo <- suppressMessages(
+  AnnotationDbi::select(
+    x = txDb, keys = AnnotationDbi::keys(x = txDb, keytype = "TXID"),
+    columns = c("GENEID", "TXNAME", "TXTYPE"), keytype = "TXID")) %>%
+  dplyr::mutate(TXID = as.character(TXID)) %>%
+  dplyr::rename(geneId = GENEID, txName = TXNAME, txType = TXTYPE)
+
+txInfo <- dplyr::filter(txInfo, !txType %in% c("tRNA", "rRNA", "snRNA", "snoRNA")) %>% 
+  dplyr::filter(!grepl(pattern = "uORF", x = geneId))
 
 ##################################################################################
 
@@ -71,14 +71,17 @@ for(i in 1:nrow(tfInfo)){
     tfInfo$peakType[i] == "narrow" ~ "narrowPeak",
     tfInfo$peakType[i] == "broad" ~ "broadPeak"
   )
-  
+
   peakAn <- narrowPeak_annotate(
     peakFile = tfInfo$peakFile[i],
     txdb = txDb,
+    txIds = txInfo$TXID,
     fileFormat = peakType,
+    promoterLength = 500,
+    upstreamLimit = 1500,
+    bidirectionalDistance = 1000,
     includeFractionCut = 0.7,
     bindingInGene = FALSE,
-    promoterLength = 500,
     insideSkewToEndCut = 0.7,
     removePseudo = TRUE,
     output = tfInfo$peakAnno[i])
@@ -101,11 +104,11 @@ for(i in 1:nrow(tfInfo)){
   #   if(peakType == "broadPeak"){
   #     mcols(peaksGr)$peak <- round(width(peaksGr) / 2)
   #   }
-  #   
+  # 
   #   peakSummitGr <- GenomicRanges::narrow(x = peaksGr,
   #                                         start = pmax(peaksGr$peak, 1),
   #                                         width = 1)
-  #   
+  # 
   #   profileMat <- bigwig_profile_matrix(bwFile = tfInfo$bwFile[i],
   #                                       regions = peakSummitGr,
   #                                       signalName = tfInfo$profileName[i],
@@ -116,12 +119,6 @@ for(i in 1:nrow(tfInfo)){
   # }
 
 }
-
-
-
-
-
-
 
 
 

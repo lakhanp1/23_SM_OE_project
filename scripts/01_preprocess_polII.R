@@ -1,6 +1,6 @@
 library(chipmine)
-library(org.Anidulans.eg.db)
-library(TxDb.Anidulans.AspGD.GFF)
+library(org.Anidulans.FGSCA4.eg.db)
+library(TxDb.Anidulans.FGSCA4.AspGD.GFF)
 library(foreach)
 library(doParallel)
 library(here)
@@ -16,8 +16,8 @@ rm(list = ls())
 file_exptInfo <- here::here("data", "referenceData/sample_info.txt")
 
 file_genes <- here::here("data", "referenceData/AN_genes_for_polII.bed")
-orgDb <- org.Anidulans.eg.db
-txDb <- TxDb.Anidulans.AspGD.GFF
+orgDb <- org.Anidulans.FGSCA4.eg.db
+txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
 
 TF_dataPath <- here::here("data", "TF_data")
 polII_dataPath <- here::here("data", "polII_data")
@@ -43,7 +43,7 @@ polIISampleList <- readr::read_tsv(file = file_polIISamples, col_names = c("id")
 polII_info <- get_sample_information(exptInfoFile = file_exptInfo,
                                      samples = polIISampleList$id,
                                      dataPath = polII_dataPath,
-                                     matrixSource = "normalizedmatrix")
+                                     profileMatrixSuffix = "normalizedmatrix")
 
 
 polIICols <- list(
