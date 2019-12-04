@@ -52,14 +52,14 @@ replicatePairs <- suppressMessages(readr::read_tsv(file = file_replicates))
 
 plotListAll <- list()
 plotList_pval_distibution <- list()
-i <- 25
+i <- 1
 
 pdf(file = paste(outPrefix, ".correlation.pdf", sep = ""), width = 18, height = 12,
     onefile = TRUE, pointsize = 8)
 
 for (i in 1:nrow(replicatePairs)) {
-# for (i in 1:10) {
-
+  # for (i in 1:10) {
+  
   cat(i, ":", replicatePairs$rep1[i], "\n")
   
   repInfo <- dplyr::filter(tfInfo, sampleId %in% c(replicatePairs$rep1[i], replicatePairs$rep2[i]))
@@ -67,11 +67,13 @@ for (i in 1:nrow(replicatePairs)) {
     next
   }
   
-  plots_pval <- tf_replicate_plots(sampleInfo = repInfo, compare = "pvalue",
-                                   title = "set1", yintercept = 20)
+  plots_pval <- compare_ChIPseq_replicates(
+    sampleInfo = repInfo, compare = "pvalue",
+    title = "set1", yintercept = 20)
   
-  plots_enrichment <- tf_replicate_plots(sampleInfo = repInfo, compare = "enrichment",
-                                         title = "set1", yintercept = 3)
+  plots_enrichment <- compare_ChIPseq_replicates(
+    sampleInfo = repInfo, compare = "enrichment",
+    title = "set1", yintercept = 3)
   
   ## all plots combined in a row for a replicate
   repPlot <- ggarrange(
@@ -85,7 +87,7 @@ for (i in 1:nrow(replicatePairs)) {
     nrow = 3, heights = c(0.1, 0.45, 0.45)) +
     theme(plot.background = element_rect(color = "black"),
           plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "cm"))
-
+  
   plot(repPlot)
   # plotListAll[[i]] <- repPlot
   
