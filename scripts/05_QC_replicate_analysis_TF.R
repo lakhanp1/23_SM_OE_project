@@ -68,12 +68,10 @@ for (i in 1:nrow(replicatePairs)) {
   }
   
   plots_pval <- compare_ChIPseq_replicates(
-    sampleInfo = repInfo, compare = "pvalue",
-    title = "set1", yintercept = 20)
+    sampleInfo = repInfo, compare = "pvalue", yintercept = 20)
   
   plots_enrichment <- compare_ChIPseq_replicates(
-    sampleInfo = repInfo, compare = "enrichment",
-    title = "set1", yintercept = 3)
+    sampleInfo = repInfo, compare = "enrichment", yintercept = 3)
   
   ## all plots combined in a row for a replicate
   repPlot <- ggarrange(
@@ -106,10 +104,10 @@ dev.off()
 
 
 fig_pval_distribution <- ggarrange(plotlist = plotList_pval_distibution,
-                                   nrow = 7, ncol = 11, hjust = 0.5)
+                                   nrow = 8, ncol = 10, hjust = 0.5)
 
 png(filename = paste(outPrefix, ".pval_distribution.png", sep = ""),
-    width = 12000, height = 8000, res = 160)
+    width = 12000, height = 9000, res = 160)
 fig_pval_distribution
 dev.off()
 

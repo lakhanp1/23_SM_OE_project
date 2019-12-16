@@ -1,6 +1,6 @@
 library(chipmine)
-library(org.Anidulans.eg.db)
-library(TxDb.Anidulans.AspGD.GFF)
+library(org.Anidulans.FGSCA4.eg.db)
+library(TxDb.Anidulans.FGSCA4.AspGD.GFF)
 library(here)
 library(ggbeeswarm)
 library(ggpubr)
@@ -22,8 +22,8 @@ outPrefix <- paste(outDir, "/", analysisName, sep = "")
 file_exptInfo <- here::here("data", "referenceData/sample_info.txt")
 
 file_genes <- here::here("data", "referenceData/AN_genes_for_polII.bed")
-orgDb <- org.Anidulans.eg.db
-txDb <- TxDb.Anidulans.AspGD.GFF
+orgDb <- org.Anidulans.FGSCA4.eg.db
+txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
 
 TF_dataPath <- here::here("data", "TF_data")
 
@@ -49,11 +49,11 @@ smGenes <- suppressMessages(
 
 ##################################################################################
 
-tfSampleList <- readr::read_tsv(file = file_tf_macs2, col_names = c("id"),  comment = "#")
+tfSampleList <- readr::read_tsv(file = file_tf_macs2, col_names = c("sampleId"),  comment = "#")
 
 tfInfo <- get_sample_information(
   exptInfoFile = file_exptInfo,
-  samples = tfSampleList$id,
+  samples = tfSampleList$sampleId,
   dataPath = TF_dataPath,
   profileMatrixSuffix = matrixType)
 
@@ -66,17 +66,16 @@ allPlotData <- NULL
 pdf(file = paste(outPrefix, ".macs2.pdf", sep = ""), width = 15, height = 10,
     onefile = TRUE, pointsize = 10)
 
-i <- 2
+i <- 119
 
 for (i in 1:nrow(tfInfo)) {
   
-  print(tfInfo$sampleId[i])
+  cat(i, ":", tfInfo$sampleId[i], "\n")
   
   peakType <- dplyr::case_when(
     tfInfo$peakType[i] == "narrow" ~ "narrowPeak",
     tfInfo$peakType[i] == "broad" ~ "broadPeak"
   )
-  
   
   backboneGene <- tfInfo$SM_TF[i]
   
@@ -105,7 +104,7 @@ for (i in 1:nrow(tfInfo)) {
     sampleId = tfInfo$sampleId[i],
     peakAnnotation = tfInfo$peakAnno[i],
     peakFile = tfInfo$peakFile[i],
-    peakType = peakType,
+    peakFormat = peakType,
     markTargets = genesToMark,
     pointColor = structure(c("red", "blue"), names = names(genesToMark)),
     pointAlpha = structure(c(1, 0.5), names = names(genesToMark))
@@ -135,6 +134,7 @@ theme_plot_matrix <- theme_bw() +
     strip.background = element_rect(fill = "white")
   )
 
+facetCols <- 15
 
 ## combined summary plot matrix: peak enrichment
 gg_all_enrichment <- ggplot(
@@ -144,11 +144,11 @@ gg_all_enrichment <- ggplot(
   geom_boxplot(width=0.1, fill = NA, outlier.colour = NA, color = alpha("black", 1)) +
   geom_hline(yintercept = 3, color = "blue") +
   labs(title = "masc2 fold enrichment distribution") +
-  facet_wrap(facets = ~ sampleId, ncol = 14, scales = "free") +
+  facet_wrap(facets = ~ sampleId, ncol = facetCols, scales = "free") +
   theme_plot_matrix
 
 # pdf(file = paste(outPrefix, ".macs2_enrichment.pdf", sep = ""), width = 16, height = 16, onefile = TRUE)
-png(filename = paste(outPrefix, ".macs2_enrichment.png", sep = ""), width = 15000, height = 10000, res = 350)
+png(filename = paste(outPrefix, ".macs2_enrichment.png", sep = ""), width = 15000, height = 9000, res = 300)
 gg_all_enrichment
 dev.off()
 
@@ -160,11 +160,11 @@ gg_all_pval <- ggplot(
   geom_boxplot(width=0.1, fill = NA, outlier.colour = NA, color = alpha("black", 1)) +
   geom_hline(yintercept = 20, color = "red") +
   labs(title = "masc2 p-value distribution") +
-  facet_wrap(facets = ~ sampleId, ncol = 14, scales = "free") +
+  facet_wrap(facets = ~ sampleId, ncol = facetCols, scales = "free") +
   theme_plot_matrix
 
 # pdf(file = paste(outPrefix, ".macs2_enrichment.pdf", sep = ""), width = 16, height = 16, onefile = TRUE)
-png(filename = paste(outPrefix, ".macs2_pval.png", sep = ""), width = 15000, height = 10000, res = 350)
+png(filename = paste(outPrefix, ".macs2_pval.png", sep = ""), width = 15000, height = 9000, res = 300)
 gg_all_pval
 dev.off()
 
@@ -173,15 +173,15 @@ dev.off()
 gg_all_width <- ggplot(
   data = allPlotData,
   mapping = aes(x = sampleId, y = peakWidth)) +
-  geom_quasirandom(color = "#372b60") +
+  geom_quasirandom(color = "#8472c0") +
   geom_boxplot(width=0.1, fill = NA, outlier.colour = NA, color = alpha("black", 1)) +
   geom_hline(yintercept = 300, color = "red") +
   labs(title = "macs2 peak width distribution") +
-  facet_wrap(facets = ~ sampleId, ncol = 14, scales = "free") +
+  facet_wrap(facets = ~ sampleId, ncol = facetCols, scales = "free") +
   theme_plot_matrix
 
 # pdf(file = paste(outPrefix, ".peak_width.png", sep = ""), width = 16, height = 16, onefile = TRUE)
-png(filename = paste(outPrefix, ".peak_width.png", sep = ""), width = 15000, height = 10000, res = 350)
+png(filename = paste(outPrefix, ".peak_width.png", sep = ""), width = 15000, height = 9000, res = 300)
 gg_all_width
 dev.off()
 
