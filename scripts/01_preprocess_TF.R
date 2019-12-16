@@ -53,25 +53,27 @@ txInfo <- dplyr::filter(txInfo, !txType %in% c("tRNA", "rRNA", "snRNA", "snoRNA"
 
 ##################################################################################
 
-tfSampleList <- readr::read_tsv(file = file_tf_macs2, col_names = c("id"),  comment = "#")
+tfSampleList <- readr::read_tsv(file = file_tf_macs2, col_names = c("sampleId"),  comment = "#")
 
 tfInfo <- get_sample_information(
   exptInfoFile = file_exptInfo,
-  samples = tfSampleList$id,
+  samples = tfSampleList$sampleId,
   dataPath = TF_dataPath,
   profileMatrixSuffix = matrixType)
 
 
-i <- 2
+i <- 119
 
-for(i in 1:nrow(tfInfo)){
+for(i in 119:nrow(tfInfo)){
+  
+  cat(i, ":", tfInfo$sampleId[i], "\n")
   
   ## annotate peaks and prepare gene level annotation file
   peakType <- dplyr::case_when(
     tfInfo$peakType[i] == "narrow" ~ "narrowPeak",
     tfInfo$peakType[i] == "broad" ~ "broadPeak"
   )
-
+  
   peakAn <- narrowPeak_annotate(
     peakFile = tfInfo$peakFile[i],
     txdb = txDb,
@@ -85,7 +87,7 @@ for(i in 1:nrow(tfInfo)){
     insideSkewToEndCut = 0.7,
     removePseudo = TRUE,
     output = tfInfo$peakAnno[i])
-
+  
   if( !is.null(peakAn) ){
     tfDf <- gene_level_peak_annotation(
       sampleId = tfInfo$sampleId[i],
@@ -117,7 +119,7 @@ for(i in 1:nrow(tfInfo)){
   #                                       storeLocal = T,
   #                                       localPath = tfInfo$matFile[i])
   # }
-
+  
 }
 
 

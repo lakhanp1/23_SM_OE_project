@@ -38,10 +38,10 @@ geneSet <- dplyr::left_join(x = geneSet, y = geneDesc, by = c("geneId" = "GID"))
 
 ##################################################################################
 ## process individual polII data
-polIISampleList <- readr::read_tsv(file = file_polIISamples, col_names = c("id"),  comment = "#")
+polIISampleList <- readr::read_tsv(file = file_polIISamples, col_names = c("geneId"),  comment = "#")
 
 polII_info <- get_sample_information(exptInfoFile = file_exptInfo,
-                                     samples = polIISampleList$id,
+                                     samples = polIISampleList$geneId,
                                      dataPath = polII_dataPath,
                                      profileMatrixSuffix = "normalizedmatrix")
 
@@ -54,9 +54,12 @@ polIICols <- list(
 
 
 
-i <- 1
+i <- 117
 
 for (i in 1:nrow(polII_info)) {
+  
+  cat(i, ":", polII_info$sampleId[i], "\n")
+  
   ## make gene level polII signal file for each sample
   polIIDf <- chipmine::preProcess_polII_expression(
     expMat = polII_info$polIIExpMat[i],
