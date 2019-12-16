@@ -47,13 +47,16 @@ replicatePairs <- suppressMessages(readr::read_tsv(file = file_replicates))
 plotListAll <- list()
 plotList_pval_distibution <- list()
 
-i <- 1
+i <- 12
 
-pdf(file = paste(outPrefix, ".correlation.pdf", sep = ""), width = 15, height = 10,
-    onefile = TRUE, pointsize = 8)
+corrDf <- NULL
+
+# pdf(file = paste(outPrefix, ".correlation.pdf", sep = ""), width = 15, height = 10,
+#     onefile = TRUE, pointsize = 8)
 
 
 for (i in 1:nrow(replicatePairs)) {
+  
   cat(i, ":", replicatePairs$rep1[i], "\n")
   
   repInfo <- dplyr::filter(polIIInfo, sampleId %in% c(replicatePairs$rep1[i], replicatePairs$rep2[i]))
@@ -73,16 +76,48 @@ for (i in 1:nrow(replicatePairs)) {
   pairCor <- compare_replicates(data = exprDf, rep1Col = rep1Col, rep2Col = rep2Col,
                                 trans = "log2")
   
-  plot(pairCor$figure)
+  # plot(pairCor$figure)
+  
+  pairCorrDf <- dplyr::mutate(.data = pairCor$data, rep1 = rep1Col, rep2 = rep2Col)
+  corrDf <- dplyr::bind_rows(corrDf, pairCorrDf)
   
 }
 
-dev.off()
+# dev.off()
 
 ##################################################################################
+corrDf <- dplyr::mutate(corrDf, fractionPer = forcats::as_factor(fractionPer))
+
+cummulativeCorr <- as.data.table(corrDf) %>% 
+  data.table::dcast(formula = rep1 + rep2 ~ fractionPer, value.var = c("pearson", "spearman"))
+
+
+readr::write_tsv(x = cummulativeCorr,
+                 path = paste(outPrefix, ".cummulative_correlation.tab", sep = ""))
 
 
 
+gg_pearsonScatter <- dplyr::filter(corrDf, fractionPer %in% c("100%", "50%", "10%")) %>% 
+  ggplot(mapping = aes(x = fractionPer, y = pearson, fill = pearson)) +
+  geom_boxplot(width=0.4, fill = NA, outlier.colour = NA, color = alpha("black", 0.7)) +
+  geom_quasirandom(size = 3, shape = 21) +
+  scale_fill_distiller(limits = c(-1, 1), type = "seq", palette = "RdBu") +
+  labs(
+    title = "Pearson correlation for top X% genes in polII ChIPseq replicates",
+    subtitle = "replicate average signal is used to rank the genes and then top X% genes are selected",
+    x = "top X% genes", y = "Pearson correlation"
+  ) +
+  theme_bw() +
+  theme(
+    panel.grid = element_blank(),
+    axis.text = element_text(size = 14),
+    axis.title = element_text(size = 14)
+  )
+
+
+png(filename =  paste(outPrefix, ".pearson_scatter.png", sep = ""), width = 2000, height = 2000, res = 250)
+gg_pearsonScatter
+dev.off()
 
 
 
