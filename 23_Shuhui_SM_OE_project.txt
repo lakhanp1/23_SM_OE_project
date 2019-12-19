@@ -12,61 +12,8 @@ bowtie2 -p 6 --local  -x <bt2-idx> -1 <> -2 <> | samtools view -bS - | samtools 
 for i in `cat sample_ANidulans.list`
 do
 cd $i
-printf "\nsamtools index %s_bt2.bam\n" $i >> generalJob.sh
-printf "samtools flagstat %s_bt2.bam > alignment.stats\n\n" $i >> generalJob.sh
-cd ..
-done
-}
-
-
-test.1:{
-mappedReads=`grep -P ' 0 mapped \(' alignment.stats | grep -P -o '^\d+'`
-scale=`perl -e "printf('%.3f', 1000000/$mappedReads)"`
-
-##macs2 pileup with 200bp extension
-macs2 pileup --extsize 200 -i SAMPLE_ID_bt2.bam -o SAMPLE_ID_pileup.bdg
-error_exit $?
-
-##normalize
-printf "Normalizing SAMPLE_ID_pileup.bdg with factor %s\n" $scale
-macs2 bdgopt -i SAMPLE_ID_pileup.bdg -m multiply -p $scale -o temp_normalized.bdg
-error_exit $?
-
-##Remove the first line
-sed -n '2,$p' temp_normalized.bdg > SAMPLE_ID_normalized.bdg
-error_exit $?
-rm temp_normalized.bdg
-
-}
-
-
-##Replace SAMPLE_ID with $i
-for i in `cat sample_ANidulans.list`; do cd $i; sed "s/SAMPLE_ID/$i/g" ../test.1 >> generalJob.sh; cd ..; done
-
-
-#sort the bdg file by bedSort
-{
-for i in `cat sample_ANidulans.list`
-do
-cd $i
-printf "##bedSort and bedGraph to bigWig conversion
-bedSort %s_normalized.bdg %s_normalized.bdg\n" $i $i >> generalJob.sh
-printf "bedGraphToBigWig %s_normalized.bdg /home/lakhanp/database/A_nidulans_FGSC_A4/reference/genome.size %s_normalized.bw
-error_exit \$? \n\n" $i $i >> generalJob.sh
-cd ..
-done
-}
-
-
-##Pol-II expression value
-{
-for i in `cat sample_ANidulans.list`
-do
-cd $i
-printf "##Pol-II expression value
-perl /home/lakhanp/scripts/miaoScripts/zqWinSGR-v2.pl -feature_file /home/lakhanp/database/A_nidulans_FGSC_A4/annotation/A_nidulans_FGSC_A4_version_s10-m04-r03_CDS_Unique.bed -socre_file %s_normalized.bdg -chrom_column 1 -start_column 2 -end_column 3  -direction_column 6 -bin_count 1 -output_folder $PWD -outout_name %s_polii_expr.tab
-error_exit \$? \n\n" $i $i >> generalJob.sh
-printf "gzip *.bdg\n\n" >> generalJob.sh
+bash /home/lakhanp/scripts/ChIPseq_scripts/template_ChIPseq_config.sh -c /home/lakhanp/database/reference_genomes.yaml -o A_nidulans --polII >> generalJob.sh
+sed "s/SAMPLE_ID/$i/g" /home/lakhanp/scripts/ChIPseq_scripts/template_ChIPseq_process.sh >> generalJob.sh
 cd ..
 done
 }
@@ -85,33 +32,29 @@ done
 }
 
 
-## Generate profile matrix
-{
-for i in `cat sample_ANidulans.list`
-do
-cd $i
-printf "##generate profile matris (-2kb == normalized(geneBody) to 2kb == +1kb)
-computeMatrix scale-regions -S %s_normalized.bw  -R /home/lakhanp/database/A_nidulans_FGSC_A4/annotation/A_nidulans_FGSC_A4_version_s10-m04-r03_CDS_Unique.bed -m 2000 -b 2000 -a 1000 --numberOfProcessors 2  --outFileName %s_normalized_profile.tab.gz
-error_exit \$? \n\n" $i $i >> generalJob.sh
-cd ..
-done
-}
+#### Generate profile matrix
+##{
+##for i in `cat sample_ANidulans.list`
+##do
+##cd $i
+##printf "##generate profile matris (-2kb == normalized(geneBody) to 2kb == +1kb)
+##computeMatrix scale-regions -S %s_normalized.bw  -R /home/lakhanp/database/A_nidulans_FGSC_A4/annotation/A_nidulans_FGSC_A4_version_s10-m04-r03_CDS_Unique.bed -m 2000 -b 2000 -a 1000 --numberOfProcessors 2  --outFileName %s_normalized_profile.tab.gz
+##error_exit \$? \n\n" $i $i >> generalJob.sh
+##cd ..
+##done
+##}
+####
 
-## Print organism ID from reference data config file
-{
-for i in `cat sample_ANidulans.list`
-do
-cd $i
-printf "##organism ID
-orgId=\"A_nidulans\"\n\n" >> generalJob.sh
-cd ..
-done
-}
 
 ## Print control information and peak type (narrow/broad) information
 {
 ## IMP
 ## use the printf information from the excel file
+for i in `cat sample_tf_macs2.list`
+do cd $i
+printf "peakType=\'narrow\'\n\n" >> generalJob.sh
+cd ..
+done
 }
 
 
@@ -119,7 +62,7 @@ done
 {
 for i in `cat sample_tf_macs2.list`
 do cd $i
-sed "s/SAMPLE_ID/$i/g" /home/lakhanp/scripts/ChIPseq_scripts/template_macs2.sh >> generalJob.sh
+sed "s/SAMPLE_ID/$i/g" /home/lakhanp/scripts/ChIPseq_scripts/template_ChIPseq_macs2.sh >> generalJob.sh
 cd ..
 done
 }
