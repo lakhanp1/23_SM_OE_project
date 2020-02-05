@@ -62,9 +62,9 @@ tfInfo <- get_sample_information(
   profileMatrixSuffix = matrixType)
 
 
-i <- 119
+i <- 3
 
-for(i in 119:nrow(tfInfo)){
+for(i in 1:nrow(tfInfo)){
   
   cat(i, ":", tfInfo$sampleId[i], "\n")
   
