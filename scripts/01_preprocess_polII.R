@@ -25,6 +25,7 @@ hist_dataPath <- here::here("data", "histone_data")
 other_dataPath <- here::here("data", "other_data")
 
 file_polIISamples <- paste(polII_dataPath, "/", "sample_polII.list", sep = "")
+file_deeptolsMat <- paste(polII_dataPath, "/", "raw_count.polII.deeptools.tab", sep = "")
 
 geneSet <- data.table::fread(file = file_genes, header = F,
                              col.names = c("chr", "start", "end", "geneId", "score", "strand")) %>%
@@ -114,10 +115,33 @@ polIIQuantiles <- purrr::map_dfr(
 readr::write_tsv(x = polIIQuantiles,
                  path = paste(polII_dataPath, "/polII_signal_quantiles.tab", sep = ""))
 
+##################################################################################
+## process deeptools raw count matrix
+
+deeptoolsMat <- suppressMessages(readr::read_tsv(file = file_deeptolsMat))
+
+colnames(deeptoolsMat) <- stringr::str_replace(
+  string = colnames(deeptoolsMat), pattern = "_bt2", replacement = "")
+
+if(!setequal(
+  paste(geneSet$chr, geneSet$start, geneSet$end, sep = ":"),
+  paste(deeptoolsMat$chr, deeptoolsMat$start, deeptoolsMat$end, sep = ":"))){
+  
+  stop("geneSet genes and deeptools matrix genes does not match")
+  
+} else{
+  rawCountMat <- dplyr::left_join(
+    x = deeptoolsMat, y = geneSet, by = c("chr" , "start", "end")
+  ) %>% 
+    dplyr::select(geneId, polII_info$sampleId)
+  
+  readr::write_tsv(x = rawCountMat,
+                   path = paste(polII_dataPath, "/polII_raw_counts.tab", sep = ""))
+}
+
+
 
 ##################################################################################
-
-
 
 
 

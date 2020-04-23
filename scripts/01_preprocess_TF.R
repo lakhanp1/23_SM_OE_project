@@ -33,6 +33,8 @@ body <- 0
 bin <- 10
 matrixDim = c(c(up, body, down)/bin, bin)
 
+##################################################################################
+
 geneSet <- data.table::fread(file = file_genes, header = F,
                              col.names = c("chr", "start", "end", "geneId", "score", "strand")) %>%
   dplyr::select(geneId)
@@ -40,6 +42,7 @@ geneSet <- data.table::fread(file = file_genes, header = F,
 geneDesc <- AnnotationDbi::select(x = orgDb, keys = geneSet$geneId, columns = "DESCRIPTION", keytype = "GID")
 
 geneSet <- dplyr::left_join(x = geneSet, y = geneDesc, by = c("geneId" = "GID"))
+
 
 txInfo <- suppressMessages(
   AnnotationDbi::select(
@@ -51,7 +54,6 @@ txInfo <- suppressMessages(
 txInfo <- dplyr::filter(txInfo, !txType %in% c("tRNA", "rRNA", "snRNA", "snoRNA")) %>% 
   dplyr::filter(!grepl(pattern = "uORF", x = geneId))
 
-##################################################################################
 
 tfSampleList <- readr::read_tsv(file = file_tf_macs2, col_names = c("sampleId"),  comment = "#")
 
@@ -61,6 +63,7 @@ tfInfo <- get_sample_information(
   dataPath = TF_dataPath,
   profileMatrixSuffix = matrixType)
 
+##################################################################################
 
 i <- 3
 
@@ -79,7 +82,7 @@ for(i in 1:nrow(tfInfo)){
     txdb = txDb,
     txIds = txInfo$TXID,
     fileFormat = peakType,
-    promoterLength = 500,
+    promoterLength = 1000,
     upstreamLimit = 1500,
     bidirectionalDistance = 1000,
     includeFractionCut = 0.7,
