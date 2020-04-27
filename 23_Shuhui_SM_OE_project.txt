@@ -89,6 +89,21 @@ done
 
 ## Rscript E:\Chris_UM\Codes\Shuhui_SM_OE_project\kmeans_all.R > kmeasns_all.log
 
+
+##############################################
+## read count for polII data: deeptools
+multiBamSummary BED-file \
+--BED /home/lakhanp/database/A_nidulans_FGSC_A4/annotation/AN_genesForPolII.bed \
+--bamfiles /home/lakhanp/Analysis/23_Shuhui_SM_OE_project/mapping/*_polII_*/*bam \
+--smartLabels -p 6 --metagene \
+-out raw_count.polII.deeptools.npz --outRawCounts raw_count.polII.deeptools.tab
+
+## read count for polII data: bedtools
+bedtools multicov -bams /home/lakhanp/Analysis/23_Shuhui_SM_OE_project/mapping/*_polII_*/*bam \
+-bed /home/lakhanp/database/A_nidulans_FGSC_A4/annotation/AN_genesForPolII.bed > raw_count.polII.bedtools.tab
+
+
+
 ###################################################
 ##### bigwig correlation using deeptools     ######
 ###################################################
