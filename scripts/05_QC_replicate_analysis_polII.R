@@ -17,9 +17,9 @@ outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
 file_replicates <- here::here("analysis", "02_QC_polII", "polII_replicates.txt")
 
-file_exptInfo <- here::here("data", "referenceData/sample_info.txt")
+file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
 
-file_genes <- here::here("data", "referenceData/AN_genes_for_polII.bed")
+file_genes <- here::here("data", "reference_data", "AN_genes_for_polII.bed")
 orgDb <- org.Anidulans.FGSCA4.eg.db
 txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
 
@@ -47,12 +47,12 @@ replicatePairs <- suppressMessages(readr::read_tsv(file = file_replicates))
 plotListAll <- list()
 plotList_pval_distibution <- list()
 
-i <- 12
+i <- 68
 
 corrDf <- NULL
 
-# pdf(file = paste(outPrefix, ".correlation.pdf", sep = ""), width = 15, height = 10,
-#     onefile = TRUE, pointsize = 8)
+pdf(file = paste(outPrefix, ".correlation.pdf", sep = ""), width = 15, height = 10,
+    onefile = TRUE, pointsize = 8)
 
 
 for (i in 1:nrow(replicatePairs)) {
@@ -74,16 +74,17 @@ for (i in 1:nrow(replicatePairs)) {
   exprDf <- get_polII_expressions(genesDf = geneSet, exptInfo = repInfo) 
   
   pairCor <- compare_replicates(data = exprDf, rep1Col = rep1Col, rep2Col = rep2Col,
-                                trans = "log2")
+                                trans = "log2", pseudoCount = 0.2)
   
-  # plot(pairCor$figure)
+  plot(pairCor$figure)
   
   pairCorrDf <- dplyr::mutate(.data = pairCor$data, rep1 = rep1Col, rep2 = rep2Col)
   corrDf <- dplyr::bind_rows(corrDf, pairCorrDf)
   
+  # Sys.sleep(5)
 }
 
-# dev.off()
+dev.off()
 
 ##################################################################################
 corrDf <- dplyr::mutate(corrDf, fractionPer = forcats::as_factor(fractionPer))
