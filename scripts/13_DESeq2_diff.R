@@ -2,6 +2,7 @@ suppressPackageStartupMessages(library(DESeq2))
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(data.table))
 suppressPackageStartupMessages(library(ggrepel))
+suppressPackageStartupMessages(library("ggpubr"))
 suppressPackageStartupMessages(library(tximport))
 suppressPackageStartupMessages(library(here))
 suppressPackageStartupMessages(library(RColorBrewer))
@@ -9,6 +10,7 @@ suppressPackageStartupMessages(library(ComplexHeatmap))
 suppressPackageStartupMessages(library(circlize))
 suppressPackageStartupMessages(library(argparse))
 suppressPackageStartupMessages(library(org.Anidulans.FGSCA4.eg.db))
+suppressPackageStartupMessages(require(openxlsx))
 
 
 ## This script:
@@ -42,8 +44,6 @@ orgDb <- org.Anidulans.FGSCA4.eg.db
 col_geneId <- "GID"
 
 ###########################################################################
-
-
 #############################################
 ## Run DESeq2 pipeline using Rscript       ##
 ## command line arguments                  ##
@@ -68,16 +68,16 @@ parser$add_argument(
 
 # parser$print_help()
 
+# file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
+# analysisName <- "AN10021_sCopy_OE_vs_MH11036"
+
 args <- parser$parse_args()
 
 file_RNAseq_info <- args$config
 analysisName <- args$deg
 
 
-file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
-analysisName <- "AN10021_sCopy_OE_vs_MH11036"
-
-rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath) %>% 
+rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath) %>%
   dplyr::filter(comparison == analysisName, type == "pairwise")
 
 if(nrow(rnaseqInfo) != 1){
@@ -92,12 +92,11 @@ samples <- unlist(stringr::str_split(string = rnaseqInfo$samples, pattern = ";")
 # #############################################
 # ## User input of conditions to be compared ##
 # #############################################
-# analysisName <- "PG_WT_8mpf_vs_PG_WT_50dpf"
+# analysisName <- "SCX1_KO_ctrl_vs_WT_ctrl"
 # 
 # ## the denominator or WT in log2(fold_change) should be second
-# ## "PG_WT_50dpf", "PG_HE_50dpf", "PG_WT_8mpf", "PG_HE_8mpf"
-# compare <- c("PG_WT_8mpf", "PG_WT_50dpf")
-# col_compare <- "condition"
+# compare <- c("SCX1_KO_ctrl", "SCX1_WT_ctrl")
+# col_compare <- "conditionSC"
 
 
 ##########################################################################
@@ -128,7 +127,7 @@ if(isFALSE(setequal(compare, exptInfo[[col_compare]]))){
 
 # ## ensure that reference level is same as compare[2] in the factor
 exptInfo <- exptInfo %>% dplyr::mutate(
-  !!col_compare := forcats::fct_relevel(!!sym(col_compare), compare[2], compare[1])
+  !!col_compare := forcats::fct_relevel(.f = !!sym(col_compare), compare[2], compare[1])
 )
 
 rownames(exptInfo) <- exptInfo$sampleId
@@ -202,6 +201,7 @@ if(any(duplicated(geneInfo$geneId))){
   # geneInfo <- dplyr::distinct(geneInfo, geneId, .keep_all = T)
 }
 
+# dplyr::glimpse(geneInfo)
 
 ###########################################################################
 
@@ -209,7 +209,7 @@ if(any(duplicated(geneInfo$geneId))){
 rawCounts <- tibble::rownames_to_column(as.data.frame(counts(dds, normalized = FALSE)), var = "geneId")
 readr::write_tsv(x = rawCounts, path = paste(outPrefix, ".rawCounts.tab", sep = ""))
 
-## FPKM
+# ## FPKM
 # fpkmCounts <- tibble::rownames_to_column(as.data.frame(fpkm(dds)), var = "geneId")
 # readr::write_tsv(x = fpkmCounts, path = paste0(c(outPrefix,".FPKM.tab"), collapse = ""))
 
@@ -229,18 +229,18 @@ readr::write_tsv(x = rldCount, path = paste(outPrefix, ".rlogCounts.tab", sep = 
 ##NOTE: Typically, we recommend users to run samples from all groups together, and then use the contrast argument of the results function to extract comparisons of interest after fitting the model using DESeq. The model fit by DESeq estimates a single dispersion parameter for each gene, which defines how far we expect the observed count for a sample will be from the mean value from the model given its size factor and its condition group. However, for some datasets, exploratory data analysis (EDA) plots could reveal that one or more groups has much higher within-group variability than the others. This is case where, by comparing groups A and B separately - subsetting a DESeqDataSet to only samples from those two groups and then running DESeq on this subset - will be more sensitive than a model including all samples together.
 
 
-plotPCA(rld, intgroup=c("condition"))
+plotPCA(rld, intgroup=c(col_compare))
 
-pcaData <- plotPCA(rld, intgroup=c("condition"), returnData = TRUE)
+pcaData <- plotPCA(rld, intgroup=c(col_compare), returnData = TRUE)
 percentVar <- sprintf("%.2f", 100 * attr(pcaData, "percentVar"))
 
 pltTitle <- paste("Principal Component Analysis:", compare[1], "vs", compare[2])
-pointCol <- base::structure(RColorBrewer::brewer.pal(n = length(unique(pcaData$condition)), name = "Set1"),
-                            names = levels(pcaData$condition))
+pointCol <- base::structure(RColorBrewer::brewer.pal(n = length(unique(pcaData[[col_compare]])), name = "Set1"),
+                            names = levels(pcaData[[col_compare]]))
 
 
 pt_pca <- ggplot(pcaData, aes(x = PC1, y = PC2)) +
-  geom_point(mapping = aes(color = condition), size=4) +
+  geom_point(mapping = aes(color = !!sym(col_compare)), size=4) +
   geom_text_repel(mapping = aes(label = name), size = 3, point.padding = 0.5) +
   geom_hline(yintercept = 0, linetype = 2) +
   geom_vline(xintercept = 0, linetype = 2) +
@@ -256,13 +256,14 @@ pt_pca <- ggplot(pcaData, aes(x = PC1, y = PC2)) +
         axis.title.y = element_text(face = "bold", size = 15),
         plot.margin = unit(c(0.5,0.5,0.5,0.5),"cm"),
         legend.text = element_text(size = 13),
+        legend.position = "bottom",
         legend.title = element_text(face = "bold", size = 15)
   )
 
 
-png(filename = paste(outPrefix, ".PCA.png", sep = ""), width = 3000, height = 3000, res = 300)
-pt_pca
-dev.off()
+# png(filename = paste(outPrefix, ".PCA.png", sep = ""), width = 3000, height = 3000, res = 300)
+# pt_pca
+# dev.off()
 
 ## PCA on subset of the data
 # subExptInfo <- dplyr::filter(exptInfo, condition %in% compare)
@@ -289,14 +290,6 @@ pt_dist <- ComplexHeatmap::Heatmap(
 )
 
 
-png(filename = paste(outPrefix, ".distance_heatmap.png", sep = ""),
-    width = 3000, height = 3000, res = 300)
-draw(pt_dist,
-     padding = unit(rep(0.5, 4), "cm")
-)
-dev.off()
-
-
 ###########################################################################
 
 
@@ -307,7 +300,7 @@ dev.off()
 
 resultsNames(dds)
 # coefName <- "condition_5A9_Control_vs_CEA17_Control"
-coefName <- paste("condition_", compare[1], "_vs_", compare[2], sep = "")
+coefName <- paste(col_compare, "_", compare[1], "_vs_", compare[2], sep = "")
 
 if(!any(coefName %in% resultsNames(dds))){
   stop("Wrong coefficient name")
@@ -437,12 +430,18 @@ resultTable <- dplyr::left_join(
 
 ## Extract significant genes and write to Excel file
 ## get the sample names for each condition under comparison
-grp1 <- sapply(rownames(exptInfo[exptInfo$condition %in% compare[1], ]), FUN = as.name, USE.NAMES = F, simplify = T)
+grp1 <- sapply(
+  X = rownames(exptInfo[exptInfo[[col_compare]] %in% compare[1], ]),
+  FUN = as.name, USE.NAMES = F, simplify = T
+)
 name1 <- paste(compare[1], "_meanCount", sep = "")
 # name1 <- "condition1_meanCount"
 grp1Len <- length(grp1)
 
-grp2 <- sapply(rownames(exptInfo[exptInfo$condition %in% compare[2], ]), FUN = as.name, USE.NAMES = F, simplify = T)
+grp2 <- sapply(
+  X = rownames(exptInfo[exptInfo[[col_compare]] %in% compare[2], ]),
+  FUN = as.name, USE.NAMES = F, simplify = T
+)
 name2 <- paste(compare[2], "_meanCount", sep = "")
 # name2 <- "condition2_meanCount"
 grp2Len <- length(grp2)
@@ -490,10 +489,34 @@ degData <- diffData %>%
 significant_up <- filter(degData, padj < cutoff_fdr, log2FoldChange >= cutoff_up)
 significant_down <- filter(degData, padj < cutoff_fdr, log2FoldChange <= cutoff_down)
 
+###########################################################################
+## store data
+
 readr::write_tsv(x = resDf, path = paste(outPrefix, ".DESeq2.tab", sep = ""))
 readr::write_tsv(x = resShrinkDf, path = paste(outPrefix, ".DESeq2_shrunken.tab", sep = ""))
 readr::write_tsv(x = degData, path = paste(outPrefix, ".DEG_all.txt", sep = ""))
 
+
+## write data to excel file
+wb <- openxlsx::createWorkbook(creator = "Lakhansing Pardehi Genomics Core")
+openxlsx::addWorksheet(wb = wb, sheetName = analysisName)
+openxlsx::writeData(
+  wb = wb, sheet = 1, startCol = 2, startRow = 1,
+  x = paste("Differential gene expression analysis by DESeq2 for",
+            col_compare,":", compare[1], "/", compare[2])
+)
+openxlsx::writeData(
+  wb = wb, sheet = 1, x = degData,
+  startCol = 1, startRow = 2, withFilter = TRUE,
+  keepNA = TRUE, na.string = "NA"
+)
+headerStyle <- openxlsx::createStyle(textDecoration = "bold", fgFill = "#e6e6e6")
+openxlsx::addStyle(wb = wb, sheet = 1, style = headerStyle, rows = 2, cols = 1:ncol(degData))
+openxlsx::setColWidths(wb = wb, sheet = 1, cols = 1, widths = "auto")
+openxlsx::freezePane(wb = wb, sheet = 1, firstActiveRow = 3, firstActiveCol = 2)
+
+# openxlsx::openXL(wb)
+openxlsx::saveWorkbook(wb = wb, file = paste(outPrefix, ".DEG_all.xlsx", sep = ""), overwrite = TRUE)
 
 ###########################################################################
 ## plot volcano plot
@@ -509,11 +532,16 @@ pt_volc <- volcano_plot(df = diffData,
                         markGenes = markGenes,
                         ylimit = 4, xlimit = c(-4, 4))
 
-png(filename = paste(outPrefix, ".volcano.png", sep = ""), width = 2500, height = 3000, res = 280)
-plot(pt_volc$plot)
-dev.off()
+# png(filename = paste(outPrefix, ".volcano.png", sep = ""), width = 2500, height = 3000, res = 280)
+# plot(pt_volc$plot)
+# dev.off()
 
 ###########################################################################
+
+pt_pca_volc <- ggpubr::ggarrange(pt_pca, pt_volc$plot, ncol = 2, align = "h")
+png(filename = paste(outPrefix, ".PCA_volcano.png", sep = ""), width = 5000, height = 3000, res = 300)
+plot(pt_pca_volc)
+dev.off()
 
 # plot all data in single PDF file
 

@@ -11,8 +11,10 @@
 *.xlsx
 *.docx
 *.xml
+/Rplots.pdf
+/logs
 sample_info.txt
 /data/*
-!/data/referenceData/
+!/data/reference_data/
 /analysis
 /reports
