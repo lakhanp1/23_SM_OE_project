@@ -84,11 +84,21 @@ plotDf <- dplyr::left_join(x = smGenes, y = motifHits, by = "geneId") %>%
   dplyr::left_join(y = dplyr::select(diffData, geneId, diff_l2fc), by = "geneId") %>% 
   dplyr::left_join(y = genesGrDf, by = "geneId") %>% 
   dplyr::left_join(y = tfBindingDf, by = "geneId") %>% 
-  dplyr::mutate(SM_ID = stringr::str_replace(string = SM_ID, pattern = "cluster_", replacement = "")) %>% 
+  dplyr::mutate(
+    SM_ID = stringr::str_replace(string = SM_ID, pattern = "cluster_", replacement = "")
+  ) %>% 
   dplyr::group_by(SM_ID) %>% 
   dplyr::arrange(start, .by_group = TRUE) %>% 
-  dplyr::mutate(index = row_number()) %>% 
-  dplyr::ungroup()
+  dplyr::mutate(
+    index = row_number(),
+    midGeneIdx = round(n()/2),
+    SM_CLUSTER = paste(SM_CLUSTER, "cluster"),
+    SM_CLUSTER = forcats::as_factor(SM_CLUSTER)
+  ) %>%
+  dplyr::ungroup() %>% 
+  dplyr::mutate(
+    centeredIndex = index + max(index)/2 - midGeneIdx 
+  )
 
 glimpse(plotDf)
 
@@ -99,32 +109,45 @@ ptTheme <- theme_bw() +
         axis.ticks = element_blank(),
         panel.grid = element_blank(),
         panel.spacing = unit(0.15, "lines"),
-        strip.text.y = element_text(hjust = 0.5, size = 12, face = "bold", angle = 180),
-        strip.background = element_rect(fill="white", size = 0.2),
+        # strip.text.x = element_text(hjust = 0.5, size = 12, face = "bold"),
+        # strip.background = element_rect(fill="white", size = 0.2),
+        strip.text = element_blank(),
+        strip.background = element_blank(),
         legend.text = element_text(size = 13),
         legend.position = "bottom",
         legend.title = element_text(size = 13, face = "bold"),
         plot.margin = unit(rep(0.5, 4), "cm"))
 
+xCol <- "centeredIndex"
+
 pt <- ggplot() +
   geom_point(
     data = dplyr::filter(plotDf, !is.na(TTAGGG)),
-    mapping = aes(x = index, y = "motif", color = TTAGGG),
+    mapping = aes(x = !!sym(xCol), y = "motif", color = TTAGGG),
     size = 2, shape = 16
   ) +
   geom_tile(
     data = plotDf,
-    mapping = aes(x = index, y = "l2fc", fill = diff_l2fc),
+    mapping = aes(x = !!sym(xCol), y = "l2fc", fill = diff_l2fc),
     color = "black", size = 0.5, height = 1
   ) +
   geom_point(
     data = dplyr::filter(plotDf, !is.na(peakPosition)),
-    mapping = aes(x = index, y = "peak"), color = "black",
+    mapping = aes(x = !!sym(xCol), y = "peak"), color = "black",
     size = 2, shape = 17
+  ) +
+  geom_text(
+    ## adding geom_text() to move strip.text inside the box as label
+    data = dplyr::group_by(plotDf, SM_CLUSTER) %>% 
+      dplyr::arrange(index) %>% 
+      dplyr::slice(n()) %>% 
+      dplyr::ungroup(),
+    mapping = aes(x = max(plotDf$index)/2, y = "label", label = SM_CLUSTER),
+    size = 5, fontface = "bold"
   ) +
   labs(
     title = "AN0153 OE peak, OE_polII/WT_polII and TTAGGG motif on SM clusters",
-    subtitle = "row1: ChIPseq peak || row2: polII OE/WT DEG || row3: TTAGGG motif"
+    subtitle = "row1: AN0153 ChIPseq peak || row2: polII AN0153:OE/WT DEG || row3: TTAGGG motif"
   ) +
   scale_fill_manual(
     values = c("down" = "blue", "noDEG" = "#F7F7F7", "up" = "red"),
@@ -133,16 +156,16 @@ pt <- ggplot() +
     values = c("promoter" = "#B35806", "3UTR" = "#542788"),
     breaks = c("promoter", "3UTR")
   ) +
-  scale_x_continuous(expand = c(0, 0)) +
+  scale_x_continuous(expand = expansion(add = c(0.5, 0.5))) +
   scale_y_discrete(
-    limits = c("motif", "l2fc", "peak"),
-    expand = expansion(add = c(0.5, 0.5))
+    limits = c("motif", "l2fc", "peak", "label"),
+    expand = expansion(add = c(0.5, 0.75))
   ) +
-  facet_wrap(facets = SM_ID ~ ., scales = "free_y", ncol = 3, strip.position = "left", dir = "v") +
+  facet_wrap(facets = SM_CLUSTER ~ ., scales = "free_y", ncol = 3, dir = "v") +
   ptTheme
 
 
-pdf(file = paste(outPrefix, ".tile_plot.pdf", sep = ""), width = 12, height = 10)
+pdf(file = paste(outPrefix, ".tile_plot.pdf", sep = ""), width = 12, height = 20)
 pt
 dev.off()
 
