@@ -65,7 +65,11 @@ diffData <- suppressMessages(
 
 smGenes <- AnnotationDbi::select(x = orgDb, keys = keys(x = orgDb, keytype = "SM_GENE"),
                                  columns = c("SM_CLUSTER", "SM_ID"), keytype = "SM_GENE") %>% 
-  dplyr::rename(geneId = SM_GENE)
+  dplyr::rename(geneId = SM_GENE) %>% 
+  dplyr::mutate(
+    SM_ID = stringr::str_replace(string = SM_ID, pattern = "cluster_", replacement = ""),
+    SM_CLUSTER = paste("(", SM_ID, ") ", SM_CLUSTER, sep = "")
+  )
 
 genesGrDf <- as.data.frame(GenomicFeatures::genes(x = txDb)) %>% 
   dplyr::select(seqnames, start, end, strand, geneId = gene_id)
@@ -84,20 +88,16 @@ plotDf <- dplyr::left_join(x = smGenes, y = motifHits, by = "geneId") %>%
   dplyr::left_join(y = dplyr::select(diffData, geneId, diff_l2fc), by = "geneId") %>% 
   dplyr::left_join(y = genesGrDf, by = "geneId") %>% 
   dplyr::left_join(y = tfBindingDf, by = "geneId") %>% 
-  dplyr::mutate(
-    SM_ID = stringr::str_replace(string = SM_ID, pattern = "cluster_", replacement = "")
-  ) %>% 
   dplyr::group_by(SM_ID) %>% 
   dplyr::arrange(start, .by_group = TRUE) %>% 
   dplyr::mutate(
     index = row_number(),
-    midGeneIdx = round(n()/2),
-    SM_CLUSTER = paste(SM_CLUSTER, "cluster"),
-    SM_CLUSTER = forcats::as_factor(SM_CLUSTER)
+    midGeneIdx = round(n()/2)
   ) %>%
   dplyr::ungroup() %>% 
   dplyr::mutate(
-    centeredIndex = index + max(index)/2 - midGeneIdx 
+    centeredIndex = index + max(index)/2 - midGeneIdx,
+    SM_CLUSTER = forcats::as_factor(SM_CLUSTER)
   )
 
 glimpse(plotDf)
