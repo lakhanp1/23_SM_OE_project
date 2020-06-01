@@ -161,3 +161,48 @@ plotCorrelation --corData An_bigwig_summary_bin.npz --corMethod pearson --skipZe
 ## plotCorrelation for all samples: spearman
 plotCorrelation --corData An_bigwig_summary_bin.npz --corMethod spearman --skipZeros --plotTitle "spearman Correlation at 1kb bin regions" --whatToPlot heatmap --colorMap RdYlBu --plotNumbers -o An_bigwig_spearman_bin.png --outFileCorMatrix An_bigwig_spearman_bin.tab --plotHeight 100 --plotWidth 100
 
+######################################
+####   Motif enrichment analysis  ####
+######################################
+
+{
+## meme-chip analysis: with control
+while IFS=$'\t' read -r name fasta neg
+do
+	printf "## meme-chip: ${name}\n"
+	printf "## meme-chip: ${name}
+	meme-chip -order 1 -meme-minw 5 -meme-maxw 30 -meme-nmotifs 5 -meme-mod zoops \
+	-db /home/lakhanp/tools/meme_motif_databases_12.19/JASPAR/JASPAR2018_CORE_fungi_non-redundant.meme \
+	-desc ${name} -oc ${name} -neg ${neg} ${fasta} < /dev/null
+	"
+	printf "## done...\n\n"
+done < memechip_de_conf.tab
+}
+
+{
+## meme-chip analysis: without control
+while IFS=$'\t' read -r name fasta
+do
+	printf "## meme-chip: ${name}\n"
+	#printf "## meme-chip: ${line[0]}
+	meme-chip -order 1 -meme-minw 5 -meme-maxw 30 -meme-nmotifs 5 -meme-mod anr -meme-p 12 \
+	-db /home/lakhanp/tools/meme_motif_databases_12.19/JASPAR/JASPAR2018_CORE_fungi_non-redundant.meme \
+	-desc ${name} -oc ${name} ${fasta} < /dev/null
+	#"
+	printf "## done...\n\n"
+done < memechip_conf.tab
+}
+
+
+
+##fimo motif scanning
+fimo -oc fimo.AN0153_OE_vs_WT_DEG --thresh 0.001 --bfile /home/lakhanp/database/A_nidulans_FGSC_A4/reference/promoter_sequences/A_nidulans_promoters.500_TSS_100.meme_background.m2.model AN0153_motif.meme AN0153_OE_vs_WT.DEG_promoter.fasta
+
+
+
+
+
+
+
+
+
