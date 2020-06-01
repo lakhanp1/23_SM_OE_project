@@ -5,7 +5,7 @@ suppressPackageStartupMessages(library(BSgenome.Anidulans.FGSCA4.AspGD))
 suppressPackageStartupMessages(library(here))
 
 
-## tile plot to visualize AN0153 binding, polII fold change and TTAGGG motif
+## peak annotation pie chart for AN0153 peaks
 
 rm(list = ls())
 
