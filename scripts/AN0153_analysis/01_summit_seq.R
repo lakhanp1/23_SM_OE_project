@@ -1,18 +1,18 @@
-library(chipmine)
-library(org.Anidulans.FGSCA4.eg.db)
-library(TxDb.Anidulans.AspGD.GFF)
-library(BSgenome.Anidulans.AspGD.FGSCA4)
-library(here)
+suppressPackageStartupMessages(library(chipmine))
+suppressPackageStartupMessages(library(org.Anidulans.FGSCA4.eg.db))
+suppressPackageStartupMessages(library(TxDb.Anidulans.FGSCA4.AspGD.GFF))
+suppressPackageStartupMessages(library(BSgenome.Anidulans.FGSCA4.AspGD))
+suppressPackageStartupMessages(library(here))
 
 
-## get summit sequence
+## get summit sequence for AN0153 ChIPseq peaks
 
 rm(list = ls())
 
 ##################################################################################
 
 analysisName <- "AN0153_summit_seq"
-outDir <- here("analysis", "04_AN0153_analysis", "motif_enrichment")
+outDir <- here("analysis", "04_AN0153_analysis", "01_motif_enrichment")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
 if(!dir.exists(outDir)){
@@ -20,9 +20,9 @@ if(!dir.exists(outDir)){
 }
 
 orgDb <- org.Anidulans.FGSCA4.eg.db
-genome <- BSgenome.Anidulans.AspGD.FGSCA4
+genome <- BSgenome.Anidulans.FGSCA4.AspGD
 
-file_exptInfo <- here::here("data", "referenceData/sample_info.txt")
+file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
 
 file_sampleIds <- here("analysis", "04_AN0153_analysis", "sample_ids.txt")
 
@@ -44,7 +44,7 @@ summit200 <- get_peak_summit_seq(file = exptData$peakFile[i],
                                  genome = genome, length = 200,
                                  column_name_prefix = FALSE)
 
-summit200 <- dplyr::select(summit200, name, summitSeq) %>% 
+summit200 <- dplyr::select(summit200, peakId, summitSeq) %>% 
   dplyr::rename(summitSeq200 = summitSeq)
 
 summit500 <- get_peak_summit_seq(file = exptData$peakFile[i],
@@ -53,7 +53,7 @@ summit500 <- get_peak_summit_seq(file = exptData$peakFile[i],
                                  genome = genome, length = 500,
                                  column_name_prefix = FALSE)
 
-summit500 <- dplyr::select(summit500, name, summitSeq) %>% 
+summit500 <- dplyr::select(summit500, peakId, summitSeq) %>% 
   dplyr::rename(summitSeq500 = summitSeq)
 
 
@@ -61,11 +61,10 @@ peakDf <- import_peaks_as_df(file = exptData$peakFile[i],
                              sampleId = exptData$sampleId[i],
                              peakFormat = "narrowPeak", rename = F)
 
-peakDf <- dplyr::left_join(x = peakDf, y = summit200, by = c("peakId" = "name")) %>% 
-  dplyr::left_join(y = summit500, by = c("peakId" = "name"))
+peakDf <- dplyr::left_join(x = peakDf, y = summit200, by = "peakId") %>% 
+  dplyr::left_join(y = summit500, by = "peakId")
 
-readr::write_tsv(x = peakDf,
-                 path = paste(outDir, "/", exptData$sampleId[i], ".summitSeq.tab", sep = ""))
+readr::write_tsv(x = peakDf, path = paste(outPrefix, ".", exptData$sampleId[i], ".tab", sep = ""))
 
 
 
