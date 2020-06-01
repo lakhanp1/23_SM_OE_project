@@ -22,7 +22,7 @@ suppressPackageStartupMessages(library(org.Anidulans.FGSCA4.eg.db))
 
 rm(list = ls())
 
-source(file = "E:/Chris_UM/GitHub/omics_util/04_GO_enrichment/topGO_functions.R")
+source(file = "E:/Chris_UM/GitHub/omics_util/04_GO_enrichment/s01_topGO_functions.R")
 source("E:/Chris_UM/GitHub/omics_util/02_RNAseq_scripts/s02_DESeq2_functions.R")
 
 ####################################################################
@@ -67,7 +67,7 @@ geneSets <- dplyr::mutate(
 
 ####################################################################
 
-i <- 1
+i <- 3
 
 degResult <- geneSets$deg[i]
 outDir <- here::here("analysis", "07_polII_diff", degResult, "geneset_plots")
@@ -110,10 +110,15 @@ pt_vol$plot <- pt_vol$plot +
   theme(
     axis.title = element_text(size = 22),
     axis.text = element_text(size = 20)
-  )
+  ) +
+  scale_color_manual(
+    values = c("Significant Up" = "#d73027", "Significant Down" = "#313695",
+               "Non-significant" = "black", "Significant" = "grey"), 
+    name = "Significance")
 
 
-png(filename = paste(outPrefix, ".volcano.", plotOutSuffix, ".png", sep = ""), width = 2000, height = 2000, res = 250)
+# png(filename = paste(outPrefix, ".volcano.", plotOutSuffix, ".png", sep = ""), width = 2000, height = 2000, res = 250)
+pdf(file = paste(outPrefix, ".volcano.", plotOutSuffix, ".pdf", sep = ""), width = 10, height = 10)
 pt_vol$plot
 dev.off()
 
