@@ -1,8 +1,8 @@
-library(chipmine)
-library(org.Anidulans.FGSCA4.eg.db)
-library(TxDb.Anidulans.FGSCA4.AspGD.GFF)
-library(BSgenome.Anidulans.FGSCA4.AspGD)
-library(here)
+suppressPackageStartupMessages(library(chipmine))
+suppressPackageStartupMessages(library(org.Anidulans.FGSCA4.eg.db))
+suppressPackageStartupMessages(library(TxDb.Anidulans.FGSCA4.AspGD.GFF))
+suppressPackageStartupMessages(library(BSgenome.Anidulans.FGSCA4.AspGD))
+suppressPackageStartupMessages(library(here))
 
 
 ## 1) annotate peaks
@@ -12,9 +12,9 @@ rm(list = ls())
 
 ##################################################################################
 
-file_exptInfo <- here::here("data", "referenceData/sample_info.txt")
+file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
 
-file_genes <- here::here("data", "referenceData/AN_genes_for_polII.bed")
+file_genes <- here::here("data", "reference_data", "AN_genes_for_polII.bed")
 orgDb <- org.Anidulans.FGSCA4.eg.db
 txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
 
@@ -54,7 +54,6 @@ txInfo <- suppressMessages(
 txInfo <- dplyr::filter(txInfo, !txType %in% c("tRNA", "rRNA", "snRNA", "snoRNA")) %>% 
   dplyr::filter(!grepl(pattern = "uORF", x = geneId))
 
-
 tfSampleList <- readr::read_tsv(file = file_tf_macs2, col_names = c("sampleId"),  comment = "#")
 
 tfInfo <- get_sample_information(
@@ -77,12 +76,12 @@ for(i in 1:nrow(tfInfo)){
     tfInfo$peakType[i] == "broad" ~ "broadPeak"
   )
   
-  peakAn <- narrowPeak_annotate(
+  peakAn <- annotate_peaks(
     peakFile = tfInfo$peakFile[i],
     txdb = txDb,
     txIds = txInfo$TXID,
     fileFormat = peakType,
-    promoterLength = 1000,
+    promoterLength = 500,
     upstreamLimit = 1500,
     bidirectionalDistance = 1000,
     includeFractionCut = 0.7,
