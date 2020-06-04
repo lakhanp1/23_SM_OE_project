@@ -1,10 +1,10 @@
-library(chipmine)
-library(org.Anidulans.FGSCA4.eg.db)
-library(TxDb.Anidulans.FGSCA4.AspGD.GFF)
-library(here)
-library(ggbeeswarm)
-library(ggpubr)
-library(ggrepel)
+suppressPackageStartupMessages(library(chipmine))
+suppressPackageStartupMessages(library(org.Anidulans.FGSCA4.eg.db))
+suppressPackageStartupMessages(library(TxDb.Anidulans.FGSCA4.AspGD.GFF))
+suppressPackageStartupMessages(library(here))
+suppressPackageStartupMessages(library(ggbeeswarm))
+suppressPackageStartupMessages(library(ggpubr))
+suppressPackageStartupMessages(library(ggrepel))
 
 ## 1) peak enrichment distribution
 ## 2) peak p-value distribution
@@ -19,9 +19,9 @@ analysisName <- "TF_ChIP_summary"
 outDir <- here::here("analysis", "02_QC_TF")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
-file_exptInfo <- here::here("data", "referenceData/sample_info.txt")
+file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
 
-file_genes <- here::here("data", "referenceData/AN_genes_for_polII.bed")
+file_genes <- here::here("data", "reference_data", "AN_genes_for_polII.bed")
 orgDb <- org.Anidulans.FGSCA4.eg.db
 txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
 
@@ -65,8 +65,12 @@ allPlotData <- NULL
 
 pdf(file = paste(outPrefix, ".macs2.pdf", sep = ""), width = 15, height = 10,
     onefile = TRUE, pointsize = 10)
+peakCountsDf <- tibble::tibble(
+  sampleId = character(), peaks_total = numeric(), peaks_pval20 = numeric(),
+  peaks_fe3 = numeric(), peaks_pval20_fe3 = numeric()
+)
 
-i <- 119
+i <- 3
 
 for (i in 1:nrow(tfInfo)) {
   
@@ -77,29 +81,42 @@ for (i in 1:nrow(tfInfo)) {
     tfInfo$peakType[i] == "broad" ~ "broadPeak"
   )
   
-  backboneGene <- tfInfo$SM_TF[i]
+  ## extract the peak counts to decide best TF replicate
+  peaksGr <- rtracklayer::import(con = tfInfo$peakFile[i], format = peakType)
+  peakCountsDf <- dplyr::bind_rows(
+    peakCountsDf,
+    tibble(
+      sampleId = tfInfo$sampleId[i],
+      peaks_total = length(peaksGr),
+      peaks_pval20 = length(which(peaksGr$pValue >= 20)),
+      peaks_fe3 = length(which(peaksGr$signalValue > 3)),
+      peaks_pval20_fe3 = length(which(peaksGr$pValue >= 20 | peaksGr$signalValue > 3))
+    )
+  )
   
+  backboneGene <- tfInfo$SM_TF[i]
+
   ## few TFs are mapped to multiple SM clusters. So preparing the list of SM tf data
   smTfInfo <- suppressMessages(
     AnnotationDbi::select(
       x = orgDb,
       keys = na.omit(backboneGene),
       columns = c("SM_GENE", "SM_CLUSTER", "SM_ID"),
-      keytype = "GID")) %>% 
+      keytype = "GID")) %>%
     dplyr::filter(!is.na(SM_ID))
-  
+
   clusterGenes <- suppressMessages(
     AnnotationDbi::select(x = orgDb,
                           keys = smTfInfo$SM_ID,
                           columns = c("GID", "SM_GENE"),
                           keytype = "SM_ID")
   )
-  
+
   genesToMark <- list(
     SM_cluster = unique(clusterGenes$SM_GENE),
     other_SM_genes = setdiff(smGenes$SM_GENE, clusterGenes$SM_GENE)
   )
-  
+
   chipSummary <- chip_summary(
     sampleId = tfInfo$sampleId[i],
     peakAnnotation = tfInfo$peakAnno[i],
@@ -109,15 +126,28 @@ for (i in 1:nrow(tfInfo)) {
     pointColor = structure(c("red", "blue"), names = names(genesToMark)),
     pointAlpha = structure(c(1, 0.5), names = names(genesToMark))
   )
-  
-  
+
+
   plot(chipSummary$figure)
-  
+
   allPlotData <- dplyr::bind_rows(allPlotData, chipSummary$data)
   
 }
 
 dev.off()
+
+bestReplicate <- dplyr::left_join(x = tfInfo, y = peakCountsDf, by = "sampleId") %>% 
+  dplyr::select(!!!colnames(peakCountsDf), SM_TF, copyNumber, condition, timePoint, rep) %>% 
+  dplyr::group_by(condition, timePoint) %>% 
+  dplyr::arrange(desc(peaks_pval20), .by_group = TRUE) %>% 
+  dplyr::mutate(
+    totalReps = n(),
+    bestRep = row_number()
+  ) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::select(sampleId, starts_with("peaks_"), bestRep, totalReps, everything())
+
+readr::write_tsv(x = bestReplicate, path = paste(outPrefix, ".best_replicates.tab", sep = ""))
 
 ##################################################################################
 ## combined summary plot matrix
@@ -289,9 +319,6 @@ dev.off()
 # }
 # 
 # 
-
-
-
 
 
 
