@@ -634,72 +634,77 @@ dev.off()
 
 ###########################################################################
 
-# ## heatmap of normalized read counts
-# significant <- filter(diffData, padj < cutoff_fdr, log2FoldChange >= cutoff_up | log2FoldChange <= cutoff_down)
-# 
-# ## rld z-score heatmap
-# geneCounts <- significant %>%
-#   dplyr::select(geneId, !!!c(grp1, grp2)) %>%
-#   dplyr::distinct() %>%
-#   column_to_rownames(var = "geneId")
-# 
-# countMat <- data.matrix(geneCounts)
-# 
-# countZscoreMat <- chipmine::scale_matrix_rows(x = countMat)
-# 
-# ## plot main rld score heatmap
-# countHeatmap <- Heatmap(
-#   countZscoreMat,
-#   name = "count_heatmap",
-#   col = colorRamp2(breaks = c(min(countZscoreMat), 0, max(countZscoreMat)),
-#                    colors = c("green", "black", "red"), space = "LAB"),
-#   show_row_names = FALSE,
-#   column_names_gp = gpar(fontsize = 14),
-#   cluster_columns = FALSE,
-#   width = unit(10, "cm"), row_names_max_width = unit(15, "cm"),
-#   heatmap_legend_param = list(title = "z-score(normalized read count)", color_bar = "continuous")
-# )
-# 
-# 
-# ## fold change heatmap
-# foldChangeDf <- dplyr::select(significant, geneId, log2FoldChange) %>%
-#   dplyr::distinct() %>%
-#   tibble::column_to_rownames(var = "geneId")
-# 
-# if(all(rownames(geneCounts) != rownames(foldChangeDf))){
-#   stop("gene order does not match")
-# }
-# 
-# foldChangeMat <- data.matrix(foldChangeDf)
-# 
-# 
-# fcHeatmap <- Heatmap(matrix = foldChangeMat,
-#                      name = "lfc_heatmap",
-#                      col = colorRamp2(breaks = c(-3, 0, 3), colors = c("blue", "white", "red"), space = "LAB"),
-#                      cluster_rows = TRUE,
-#                      clustering_distance_rows = "euclidean",
-#                      cluster_columns = TRUE,
-#                      show_row_names = FALSE,
-#                      column_names_gp = gpar(fontsize = 14),
-#                      width = unit(2, "cm"),
-#                      heatmap_legend_param = list(title = "\nlog2(fold_change)")
-# )
-# 
-# htList <- countHeatmap + fcHeatmap
-# 
-# pdf(file = paste(outPrefix, ".normCount_heatmap.pdf", sep = ""), width = 10, height = 12, onefile = TRUE)
-# 
-# draw(object = htList,
-#      main_heatmap = "lfc_heatmap",
-#      column_title = paste("Normalized read counts heatmap:", analysisName),
-#      row_title = "Genes",
-#      row_dend_side = "left",
-#      column_title_gp = gpar(fontsize = 14, fontface = "bold")
-# )
-# 
-# dev.off()
-# 
-# ###########################################################################
+## heatmap of normalized read counts
+significant <- filter(diffData, padj < cutoff_fdr, log2FoldChange >= cutoff_up | log2FoldChange <= cutoff_down)
+
+## rld z-score heatmap
+geneCounts <- significant %>%
+  dplyr::select(geneId, !!!c(grp1, grp2)) %>%
+  dplyr::distinct() %>%
+  column_to_rownames(var = "geneId")
+
+countMat <- data.matrix(geneCounts)
+
+countZscoreMat <- chipmine::scale_matrix_rows(x = countMat)
+
+## plot main rld score heatmap
+countHeatmap <- Heatmap(
+  countZscoreMat,
+  name = "count_heatmap",
+  col = colorRamp2(breaks = c(min(countZscoreMat), 0, max(countZscoreMat)),
+                   colors = c("green", "black", "red"), space = "LAB"),
+  show_row_names = FALSE,
+  column_names_gp = gpar(fontsize = 14),
+  column_labels = colnames(countZscoreMat) %>% 
+    stringr::str_replace_all(pattern = "_", replacement = " ") %>% 
+    stringr::str_wrap(width = 20) %>% 
+    stringr::str_replace_all(pattern = " ", replacement = "_"),
+  cluster_columns = FALSE,
+  width = unit(10, "cm"), row_names_max_width = unit(15, "cm"),
+  heatmap_legend_param = list(title = "z-score(normalized read count)", color_bar = "continuous")
+)
+
+
+## fold change heatmap
+foldChangeDf <- dplyr::select(significant, geneId, log2FoldChange) %>%
+  dplyr::distinct() %>%
+  tibble::column_to_rownames(var = "geneId")
+
+if(all(rownames(geneCounts) != rownames(foldChangeDf))){
+  stop("gene order does not match")
+}
+
+foldChangeMat <- data.matrix(foldChangeDf)
+
+
+fcHeatmap <- Heatmap(
+  matrix = foldChangeMat,
+  name = "lfc_heatmap",
+  col = colorRamp2(breaks = c(-3, 0, 3), colors = c("blue", "white", "red"), space = "LAB"),
+  cluster_rows = TRUE,
+  clustering_distance_rows = "euclidean",
+  cluster_columns = TRUE,
+  show_row_names = FALSE,
+  column_names_gp = gpar(fontsize = 14),
+  width = unit(2, "cm"),
+  heatmap_legend_param = list(title = "\nlog2(fold_change)")
+)
+
+htList <- countHeatmap + fcHeatmap
+
+pdf(file = paste(outPrefix, ".normCount_heatmap.pdf", sep = ""), width = 10, height = 12, onefile = TRUE)
+
+draw(object = htList,
+     main_heatmap = "lfc_heatmap",
+     column_title = paste("Normalized read counts heatmap:", analysisName),
+     row_title = "Genes",
+     row_dend_side = "left",
+     column_title_gp = gpar(fontsize = 14, fontface = "bold")
+)
+
+dev.off()
+
+###########################################################################
 
 
 
