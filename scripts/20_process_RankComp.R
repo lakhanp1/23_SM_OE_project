@@ -76,7 +76,7 @@ for (i in 1:nrow(diffInfo)) {
     dplyr::filter(sampleId %in% samples) %>% 
     dplyr::mutate(index = paste("WT", row_number(), sep = ""))
   
-  degsetList <- dplyr::bind_rows(wtSampleInfo, mtSampleInfo) %>% 
+  degsetList <- dplyr::bind_rows(mtSampleInfo, wtSampleInfo) %>% 
     dplyr::mutate(rankCol = paste("rank.", sampleId, sep = "")) %>% 
     purrr::transpose() %>% 
     purrr::set_names(nm = purrr::map(., "index"))
