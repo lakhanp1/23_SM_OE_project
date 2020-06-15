@@ -120,6 +120,7 @@ degData <- degData %>%
     log2FoldChange = if_else(condition = padj > cutoff_fdr, true = 0, false = log2FoldChange, missing = 0)
   )
 
+readr::write_tsv(x = degData, path = paste(outPrefix, ".combined_data.tab", sep = ""))
 
 lfcDf <- tidyr::pivot_wider(
   data = degData,

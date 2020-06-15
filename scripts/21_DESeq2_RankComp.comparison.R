@@ -2,10 +2,11 @@ suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(ComplexHeatmap))
 suppressPackageStartupMessages(library(circlize))
 suppressPackageStartupMessages(library(chipmine))
+suppressPackageStartupMessages(library(argparse))
 
 
 
-## process RankComp2 output and prepare result table
+## DESeq2 and RankComp2 DEG comparison
 
 rm(list = ls())
 
@@ -27,7 +28,27 @@ cutoff_up <- cutoff_lfc
 cutoff_down <- cutoff_lfc * -1
 
 ##################################################################################
-analysisName <- "AN0153_sCopy_OE_vs_MH11036"
+## optionally run for multiple samples using command line arguments
+
+parser <- ArgumentParser(
+  description = "This script automates the DEG comparison by DESeq2 and RankComp2 algorithms."
+)
+
+parser$add_argument(
+  "-d", "--deg", action="store",
+  dest = "deg", type = "character", nargs = 1, required = TRUE,
+  help = "DEG comparison ID. This value should be present in the column comparison of config file"
+)
+
+# parser$print_help()
+
+# analysisName <- "AN0153_sCopy_OE_vs_MH11036"
+
+args <- parser$parse_args()
+
+analysisName <- args$deg
+
+##################################################################################
 
 outDir <- paste(rankcompPath, "/", analysisName, sep = "")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
@@ -41,8 +62,6 @@ sampleInfo <- read.table(file = file_sampleInfo, header = T, sep = "\t", strings
 fpkmMat <- suppressMessages(readr::read_tsv(file = file_fpkm))
 
 ##################################################################################
-
-
 
 
 file_deseq <- paste(diffDataPath, "/", analysisName, "/", analysisName, ".DEG_all.txt", sep = "")
@@ -140,6 +159,12 @@ rankSummaryMat <- dplyr::select(mergedData, geneId, minRankDiff, maxRankDiff, av
 
 #########################
 ## generate heatmaps
+
+ptTitle <- paste(
+  "DESeq2 (DEGs = ", length(which(deseqData$deseq2_diff != "noDEG")),
+  ") and RankComp2 (DEGs = ", length(which(rankcompData$rankcomp_diff != "noDEG")),
+  ") DEG comparison for ", analysisName, " (n = ", nrow(mergedData), ")",
+  sep = "")
 
 ## DESeq2 log2FoldChange 
 ht_lfc <- Heatmap(
@@ -277,12 +302,12 @@ ht_rankSummary <- Heatmap(
 
 htLits <- an_right + an_diff + ht_lfc + ht_normCount + ht_fpkm + ht_rank + ht_rankDiff + ht_rankSummary
 
+
 png(filename = paste(outPrefix, ".deseq2.rankcomp.comp.png", sep = ""), width = 7000, height = 5000, res = 450)
 
 draw(
   htLits,
-  column_title = paste("DESeq2 and RankComp2 DEG comparison for ", analysisName,
-                       " (n = ", nrow(mergedData), ")", sep = ""),
+  column_title = ptTitle,
   column_title_gp = gpar(fontsize = 16),
   show_row_dend = FALSE,
   row_dend_side = "left",
