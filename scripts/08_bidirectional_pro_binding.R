@@ -1,8 +1,9 @@
-library(chipmine)
-library(org.Anidulans.FGSCA4.eg.db)
-library(TxDb.Anidulans.FGSCA4.AspGD.GFF)
-library(here)
-library(ggbeeswarm)
+suppressPackageStartupMessages(library(chipmine))
+suppressPackageStartupMessages(library(org.Anidulans.FGSCA4.eg.db))
+suppressPackageStartupMessages(library(TxDb.Anidulans.FGSCA4.AspGD.GFF))
+suppressPackageStartupMessages(library(here))
+suppressPackageStartupMessages(library(ggbeeswarm))
+suppressPackageStartupMessages(library(viridis))
 
 
 rm(list = ls())
@@ -13,9 +14,9 @@ analysisName <- "intergenic_regions"
 outDir <- here::here("analysis", "02_QC_TF", "intergenic_regions")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
-file_exptInfo <- here::here("data", "referenceData/sample_info.txt")
+file_exptInfo <- here::here("data", "reference_data/sample_info.txt")
 
-file_genes <- here::here("data", "referenceData/AN_genes_for_polII.bed")
+file_genes <- here::here("data", "reference_data/AN_genes_for_polII.bed")
 orgDb <- org.Anidulans.FGSCA4.eg.db
 txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
 
@@ -110,7 +111,7 @@ gapDf <- as.data.frame(intergenicGr) %>%
   dplyr::filter(!is.na(leftStrand), !is.na(rightStrand)) %>% 
   dplyr::mutate(
     gapType = dplyr::case_when(
-      leftStrand == rightStrand ~ "continuous",
+      leftStrand == rightStrand ~ "tandem",
       # leftStrand == "+" & rightStrand == "+" ~ ">=(+)=>     >=(+)=>",
       # leftStrand == "-" & rightStrand == "-" ~ "<=(-)=<     <=(-)=<",
       leftStrand == "+" & rightStrand == "-" ~ "convergent",
@@ -146,9 +147,9 @@ pt_width <- ggplot(
   stat_summary(fun.data = fun_summary, color="red", size = 1) +
   scale_x_discrete(
     labels = c(
-      "continuous" = ">=(+)=>     >=(+)=>\nor\n<=(-)=<     <=(-)=<",
-      "convergent" = ">=(+)=>     <=(-)=<\n(convergent)",
-      "divergent" = "<=(-)=<     >=(+)=>\n(divergent)"
+      "tandem" = "(tandem)\n>=(+)=>     >=(+)=>\n<=(-)=<     <=(-)=<",
+      "convergent" = "(convergent)\n>=(+)=>     <=(-)=<",
+      "divergent" = "(divergent)\n<=(-)=<     >=(+)=>"
     )
   ) +
   geom_text(
@@ -199,21 +200,28 @@ for (i in 1:nrow(tfInfo)) {
     # cat(tfInfo$sampleId[i], "\n")
     next()
   }
+
+  ## use peak summit instead of whole peak
+  peakSummitGr <- GenomicRanges::resize(
+    x = GenomicRanges::shift(x = peaksGr, shift = peaksGr$peak),
+    width = 1, fix = "start"
+  )
   
+    
   ## peaks falling within intergenic regions
   ovHits <- GenomicRanges::findOverlaps(
-    query = peaksGr,
+    query = peakSummitGr,
     subject = intergenicGr,
     select = "all", ignore.strand = TRUE,
     type = "within"
   )
   
   
-  peaksGr[ovHits@from]
+  # peakSummitGr[ovHits@from]
   
   ovlpGr <- as.data.frame(mcols(intergenicGr)[ovHits@to, ]) %>% 
     dplyr::mutate(
-      peakId = peaksGr$name[ovHits@from]
+      peakId = peakSummitGr$name[ovHits@from]
     )
   
   ## summary stats of peaks in intergenic regions
@@ -225,11 +233,11 @@ for (i in 1:nrow(tfInfo)) {
   tfSummary <- tfSummary %>% 
     dplyr::bind_rows(
       tibble(gapType = "non-intergenic",
-             intergenicPeaks = length(peaksGr) - sum(tfSummary$intergenicPeaks))
+             intergenicPeaks = length(peakSummitGr) - sum(tfSummary$intergenicPeaks))
     ) %>% 
     dplyr::mutate(
       totalIntergenicPeaks = length(ovHits),
-      totalPeaks = length(peaksGr),
+      totalPeaks = length(peakSummitGr),
       sampleId = tfInfo$sampleId[i]
     )
   
@@ -244,22 +252,25 @@ itgPeakStats <- dplyr::left_join(
 
 itgPeakStats <- dplyr::mutate(
   itgPeakStats,
-  fraction = round(x = intergenicPeaks/totalPeaks, digits = 3)
+  fraction = round(x = intergenicPeaks/totalPeaks, digits = 3),
+  gapType = forcats::fct_relevel(gapType, "tandem", "convergent", "divergent")
 )
 
-
+readr::write_tsv(x = itgPeakStats, path = paste(outPrefix, ".all_TF_distriution.data.tab", sep = ""))
 
 pt2 <- ggplot(
   data = itgPeakStats,
   mapping = aes(x = gapType, y = fraction)
 ) +
-  geom_quasirandom() +
+  geom_quasirandom(mapping = aes(fill = totalPeaks), shape = 21, size = 3) +
   stat_summary(fun.data = fun_summary, color="red", size = 1) +
+  scale_fill_viridis(name = "log2(#peaks)", option = "viridis", direction = -1, trans = "log2") +
+  scale_y_continuous(labels = scales::percent_format()) +
   scale_x_discrete(
     labels = c(
-      "continuous" = ">=(+)=>     >=(+)=>\nor\n<=(-)=<     <=(-)=<\n(continuous)",
-      "convergent" = ">=(+)=>     <=(-)=<\n(convergent)",
-      "divergent" = "<=(-)=<     >=(+)=>\n(divergent)"
+      "tandem" = "(tandem)\n>=(+)=>     >=(+)=>\n<=(-)=<     <=(-)=<",
+      "convergent" = "(convergent)\n>=(+)=>     <=(-)=<",
+      "divergent" = "(divergent)\n<=(-)=<     >=(+)=>"
     )
   ) +
   labs(
@@ -272,11 +283,15 @@ pt2 <- ggplot(
   ) +
   theme_bw() +
   theme(
-    axis.text = element_text(size = 14),
-    axis.title = element_text(size = 14, face = "bold"),
-    plot.title = element_text(size = 14, face = "bold"),
+    panel.grid = element_blank(),
+    axis.text = element_text(size = 16),
+    axis.title = element_text(size = 16, face = "bold"),
+    plot.title = element_text(size = 16, face = "bold"),
     axis.ticks = element_line(size = 1),
-    axis.ticks.length = unit(2, "mm")
+    axis.ticks.length = unit(2, "mm"),
+    legend.text = element_text(size = 16),
+    legend.key.height = unit(1, "cm"),
+    legend.title = element_text(size = 16, face = "bold", angle = 90, vjust = 1)
   )
 
 
