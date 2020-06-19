@@ -27,8 +27,8 @@ source("E:/Chris_UM/GitHub/omics_util/02_RNAseq_scripts/s02_DESeq2_functions.R")
 
 ####################################################################
 
-diffDataPath <- here::here("analysis", "07_polII_diff")
-file_geneset <- here::here("analysis", "07_polII_diff", "geneset_volcano.config.tab")
+diffDataPath <- here::here("analysis", "06_polII_diff")
+file_geneset <- here::here("analysis", "06_polII_diff", "geneset_volcano.config.tab")
 
 file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
 
@@ -70,7 +70,7 @@ geneSets <- dplyr::mutate(
 i <- 3
 
 degResult <- geneSets$deg[i]
-outDir <- here::here("analysis", "07_polII_diff", degResult, "geneset_plots")
+outDir <- here::here("analysis", "06_polII_diff", degResult, "geneset_plots")
 
 if(!dir.exists(outDir)){
   dir.create(path = outDir)

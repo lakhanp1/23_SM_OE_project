@@ -13,9 +13,9 @@ rm(list = ls())
 
 ##################################################################################
 
-file_exptInfo <- here::here("data", "referenceData/sample_info.txt")
+file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
 
-file_genes <- here::here("data", "referenceData/AN_genes_for_polII.bed")
+file_genes <- here::here("data", "reference_data", "AN_genes_for_polII.bed")
 orgDb <- org.Anidulans.FGSCA4.eg.db
 txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
 

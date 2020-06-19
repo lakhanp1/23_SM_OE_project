@@ -22,7 +22,7 @@ if(!dir.exists(outDir)){
   dir.create(outDir, recursive = T)
 }
 
-diffDataPath <- here::here("analysis", "07_polII_diff")
+diffDataPath <- here::here("analysis", "06_polII_diff")
 file_sampleInfo <- here::here("data", "reference_data", "polII_sample_info.txt")
 file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
 
@@ -69,7 +69,7 @@ degStats <- dplyr::group_by(degData, contrast, diff) %>%
     names_from = diff, values_from = n, values_fill = list(n = 0)
   )
 
-readr::write_tsv(x = degStats, path = paste(outPrefix, ".stats.tab", sep = ""))
+readr::write_tsv(x = degStats, path = paste(diffDataPath, "/polII_DEG.stats.tab", sep = ""))
 
 ## a dataframe with DEG status column for each comparison
 diffDf <- tidyr::pivot_wider(

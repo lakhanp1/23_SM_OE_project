@@ -30,7 +30,7 @@ source("E:/Chris_UM/GitHub/omics_util/02_RNAseq_scripts/s02_DESeq2_functions.R")
 ###########################################################################
 ## configuration and cutoffs
 
-diffDataPath <- here::here("analysis", "07_polII_diff")
+diffDataPath <- here::here("analysis", "06_polII_diff")
 file_sampleInfo <- here::here("data", "reference_data", "polII_sample_info.txt")
 
 useAllGroupsSamples <- FALSE

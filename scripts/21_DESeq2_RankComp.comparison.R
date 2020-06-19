@@ -13,7 +13,7 @@ rm(list = ls())
 ##################################################################################
 
 rankcompPath <- here::here("analysis", "07_polII_rank_diff")
-diffDataPath <- here::here("analysis", "07_polII_diff")
+diffDataPath <- here::here("analysis", "06_polII_diff")
 
 file_sampleInfo <- here::here("data", "reference_data", "polII_sample_info.txt")
 file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
@@ -280,7 +280,7 @@ ht_rankDiff <- Heatmap(
     breaks = seq(-50, 50, length.out = 11),
     colors = RColorBrewer::brewer.pal(n = 11, name = "PiYG"),
   ),
-  column_title = "rank difference",
+  column_title = "% rank difference",
   show_row_names = FALSE,
   cluster_columns = FALSE,
   width = unit(5, "cm")
@@ -294,7 +294,7 @@ ht_rankSummary <- Heatmap(
     breaks = seq(-50, 50, length.out = 11),
     colors = RColorBrewer::brewer.pal(n = 11, name = "PiYG"),
   ),
-  column_title = "rank diff summary",
+  column_title = "% rank difference summary",
   show_row_names = FALSE,
   cluster_columns = FALSE,
   width = unit(5, "cm")

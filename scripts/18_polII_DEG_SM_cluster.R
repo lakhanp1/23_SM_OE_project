@@ -23,7 +23,7 @@ if(!dir.exists(outDir)){
   dir.create(outDir, recursive = T)
 }
 
-diffDataPath <- here::here("analysis", "07_polII_diff")
+diffDataPath <- here::here("analysis", "06_polII_diff")
 file_sampleInfo <- here::here("data", "reference_data", "polII_sample_info.txt")
 file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
 file_degIds <- here::here("data", "reference_data", "polII_DEG_ids.txt")
