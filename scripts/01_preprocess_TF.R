@@ -22,6 +22,7 @@ TF_dataPath <- here::here("data", "TF_data")
 polII_dataPath <- here::here("data", "polII_data")
 hist_dataPath <- here::here("data", "histone_data")
 other_dataPath <- here::here("data", "other_data")
+file_blacklist <- here::here("data", "reference_data", "A_nidulans_FGSC_A4.blacklist_regions.bed")
 
 file_tf_macs2 <- paste(TF_dataPath, "/", "sample_tf_macs2.list", sep = "")
 file_tf <- paste(TF_dataPath, "/", "sample_tf.list", sep = "")
@@ -87,6 +88,7 @@ for(i in 1:nrow(tfInfo)){
     includeFractionCut = 0.7,
     bindingInGene = FALSE,
     insideSkewToEndCut = 0.7,
+    blacklistRegions = file_blacklist,
     removePseudo = TRUE,
     output = tfInfo$peakAnno[i])
   
