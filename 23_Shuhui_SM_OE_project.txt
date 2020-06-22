@@ -195,7 +195,7 @@ done < memechip_conf.tab
 
 
 
-##fimo motif scanning
+##fimo motif scanning in polII DEG promoter
 fimo -oc fimo.AN0153_OE_vs_WT_DEG --thresh 0.001 --bfile /home/lakhanp/database/A_nidulans_FGSC_A4/reference/promoter_sequences/A_nidulans_promoters.500_TSS_100.meme_background.m2.model AN0153_motif.meme AN0153_OE_vs_WT.DEG_promoter.fasta
 
 

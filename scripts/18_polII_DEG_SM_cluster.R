@@ -29,7 +29,7 @@ file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.
 file_degIds <- here::here("data", "reference_data", "polII_DEG_ids.txt")
 
 file_clusterInfo <- here::here("data", "reference_data", "raw_data_summary.SM_cluster.tab")
-file_backboneInfo <- here::here("data", "reference_data", "raw_data_summary.TF.tab")
+file_backboneInfo <- here::here("data", "reference_data", "raw_data_summary.tab")
 
 useAllGroupsSamples <- FALSE
 
@@ -55,14 +55,14 @@ dataSummary_SM <- suppressMessages(readr::read_tsv(file = file_clusterInfo)) %>%
     tf_with_polII = forcats::as_factor(tf_with_polII)
   )
 
-dataSummary_tf <- suppressMessages(readr::read_tsv(file = file_backboneInfo))
+rawDataSummary <- suppressMessages(readr::read_tsv(file = file_backboneInfo))
 
 degIds <- suppressMessages(readr::read_tsv(file = file_degIds))
 
 rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath) %>% 
   dplyr::filter(comparison %in% degIds$comparison)
 
-rnaseqInfo <- dplyr::left_join(x = rnaseqInfo, y = dataSummary_tf, by = c("SM_TF" = "geneId")) %>% 
+rnaseqInfo <- dplyr::left_join(x = rnaseqInfo, y = rawDataSummary, by = c("SM_TF" = "geneId")) %>% 
   dplyr::mutate(
     SM_cluster_tf = dplyr::if_else(
       condition = is.na(SM_ID), true = "no", false = "yes", missing = "no"
@@ -282,8 +282,8 @@ pt_barUp <- pt_bar +
   )
 
 
-png(filename = paste(outPrefix, ".deg_up.barplot.png", sep = ""), width = 5000, height = 7000, res = 450)
-# pdf(file = paste(outPrefix, ".deg_up.barplot.pdf", sep = ""), width = 12, height = 15)
+# png(filename = paste(outPrefix, ".deg_up.barplot.png", sep = ""), width = 5000, height = 7000, res = 450)
+pdf(file = paste(outPrefix, ".deg_up.barplot.pdf", sep = ""), width = 12, height = 15)
 print(pt_barUp)
 dev.off()
 
