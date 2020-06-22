@@ -1,10 +1,10 @@
-library(chipmine)
-library(org.Anidulans.FGSCA4.eg.db)
-library(TxDb.Anidulans.FGSCA4.AspGD.GFF)
-library(foreach)
-library(doParallel)
-library(here)
-library(GGally)
+suppressPackageStartupMessages(library(chipmine))
+suppressPackageStartupMessages(library(org.Anidulans.FGSCA4.eg.db))
+suppressPackageStartupMessages(library(TxDb.Anidulans.FGSCA4.AspGD.GFF))
+suppressPackageStartupMessages(library(foreach))
+suppressPackageStartupMessages(library(doParallel))
+suppressPackageStartupMessages(library(here))
+suppressPackageStartupMessages(library(GGally))
 
 
 rm(list = ls())
@@ -16,6 +16,7 @@ rm(list = ls())
 file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
 
 file_genes <- here::here("data", "reference_data", "AN_genes_for_polII.bed")
+file_cds <- here::here("data", "reference_data", "A_nidulans_FGSC_A4_version_s10-m04-r03_CDS_Unique.bed")
 orgDb <- org.Anidulans.FGSCA4.eg.db
 txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
 
@@ -25,7 +26,7 @@ hist_dataPath <- here::here("data", "histone_data")
 other_dataPath <- here::here("data", "other_data")
 
 file_polIISamples <- paste(polII_dataPath, "/", "sample_polII.list", sep = "")
-file_deeptolsMat <- paste(polII_dataPath, "/", "raw_count.polII.deeptools.tab", sep = "")
+file_deeptolsMat <- paste(polII_dataPath, "/", "polII_raw_count.cds.deeptools.tab", sep = "")
 
 geneSet <- data.table::fread(file = file_genes, header = F,
                              col.names = c("chr", "start", "end", "geneId", "score", "strand")) %>%
@@ -53,7 +54,7 @@ polIICols <- list(
                            names = polII_info$sampleId)
 )
 
-
+##################################################################################
 
 i <- 117
 
@@ -117,26 +118,35 @@ readr::write_tsv(x = polIIQuantiles,
 
 ##################################################################################
 ## process deeptools raw count matrix
+cdsData <- suppressMessages(
+  readr::read_tsv(
+    file = file_cds,
+    col_names = c("chr", "start", "end", "geneId", "score", "strand"))
+) %>%
+  dplyr::select(-score)
 
 deeptoolsMat <- suppressMessages(readr::read_tsv(file = file_deeptolsMat))
 
 colnames(deeptoolsMat) <- stringr::str_replace(
-  string = colnames(deeptoolsMat), pattern = "_bt2", replacement = "")
+  string = colnames(deeptoolsMat), pattern = "#?'(.*)'", replacement = "\\1") %>% 
+  stringr::str_replace(pattern = "_bt2", replacement = "")
+
 
 if(!setequal(
-  paste(geneSet$chr, geneSet$start, geneSet$end, sep = ":"),
+  paste(cdsData$chr, cdsData$start, cdsData$end, sep = ":"),
   paste(deeptoolsMat$chr, deeptoolsMat$start, deeptoolsMat$end, sep = ":"))){
   
   stop("geneSet genes and deeptools matrix genes does not match")
   
 } else{
   rawCountMat <- dplyr::left_join(
-    x = deeptoolsMat, y = geneSet, by = c("chr" , "start", "end")
+    x = deeptoolsMat, y = cdsData, by = c("chr" , "start", "end")
   ) %>% 
+    dplyr::arrange(chr, start) %>% 
     dplyr::select(geneId, polII_info$sampleId)
   
   readr::write_tsv(x = rawCountMat,
-                   path = paste(polII_dataPath, "/polII_raw_counts.tab", sep = ""))
+                   path = paste(polII_dataPath, "/polII_raw_counts.cds.tab", sep = ""))
 }
 
 
