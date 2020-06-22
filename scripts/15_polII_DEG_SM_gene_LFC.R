@@ -17,6 +17,7 @@ outPrefix <- paste(outDir, "/", analysisName, sep = "")
 diffDataPath <- here::here("analysis", "06_polII_diff")
 file_sampleInfo <- here::here("data", "reference_data", "polII_sample_info.txt")
 file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
+file_degIds <- here::here("data", "reference_data", "polII_DEG_ids.txt")
 
 useAllGroupsSamples <- FALSE
 
@@ -31,7 +32,10 @@ col_geneId <- "GID"
 
 ###########################################################################
 
-rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath) 
+degIds <- suppressMessages(readr::read_tsv(file = file_degIds))
+
+rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath) %>% 
+  dplyr::filter(comparison %in% degIds$comparison)
 
 rnaseqInfo$log2FoldChange <- NA
 rnaseqInfo$pvalue <- NA
@@ -99,8 +103,8 @@ pt <- ggplot(
   )
 
 
-pdf(file = paste(outPrefix, ".SM_gene_LFC.pdf", sep = ""), width = 12, height = 12)
-# png(filename = paste(outPrefix, ".SM_gene_LFC.png", sep = ""), width = 3000, height = 2500, res = 230)
+# pdf(file = paste(outPrefix, ".SM_gene_LFC.pdf", sep = ""), width = 12, height = 12)
+png(filename = paste(outPrefix, ".SM_gene_LFC.png", sep = ""), width = 3000, height = 2500, res = 230)
 pt
 dev.off()
 
