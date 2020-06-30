@@ -1,10 +1,10 @@
-library(chipmine)
-library(org.Anidulans.FGSCA4.eg.db)
-library(TxDb.Anidulans.FGSCA4.AspGD.GFF)
-library(here)
-library(ggbeeswarm)
-library(ggpubr)
-library(ggrepel)
+suppressPackageStartupMessages(library(chipmine))
+suppressPackageStartupMessages(library(org.Anidulans.FGSCA4.eg.db))
+suppressPackageStartupMessages(library(TxDb.Anidulans.FGSCA4.AspGD.GFF))
+suppressPackageStartupMessages(library(here))
+suppressPackageStartupMessages(library(ggbeeswarm))
+suppressPackageStartupMessages(library(ggpubr))
+suppressPackageStartupMessages(library(ggrepel))
 
 
 rm(list = ls())
@@ -16,9 +16,9 @@ outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
 file_replicates <- here::here("analysis", "02_QC_TF", "tf_replicates.txt")
 
-file_exptInfo <- here::here("data", "referenceData/sample_info.txt")
+file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
 
-file_genes <- here::here("data", "referenceData/AN_genes_for_polII.bed")
+file_genes <- here::here("data", "reference_data", "AN_genes_for_polII.bed")
 orgDb <- org.Anidulans.FGSCA4.eg.db
 txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
 
@@ -68,10 +68,14 @@ for (i in 1:nrow(replicatePairs)) {
   }
   
   plots_pval <- compare_ChIPseq_replicates(
-    sampleInfo = repInfo, compare = "pvalue", yintercept = 20)
+    sampleInfo = repInfo, compare = "pvalue", yintercept = 20,
+    peakFormat = repInfo$peakType[1]
+  )
   
   plots_enrichment <- compare_ChIPseq_replicates(
-    sampleInfo = repInfo, compare = "enrichment", yintercept = 3)
+    sampleInfo = repInfo, compare = "enrichment", yintercept = 3,
+    peakFormat = repInfo$peakType[1]
+  )
   
   ## all plots combined in a row for a replicate
   repPlot <- ggarrange(

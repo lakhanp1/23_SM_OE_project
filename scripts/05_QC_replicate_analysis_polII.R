@@ -1,10 +1,10 @@
-library(chipmine)
-library(org.Anidulans.FGSCA4.eg.db)
-library(TxDb.Anidulans.FGSCA4.AspGD.GFF)
-library(here)
-library(ggbeeswarm)
-library(ggpubr)
-library(ggrepel)
+suppressPackageStartupMessages(library(chipmine))
+suppressPackageStartupMessages(library(org.Anidulans.FGSCA4.eg.db))
+suppressPackageStartupMessages(library(TxDb.Anidulans.FGSCA4.AspGD.GFF))
+suppressPackageStartupMessages(library(here))
+suppressPackageStartupMessages(library(ggbeeswarm))
+suppressPackageStartupMessages(library(ggpubr))
+suppressPackageStartupMessages(library(ggrepel))
 
 
 rm(list = ls())
@@ -93,8 +93,10 @@ cummulativeCorr <- as.data.table(corrDf) %>%
   data.table::dcast(formula = rep1 + rep2 ~ fractionPer, value.var = c("pearson", "spearman"))
 
 
-readr::write_tsv(x = cummulativeCorr,
-                 path = paste(outPrefix, ".cummulative_correlation.tab", sep = ""))
+readr::write_tsv(
+  x = cummulativeCorr,
+  path = paste(outPrefix, ".cummulative_correlation.tab", sep = "")
+)
 
 
 

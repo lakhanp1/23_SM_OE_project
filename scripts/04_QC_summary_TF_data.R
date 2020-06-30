@@ -63,12 +63,14 @@ tfInfoList <- purrr::transpose(tfInfo)  %>%
 
 allPlotData <- NULL
 
-pdf(file = paste(outPrefix, ".macs2.pdf", sep = ""), width = 15, height = 10,
-    onefile = TRUE, pointsize = 10)
 peakCountsDf <- tibble::tibble(
   sampleId = character(), peaks_total = numeric(), peaks_pval20 = numeric(),
   peaks_fe3 = numeric(), peaks_pval20_fe3 = numeric()
 )
+
+
+pdf(file = paste(outPrefix, ".macs2.pdf", sep = ""), width = 15, height = 10,
+    onefile = TRUE, pointsize = 10)
 
 i <- 3
 
@@ -76,10 +78,7 @@ for (i in 1:nrow(tfInfo)) {
   
   cat(i, ":", tfInfo$sampleId[i], "\n")
   
-  peakType <- dplyr::case_when(
-    tfInfo$peakType[i] == "narrow" ~ "narrowPeak",
-    tfInfo$peakType[i] == "broad" ~ "broadPeak"
-  )
+  peakType <- tfInfo$peakType[i]
   
   ## extract the peak counts to decide best TF replicate
   peaksGr <- rtracklayer::import(con = tfInfo$peakFile[i], format = peakType)

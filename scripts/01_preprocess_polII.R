@@ -113,8 +113,10 @@ polIIQuantiles <- purrr::map_dfr(
 )
 
 
-readr::write_tsv(x = polIIQuantiles,
-                 path = paste(polII_dataPath, "/polII_signal_quantiles.tab", sep = ""))
+readr::write_tsv(
+  x = polIIQuantiles,
+  path = paste(polII_dataPath, "/polII_signal_quantiles.tab", sep = "")
+)
 
 ##################################################################################
 ## process deeptools raw count matrix

@@ -65,17 +65,15 @@ tfInfo <- get_sample_information(
 
 ##################################################################################
 
-i <- 3
+i <- 119
 
-for(i in 1:nrow(tfInfo)){
-  
+
+for(i in 119:nrow(tfInfo)){
+
   cat(i, ":", tfInfo$sampleId[i], "\n")
   
   ## annotate peaks and prepare gene level annotation file
-  peakType <- dplyr::case_when(
-    tfInfo$peakType[i] == "narrow" ~ "narrowPeak",
-    tfInfo$peakType[i] == "broad" ~ "broadPeak"
-  )
+  peakType <- tfInfo$peakType[i]
   
   peakAn <- annotate_peaks(
     peakFile = tfInfo$peakFile[i],
@@ -83,7 +81,7 @@ for(i in 1:nrow(tfInfo)){
     txIds = txInfo$TXID,
     fileFormat = peakType,
     promoterLength = 500,
-    upstreamLimit = 1500,
+    upstreamLimit = 1000,
     bidirectionalDistance = 1000,
     includeFractionCut = 0.7,
     bindingInGene = FALSE,
@@ -125,6 +123,15 @@ for(i in 1:nrow(tfInfo)){
   # }
   
 }
+
+
+
+
+
+
+
+
+
 
 
 

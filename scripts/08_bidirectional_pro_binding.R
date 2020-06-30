@@ -188,11 +188,7 @@ itgPeakStats <- NULL
 
 for (i in 1:nrow(tfInfo)) {
   
-  peakType <- dplyr::case_when(
-    tfInfo$peakType[i] == "narrow" ~ "narrowPeak",
-    tfInfo$peakType[i] == "broad" ~ "broadPeak"
-  )
-  
+  peakType <- tfInfo$peakType[i]  
   
   peaksGr <- rtracklayer::import(con = tfInfo$peakFile[i], format = peakType)
   
