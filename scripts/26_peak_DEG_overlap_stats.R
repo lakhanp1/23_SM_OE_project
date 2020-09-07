@@ -181,42 +181,53 @@ peakDegOvlpDf <- dplyr::select(masterCombDf, tf, peaks, up_peak, down_peak, noDe
     deg = forcats::fct_relevel(deg, "down", "noDeg", "up")
   )
 
-col_peak <- "black"
-col_down <- "#0000FF"
-col_up <- "#ff0000"
+col_peak <- "#FFC20A"
+col_down <- "#313695"
+col_up <- "#a50026"
 
 ptTheme <- theme_bw() +
   theme(
     axis.text = element_text(size = 14),
+    axis.text.x = element_text(face = "bold"),
     axis.title = element_blank(),
     title = element_text(size = 14, face = "bold"),
     legend.key.size = unit(1, "cm"),
     legend.text = element_text(size = 16),
     legend.title = element_text(size = 16, face = "bold"),
-    plot.margin = margin(0.5, 1, 0.5, 0.5, "cm"),
+    plot.margin = margin(0.25, 0.75, 0.25, 0.25, "cm"),
     panel.grid = element_blank()
   )
 
 ## peak count bar plot
 pt_peakCount <- ggplot(data = masterCombDf) +
   geom_bar(mapping = aes(y = forcats::fct_rev(tf), x = peaks),
-           stat = "identity", fill = col_peak) +
+           stat = "identity", fill = col_peak, color = "black", width = 0.8) +
+  scale_x_continuous(expand = expansion(add = 0)) +
   labs(title = "Peak count") +
   ptTheme
 
 ## DEG count bar plot
 pt_deg <- dplyr::mutate(masterCombDf, down = -1*down) %>% 
   ggplot(mapping = aes(y = forcats::fct_rev(tf))) +
-  geom_bar(mapping = aes(x = up), stat = "identity", fill = col_up) +
-  geom_bar(mapping = aes(x = down), stat = "identity", fill = col_down) +
+  geom_bar(
+    mapping = aes(x = up), stat = "identity", fill = col_up,
+    width = 0.8, color = "black"
+  ) +
+  geom_bar(
+    mapping = aes(x = down), stat = "identity", fill = col_down,
+    width = 0.8, color = "black"
+  ) +
   labs(title = "PolII DEG count") +
   ptTheme
 
 
 ## stacked bar plot: peak overlap with up and down DEGs
 pt_peakOvlp <- ggplot(data = peakDegOvlpDf) +
-  geom_bar(mapping = aes(y = forcats::fct_rev(tf), x = count, fill = deg),
-           stat = "identity", position = position_fill(reverse = TRUE)) +
+  geom_bar(
+    mapping = aes(y = forcats::fct_rev(tf), x = count, fill = deg),
+    stat = "identity", position = position_fill(reverse = TRUE),
+    width = 0.8, color = "black"
+  ) +
   scale_fill_manual(
     breaks = NULL,
     values = c("down" = col_down, "noDeg" = col_peak, "up" = col_up)
@@ -229,8 +240,11 @@ pt_peakOvlp <- ggplot(data = peakDegOvlpDf) +
 ## stacked bar plot: up DEG overlap with peak
 pt_upOvlp <- dplyr::filter(degPeakOvlpDf, DEG == "up") %>% 
   ggplot() +
-  geom_bar(mapping = aes(y = forcats::fct_rev(tf), x = count, fill = with_peak),
-           stat = "identity", position = position_fill(reverse = TRUE)) +
+  geom_bar(
+    mapping = aes(y = forcats::fct_rev(tf), x = count, fill = with_peak),
+    stat = "identity", position = position_fill(reverse = TRUE),
+    width = 0.8, color = "black"
+  ) +
   scale_fill_manual(
     breaks = NULL,
     values = c("peak" = col_peak, "noPeak" = col_up)
@@ -242,8 +256,11 @@ pt_upOvlp <- dplyr::filter(degPeakOvlpDf, DEG == "up") %>%
 ## stacked bar plot: down DEG overlp with peak
 pt_downOvlp <- dplyr::filter(degPeakOvlpDf, DEG == "down") %>% 
   ggplot() +
-  geom_bar(mapping = aes(y = forcats::fct_rev(tf), x = count, fill = with_peak),
-           stat = "identity", position = position_fill(reverse = TRUE)) +
+  geom_bar(
+    mapping = aes(y = forcats::fct_rev(tf), x = count, fill = with_peak),
+    stat = "identity", position = position_fill(reverse = TRUE),
+    width = 0.8, color = "black"
+  ) +
   scale_fill_manual(
     breaks = NULL,
     values = c("peak" = col_peak, "noPeak" = col_down)
@@ -259,8 +276,8 @@ pt_merged <- ggarrange(
   common.legend = TRUE, legend = "right"
 )
 
-png(filename = paste(outPrefix, ".stats.png", sep = ""), width = 6000, height = 3000, res = 280)
-# pdf(file = paste(outPrefix, ".stats.pdf", sep = ""), width = 20, height = 10, pointsize = 6)
+png(filename = paste(outPrefix, ".stats.png", sep = ""), width = 6000, height = 3500, res = 320)
+# pdf(file = paste(outPrefix, ".stats.pdf", sep = ""), width = 20, height = 10)
 pt_merged
 dev.off()
 
