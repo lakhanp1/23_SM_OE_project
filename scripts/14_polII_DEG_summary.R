@@ -25,7 +25,7 @@ if(!dir.exists(outDir)){
 diffDataPath <- here::here("analysis", "06_polII_diff")
 file_sampleInfo <- here::here("data", "reference_data", "polII_sample_info.txt")
 file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
-file_degIds <- here::here("data", "reference_data", "polII_DEG_ids.txt")
+file_degIds <- here::here("data", "reference_data", "production_data.polII_DEG_ids.txt")
 
 useAllGroupsSamples <- FALSE
 
@@ -40,7 +40,8 @@ col_geneId <- "GID"
 ###########################################################################
 degIds <- suppressMessages(readr::read_tsv(file = file_degIds))
 
-rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath)
+rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath) %>% 
+  dplyr::filter(comparison %in% degIds$comparison)
 
 
 rowId <- 1

@@ -1,10 +1,10 @@
-library(chipmine)
-library(org.Anidulans.FGSCA4.eg.db)
-library(TxDb.Anidulans.FGSCA4.AspGD.GFF)
-library(here)
-library(ggbeeswarm)
-library(ggpubr)
-library(ggrepel)
+suppressPackageStartupMessages(library(chipmine))
+suppressPackageStartupMessages(library(org.Anidulans.FGSCA4.eg.db))
+suppressPackageStartupMessages(library(TxDb.Anidulans.FGSCA4.AspGD.GFF))
+suppressPackageStartupMessages(library(here))
+suppressPackageStartupMessages(library(ggbeeswarm))
+suppressPackageStartupMessages(library(ggpubr))
+suppressPackageStartupMessages(library(ggrepel))
 
 
 rm(list = ls())
@@ -15,9 +15,9 @@ analysisName <- "OE_TF_polII_rank"
 outDir <- here::here("analysis", "02_QC_polII")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
-file_exptInfo <- here::here("data", "referenceData/sample_info.txt")
+file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
 
-file_genes <- here::here("data", "referenceData/AN_genes_for_polII.bed")
+file_genes <- here::here("data", "reference_data", "AN_genes_for_polII.bed")
 orgDb <- org.Anidulans.FGSCA4.eg.db
 txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
 
@@ -141,9 +141,11 @@ pt_oe_gene_rank <- dplyr::filter(plotData, copyNumber != "deletion") %>%
   scale_color_manual(
     values = c("sCopy_OE" = "red", "mCopy_OE" = "#4daf4a", "WT" = "black")
   ) +
-  labs(title = "Rank of SM cluster TF gene in its own over-expression and WT polII ChIPseq data",
-       subtitle = paste("min rank = 0, max rank =", nrow(geneSet)),
-       x = "SM cluster TF", y = "polII signal rank") +
+  labs(
+    title = "Rank of SM cluster TF gene in its own over-expression and WT polII ChIPseq data",
+    subtitle = paste("min rank = 0, max rank =", nrow(geneSet)),
+    x = "SM cluster TF", y = "polII signal rank"
+  ) +
   theme_bw() +
   theme(
     panel.grid.major.y = element_blank(),

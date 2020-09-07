@@ -51,8 +51,8 @@ i <- 68
 
 corrDf <- NULL
 
-pdf(file = paste(outPrefix, ".correlation.pdf", sep = ""), width = 15, height = 10,
-    onefile = TRUE, pointsize = 8)
+# pdf(file = paste(outPrefix, ".correlation.pdf", sep = ""), width = 15, height = 10,
+#     onefile = TRUE, pointsize = 8)
 
 
 for (i in 1:nrow(replicatePairs)) {
@@ -76,7 +76,7 @@ for (i in 1:nrow(replicatePairs)) {
   pairCor <- compare_replicates(data = exprDf, rep1Col = rep1Col, rep2Col = rep2Col,
                                 trans = "log2", pseudoCount = 0.2)
   
-  plot(pairCor$figure)
+  # plot(pairCor$figure)
   
   pairCorrDf <- dplyr::mutate(.data = pairCor$data, rep1 = rep1Col, rep2 = rep2Col)
   corrDf <- dplyr::bind_rows(corrDf, pairCorrDf)
@@ -84,14 +84,22 @@ for (i in 1:nrow(replicatePairs)) {
   # Sys.sleep(5)
 }
 
-dev.off()
+# dev.off()
 
 ##################################################################################
-corrDf <- dplyr::mutate(corrDf, fractionPer = forcats::as_factor(fractionPer))
+corrDf <- dplyr::mutate(corrDf, fractionPer = forcats::as_factor(fractionPer)) %>% 
+  dplyr::left_join(
+    y = dplyr::select(polIIInfo, sampleId, SM_TF, timePoint), by = c("rep1" = "sampleId")
+    )
 
-cummulativeCorr <- as.data.table(corrDf) %>% 
-  data.table::dcast(formula = rep1 + rep2 ~ fractionPer, value.var = c("pearson", "spearman"))
-
+cummulativeCorr <- tidyr::pivot_wider(
+  data = corrDf,
+  id_cols = c(rep1, rep2, SM_TF, timePoint),
+  names_from = fractionPer,
+  values_from = c(pearson, spearman)
+) %>% 
+  dplyr::arrange(SM_TF, desc(`pearson_100%`)) %>% 
+  dplyr::select(SM_TF, timePoint, rep1, rep2, everything())
 
 readr::write_tsv(
   x = cummulativeCorr,

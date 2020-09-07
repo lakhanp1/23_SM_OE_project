@@ -70,7 +70,7 @@ parser$add_argument(
 # parser$print_help()
 
 # file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
-# analysisName <- "AN0153_sCopy_OE_vs_MH11036"
+# analysisName <- "AN0148_sCopy_OE_vs_MH11036"
 
 args <- parser$parse_args()
 
@@ -161,7 +161,7 @@ design <- as.formula(paste("~", col_compare))
 
 
 ## import raw counts data and run DESeq2
-file_rawCounts <- here::here("data", "polII_data", "polII_raw_counts.tab")
+file_rawCounts <- here::here("data", "polII_data", "polII_raw_counts.cds.tab")
 
 countsDf <- suppressMessages(readr::read_tsv(file = file_rawCounts, col_names = T)) %>%
   as.data.frame()
@@ -305,7 +305,7 @@ pt_pca <- ggplot(pcaData, aes(x = PC1, y = PC2)) +
 #
 # plotPCA( DESeqTransform(seTemp))
 
-
+###########################################################################
 sampleDists <- dist(t(assay(rld)))
 sampleDistMatrix <- as.matrix(sampleDists)
 
@@ -323,10 +323,6 @@ pt_dist <- ComplexHeatmap::Heatmap(
                               title_position = "lefttop", direction = "horizontal",
                               labels_gp = gpar(fontsize = 16))
 )
-
-
-###########################################################################
-
 
 
 ###########################################################################

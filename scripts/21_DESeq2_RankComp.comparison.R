@@ -169,7 +169,7 @@ ptTitle <- paste(
 ## DESeq2 log2FoldChange 
 ht_lfc <- Heatmap(
   matrix = lfcMat,
-  col = colorRamp2(breaks = c(-3, 0, 3), colors = c("#313695", "white", "#a50026")),,
+  col = colorRamp2(breaks = c(-3, 0, 3), colors = c("#313695", "white", "#a50026")),
   name = "lfcMat",
   # column_title = "DESeq2 log2FoldChange",
   show_row_names = FALSE,
