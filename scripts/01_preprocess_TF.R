@@ -1,4 +1,5 @@
 suppressPackageStartupMessages(library(chipmine))
+suppressPackageStartupMessages(library(markPeaks))
 suppressPackageStartupMessages(library(org.Anidulans.FGSCA4.eg.db))
 suppressPackageStartupMessages(library(TxDb.Anidulans.FGSCA4.AspGD.GFF))
 suppressPackageStartupMessages(library(BSgenome.Anidulans.FGSCA4.AspGD))
@@ -65,17 +66,17 @@ tfInfo <- get_sample_information(
 
 ##################################################################################
 
-i <- 119
+i <- 3
 
 
-for(i in 119:nrow(tfInfo)){
+for(i in 1:nrow(tfInfo)){
 
   cat(i, ":", tfInfo$sampleId[i], "\n")
   
   ## annotate peaks and prepare gene level annotation file
   peakType <- tfInfo$peakType[i]
   
-  peakAn <- annotate_peaks(
+  peakAn <- markPeaks::annotate_peaks(
     peakFile = tfInfo$peakFile[i],
     txdb = txDb,
     txIds = txInfo$TXID,
