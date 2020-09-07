@@ -199,7 +199,11 @@ done < memechip_conf.tab
 fimo -oc fimo.AN0153_OE_vs_WT_DEG --thresh 0.001 --bfile /home/lakhanp/database/A_nidulans_FGSC_A4/reference/promoter_sequences/A_nidulans_promoters.500_TSS_100.meme_background.m2.model AN0153_motif.meme AN0153_OE_vs_WT.DEG_promoter.fasta
 
 
-
+##########################
+####   AflR analysis  ####
+##########################
+##fimo motif scanning in whole genome
+fimo -oc fimo.AN7820_genome --thresh 0.001 --bfile /home/lakhanp/database/A_nidulans_FGSC_A4/reference/promoter_sequences/A_nidulans_promoters.500_TSS_100.meme_background.m2.model AN7820_motifs.meme /home/lakhanp/database/A_nidulans_FGSC_A4/reference/A_nidulans_FGSC_A4_version_s10-m04-r03_chromosomes.fasta
 
 
 

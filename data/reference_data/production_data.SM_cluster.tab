@@ -1,5 +1,5 @@
 SM_ID	has_tf	tf_data	tf_with_chip	polII_data	tf_with_polII
-cluster_01	has_tf	has_data	has_tf:has_data	has_data	has_tf:has_data
+cluster_01	no_tf	no_data	no_tf:no_data	no_data	no_tf:no_data
 cluster_02	no_tf	no_data	no_tf:no_data	no_data	no_tf:no_data
 cluster_03	has_tf	has_data	has_tf:has_data	has_data	has_tf:has_data
 cluster_04	no_tf	no_data	no_tf:no_data	no_data	no_tf:no_data
