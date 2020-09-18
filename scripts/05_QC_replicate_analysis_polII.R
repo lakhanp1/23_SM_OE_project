@@ -12,10 +12,10 @@ rm(list = ls())
 
 ##################################################################################
 analysisName <- "PolII_replicate"
-outDir <- here::here("analysis", "02_QC_polII")
+outDir <- here::here("analysis", "02_QC_polII", "production_data_QC")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
-file_replicates <- here::here("analysis", "02_QC_polII", "polII_replicates.txt")
+file_replicates <- here::here("analysis", "02_QC_polII", "production_data_QC", "polII_DESeq2_replicates.txt")
 
 file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
 
@@ -47,7 +47,7 @@ replicatePairs <- suppressMessages(readr::read_tsv(file = file_replicates))
 plotListAll <- list()
 plotList_pval_distibution <- list()
 
-i <- 68
+i <- 1
 
 corrDf <- NULL
 
@@ -90,7 +90,7 @@ for (i in 1:nrow(replicatePairs)) {
 corrDf <- dplyr::mutate(corrDf, fractionPer = forcats::as_factor(fractionPer)) %>% 
   dplyr::left_join(
     y = dplyr::select(polIIInfo, sampleId, SM_TF, timePoint), by = c("rep1" = "sampleId")
-    )
+  )
 
 cummulativeCorr <- tidyr::pivot_wider(
   data = corrDf,
@@ -113,6 +113,7 @@ gg_pearsonScatter <- dplyr::filter(corrDf, fractionPer %in% c("100%", "50%", "10
   geom_boxplot(width=0.4, fill = NA, outlier.colour = NA, color = alpha("black", 0.7)) +
   geom_quasirandom(size = 3, shape = 21) +
   scale_fill_distiller(limits = c(-1, 1), type = "seq", palette = "RdBu") +
+  scale_y_continuous(limits = c(0, 1)) +
   labs(
     title = "Pearson correlation for top X% genes in polII ChIPseq replicates",
     subtitle = "replicate average signal is used to rank the genes and then top X% genes are selected",
@@ -126,7 +127,8 @@ gg_pearsonScatter <- dplyr::filter(corrDf, fractionPer %in% c("100%", "50%", "10
   )
 
 
-png(filename =  paste(outPrefix, ".pearson_scatter.png", sep = ""), width = 2000, height = 2000, res = 250)
+png(filename =  paste(outPrefix, ".pearson_scatter.png", sep = ""), width = 2000, height = 2000, res = 280)
+# pdf(file = paste(outPrefix, ".pearson_scatter.pdf", sep = ""), width = 7, height = 7)
 gg_pearsonScatter
 dev.off()
 

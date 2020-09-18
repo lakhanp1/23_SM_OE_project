@@ -12,7 +12,7 @@ rm(list = ls())
 
 ##################################################################################
 analysisName <- "OE_TF_polII_rank"
-outDir <- here::here("analysis", "02_QC_polII")
+outDir <- here::here("analysis", "02_QC_polII", "production_data_QC")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
 file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
@@ -23,7 +23,7 @@ txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
 
 polII_dataPath <- here::here("data", "polII_data")
 
-file_polII <- paste(polII_dataPath, "/", "sample_polII.list", sep = "")
+file_polII <- paste(polII_dataPath, "/", "samples_polII.DESeq2.list", sep = "")
 
 ##################################################################################
 
@@ -134,33 +134,38 @@ plotData <- dplyr::bind_rows(oeGeneRanks, wtGeneRanks) %>%
 
 ## plot the data
 pt_oe_gene_rank <- dplyr::filter(plotData, copyNumber != "deletion") %>% 
-  ggplot(mapping = aes(x = geneId, y = rank, color = copyNumber, shape = timePoint)) +
+  ggplot(mapping = aes(x = geneId, y = rank, color = copyNumber)) +
   geom_hline(yintercept = nrow(geneSet), linetype = "dashed") +
   geom_point(size = 3) +
   coord_cartesian(ylim = c(0, nrow(geneSet))) +
+  scale_y_continuous(
+    breaks = c(1, 3000, 6000, 9000, nrow(geneSet)),
+    expand = expansion(mult = c(0.01, 0.01))
+  ) +
   scale_color_manual(
     values = c("sCopy_OE" = "red", "mCopy_OE" = "#4daf4a", "WT" = "black")
   ) +
   labs(
     title = "Rank of SM cluster TF gene in its own over-expression and WT polII ChIPseq data",
     subtitle = paste("min rank = 0, max rank =", nrow(geneSet)),
-    x = "SM cluster TF", y = "polII signal rank"
+    x = "SM TF", y = "rank(polII ChIPseq signal)"
   ) +
+  guides(color = guide_legend(override.aes = list(size = 6))) +
   theme_bw() +
   theme(
     panel.grid.major.y = element_blank(),
     panel.grid.minor.y = element_blank(),
+    legend.position = "bottom",
+    legend.text = element_text(size = 14),
+    legend.title = element_text(size = 16, face = "bold"),
     axis.text = element_text(size = 14),
     axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
     axis.title = element_text(size = 14)
   )
 
-# png(filename = paste(outPrefix, ".png", sep = ""), width = 5000, height = 3000, res = 350)
-pdf(file = paste(outPrefix, ".pdf", sep = ""), width = 12, height = 8)
-pt_oe_gene_rank
-dev.off()
 
-
+ggsave(filename = paste(outPrefix, ".png", sep = ""), plot = pt_oe_gene_rank, width = 10, height = 8)
+ggsave(filename = paste(outPrefix, ".pdf", sep = ""), plot = pt_oe_gene_rank, width = 12, height = 8)
 
 
 
