@@ -19,7 +19,7 @@ outDir <- here("analysis", "04_AN0153_analysis", "01_motif_enrichment")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
 file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
-diffDataPath <- here::here("analysis", "07_polII_diff")
+diffDataPath <- here::here("analysis", "06_polII_diff")
 
 polIIDiffIds <- "AN0153_sCopy_OE_vs_MH11036"
 

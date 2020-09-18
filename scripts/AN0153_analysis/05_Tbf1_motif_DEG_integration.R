@@ -6,7 +6,7 @@ suppressPackageStartupMessages(library(here))
 suppressPackageStartupMessages(library(ggpubr))
 
 
-## integrate polII DEG data and motif search data
+## integrate polII DEG data and motif search data for AN0153
 
 rm(list = ls())
 
@@ -26,9 +26,9 @@ file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
 file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
 
 TF_dataPath <- here::here("data", "TF_data")
-diffDataPath <- here::here("analysis", "07_polII_diff")
+diffDataPath <- here::here("analysis", "06_polII_diff")
 
-samples_tf <- "AN0153_sCopy_OE_16h_HA_ChIPMix46_1"
+samples_tf <- "AN0153_sCopy_OE_16h_HA_ChIPMix64_3"
 polIIDiffIds <- "AN0153_sCopy_OE_vs_MH11036"
 
 
@@ -39,6 +39,7 @@ if(!dir.exists(outDir)){
 orgDb <- org.Anidulans.FGSCA4.eg.db
 genome <- BSgenome.Anidulans.FGSCA4.AspGD
 txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
+
 
 cutoff_fdr <- 0.05
 cutoff_lfc <- 1
@@ -60,14 +61,15 @@ exptData <- get_sample_information(exptInfoFile = file_exptInfo,
 peakAn <- import_peak_annotation(
   sampleId = exptData$sampleId,
   peakAnnoFile = exptData$peakAnno,
-  renameColumn = FALSE) %>% 
-  dplyr::filter(peakPosition == "TSS" & peakDist >= -1000) %>% 
+  renameColumn = FALSE
+  ) %>% 
+  dplyr::filter(peakPosition == "TSS" & peakDist >= -1000 & peakPval >= 20) %>% 
   dplyr::group_by(geneId) %>% 
   dplyr::arrange(desc(peakDist)) %>% 
   dplyr::slice(1) %>% 
   dplyr::ungroup() %>% 
   dplyr::select(peakId, peakEnrichment, peakPval, peakDist, geneId) %>% 
-  dplyr::mutate(hasPeak = "peak")
+  dplyr::mutate(hasPeak = "bound")
 
 
 
@@ -104,12 +106,12 @@ plotDegs <- dplyr::left_join(
   dplyr::left_join(y = peakAn, by = "geneId") %>% 
   dplyr::mutate(diff_l2fc = forcats::fct_relevel(.f = diff_l2fc, "up")) %>% 
   tidyr::replace_na(
-    list(nMotifs = 0, peakEnrichment = 0, peakPval = 0, hasPeak = "noPeak")
+    list(nMotifs = 0, peakEnrichment = 0, peakPval = 0, hasPeak = "notBound")
   ) %>% 
   tidyr::unite(col = "cluster", diff_l2fc, hasPeak, sep = ":", remove = FALSE) %>% 
   dplyr::mutate(
     cluster = forcats::fct_relevel(
-      .f = cluster, "up:peak", "up:noPeak", "down:peak", "down:noPeak")
+      .f = cluster, "up:bound", "up:notBound", "down:bound", "down:notBound")
   )
 
 
@@ -118,6 +120,10 @@ map <- structure(.Data = names(geneStats),
                  names =paste(names(geneStats), " (", geneStats, ")", sep = ""))
 
 plotDegs$cluster <- forcats::fct_recode(.f = plotDegs$cluster, !!!map)
+
+dplyr::glimpse(plotDegs)
+
+readr::write_tsv(x = plotDegs, path = paste(outPrefix, ".heatmap.data.tab", sep = ""))
 
 ## plotting
 mat <- chipmine::bigwig_profile_matrix(
@@ -139,26 +145,43 @@ anBar <- HeatmapAnnotation(
     x = plotDegs$nMotifs, width = unit(3, "cm")),
   width = unit(3, "cm"),
   which = "row",
+  annotation_name_side = "top",
+  annotation_label = "Motif",
+  annotation_name_rot = 0,
+  annotation_name_gp = gpar(fontsize = 14),
   show_legend = TRUE
 )
 
 pt1 <- chipmine::profile_heatmap(
   profileMat = mat,
-  signalName = exptData$sampleId,
+  signalName = "AN0153 binding",
   profileColor = tfColor,
   geneGroups = dplyr::select(plotDegs, geneId, cluster),
   showAnnotation = FALSE,
   column_title_gp = gpar(fontsize = 14),
   width = unit(10, "cm"),
-  posLineGpar = gpar(col = "white", lty = 2, alpha = 0.4, lwd = 1)
+  posLineGpar = gpar(col = "white", lty = 2, alpha = 0.4, lwd = 1),
+  row_title_gp = gpar(fontsize = 18),
+  heatmap_legend_param = list(
+    legend_height = unit(6, "cm"), grid_width = unit(1, "cm"),
+    labels_gp = gpar(fontsize = 16),
+    title_gp = gpar(fontsize = 16, fontface = "bold")
+  )
 )
 
 ht_lfc <- Heatmap(
   matrix = matrix(data = plotDegs$log2FoldChange, dimnames = list(plotDegs$geneId, "polII_lfc")),
   col = colorRamp2(breaks = c(-2, -0.5, 0.5, 2), colors = c("#313695", "white", "white", "#d73027")),
   name = "polII_lfc",
+  column_title = "OE/WT DEG",
+  show_column_names = FALSE,
   cluster_rows = FALSE, show_row_names = FALSE,
-  width = unit(2, "cm")
+  width = unit(3, "cm"),
+  heatmap_legend_param = list(
+    legend_height = unit(4, "cm"), grid_width = unit(1, "cm"),
+    labels_gp = gpar(fontsize = 16),
+    title_gp = gpar(fontsize = 16, fontface = "bold")
+  )
 )
 
 htList <- pt1$heatmap + ht_lfc + anBar
@@ -167,7 +190,8 @@ pdf(file = paste(outPrefix, ".heatmap.pdf", sep = ""), width = 12, height = 12)
 
 draw(
   object = htList,
-  column_title = "AN0153 polII DEGs, binding and motif counts"
+  column_title = "AN0153 polII DEGs, binding and motif counts",
+  column_title_gp = gpar(fontsize = 20, fontface = "bold")
 )
 
 dev.off()
