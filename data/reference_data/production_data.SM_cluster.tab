@@ -1,12 +1,12 @@
 SM_ID	has_tf	tf_data	tf_with_chip	polII_data	tf_with_polII
-cluster_01	no_tf	no_data	no_tf:no_data	no_data	no_tf:no_data
+cluster_01	has_tf	no_data	has_tf:no_data	no_data	no_tf:no_data
 cluster_02	no_tf	no_data	no_tf:no_data	no_data	no_tf:no_data
 cluster_03	has_tf	has_data	has_tf:has_data	has_data	has_tf:has_data
 cluster_04	no_tf	no_data	no_tf:no_data	no_data	no_tf:no_data
 cluster_05	has_tf	has_data	has_tf:has_data	has_data	has_tf:has_data
 cluster_06	has_tf	has_data	has_tf:has_data	has_data	has_tf:has_data
 cluster_07	has_tf	has_data	has_tf:has_data	has_data	has_tf:has_data
-cluster_08	has_tf	has_data	has_tf:has_data	no_data	has_tf:no_data
+cluster_08	has_tf	has_data	has_tf:has_data	has_data	has_tf:no_data
 cluster_09	has_tf	has_data	has_tf:has_data	has_data	has_tf:has_data
 cluster_10	no_tf	no_data	no_tf:no_data	no_data	no_tf:no_data
 cluster_11	has_tf	has_data	has_tf:has_data	has_data	has_tf:has_data
