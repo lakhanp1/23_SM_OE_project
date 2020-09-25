@@ -1,4 +1,5 @@
 suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(scales))
 suppressPackageStartupMessages(library(org.Anidulans.FGSCA4.eg.db))
 
 ## plot fold change of SM gene in its own OE strain
@@ -17,7 +18,7 @@ outPrefix <- paste(outDir, "/", analysisName, sep = "")
 diffDataPath <- here::here("analysis", "06_polII_diff")
 file_sampleInfo <- here::here("data", "reference_data", "polII_sample_info.txt")
 file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
-file_degIds <- here::here("data", "reference_data", "polII_DEG_ids.txt")
+file_degIds <- here::here("data", "reference_data", "production_data.polII_DEG_ids.txt")
 
 useAllGroupsSamples <- FALSE
 
@@ -53,11 +54,14 @@ for (row in 1:nrow(rnaseqInfo)) {
   
 }
 
-rnaseqInfo <- dplyr::mutate(
-  rnaseqInfo,
-  log10_padj = -log10(padj),
-  significant = if_else(condition = padj <= 0.05, "significant", "non-significant")
-)
+plotData <-  rnaseqInfo %>% 
+  dplyr::arrange(log2FoldChange) %>% 
+  dplyr::mutate(
+    log10_padj = -log10(padj),
+    significant = if_else(condition = padj <= 0.05, "significant", "non-significant"),
+    SM_TF = forcats::as_factor(SM_TF)
+  )
+
 
 
 ## color scales
@@ -69,13 +73,13 @@ scaleLabels <- c(format(1/(10^c(1, 1.30103, 2:scaleLim)), drop0trailing = T, sci
 
 
 pt <- ggplot(
-  data = rnaseqInfo,
-  mapping = aes(x = log2FoldChange, y = comparison)) +
+  data = plotData,
+  mapping = aes(x = log2FoldChange, y = SM_TF)) +
   geom_point(mapping = aes(fill = log10_padj, color = significant),
              shape = 21, size = 5, stroke = 1) +
   scale_fill_gradientn(
     name = "-log10(padj)",
-    values = rescale(c(seq(1, max(rnaseqInfo$log10_padj), length.out = 9))),
+    values = scales::rescale(c(seq(1, max(plotData$log10_padj), length.out = 9))),
     colours = RColorBrewer::brewer.pal(n = 9, name = "PuRd"),
     breaks = brk,
     labels = scaleLabels,
@@ -92,21 +96,18 @@ pt <- ggplot(
   ) +
   theme_bw() +
   theme(
-    plot.title = element_text(hjust = 1),
+    plot.title = element_text(hjust = 0),
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank(),
     axis.text = element_text(size = 14),
     axis.title.y = element_blank(),
-    axis.title = element_text(size = 16, face = "bold"),
-    title = element_text(size =16, face = "bold"),
+    axis.title = element_text(size = 14, face = "bold"),
+    title = element_text(size =14, face = "bold"),
     legend.text = element_text(size = 12)
   )
 
-
-# pdf(file = paste(outPrefix, ".SM_gene_LFC.pdf", sep = ""), width = 12, height = 12)
-png(filename = paste(outPrefix, ".SM_gene_LFC.png", sep = ""), width = 3000, height = 2500, res = 230)
-pt
-dev.off()
+ggsave(filename = paste(outPrefix, ".SM_gene_LFC.pdf", sep = ""), plot = pt, width = 10, height = 10)
+ggsave(filename = paste(outPrefix, ".SM_gene_LFC.png", sep = ""), plot = pt, width = 10, height = 10, scale = 1.1)
 
 
 
