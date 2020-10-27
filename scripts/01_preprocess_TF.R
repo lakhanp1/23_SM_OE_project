@@ -56,7 +56,7 @@ txInfo <- suppressMessages(
 txInfo <- dplyr::filter(txInfo, !txType %in% c("tRNA", "rRNA", "snRNA", "snoRNA")) %>% 
   dplyr::filter(!grepl(pattern = "uORF", x = geneId))
 
-tfSampleList <- readr::read_tsv(file = file_tf_macs2, col_names = c("sampleId"),  comment = "#")
+tfSampleList <- readr::read_tsv(file = file_tf_macs2,  comment = "#")
 
 tfInfo <- get_sample_information(
   exptInfoFile = file_exptInfo,

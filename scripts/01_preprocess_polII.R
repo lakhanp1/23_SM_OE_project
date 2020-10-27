@@ -25,7 +25,7 @@ polII_dataPath <- here::here("data", "polII_data")
 hist_dataPath <- here::here("data", "histone_data")
 other_dataPath <- here::here("data", "other_data")
 
-file_polIISamples <- paste(polII_dataPath, "/", "sample_polII.list", sep = "")
+file_polIISamples <- paste(polII_dataPath, "/", "samples_polII.all.list", sep = "")
 file_deeptolsMat <- paste(polII_dataPath, "/", "polII_raw_count.cds.deeptools.tab", sep = "")
 
 geneSet <- data.table::fread(file = file_genes, header = F,
@@ -40,10 +40,10 @@ geneSet <- dplyr::left_join(x = geneSet, y = geneDesc, by = c("geneId" = "GID"))
 
 ##################################################################################
 ## process individual polII data
-polIISampleList <- readr::read_tsv(file = file_polIISamples, col_names = c("geneId"),  comment = "#")
+polIISampleList <- readr::read_tsv(file = file_polIISamples, comment = "#")
 
 polII_info <- get_sample_information(exptInfoFile = file_exptInfo,
-                                     samples = polIISampleList$geneId,
+                                     samples = polIISampleList$sampleId,
                                      dataPath = polII_dataPath,
                                      profileMatrixSuffix = "normalizedmatrix")
 
