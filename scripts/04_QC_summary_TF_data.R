@@ -49,7 +49,7 @@ smGenes <- suppressMessages(
 
 ##################################################################################
 
-tfSampleList <- readr::read_tsv(file = file_tf_macs2, col_names = c("sampleId"),  comment = "#")
+tfSampleList <- readr::read_tsv(file = file_tf_macs2,  comment = "#")
 
 tfInfo <- get_sample_information(
   exptInfoFile = file_exptInfo,
@@ -69,8 +69,8 @@ peakCountsDf <- tibble::tibble(
 )
 
 
-pdf(file = paste(outPrefix, ".macs2.pdf", sep = ""), width = 15, height = 10,
-    onefile = TRUE, pointsize = 10)
+# pdf(file = paste(outPrefix, ".macs2.pdf", sep = ""), width = 15, height = 10,
+#     onefile = TRUE, pointsize = 10)
 
 i <- 3
 
@@ -127,13 +127,13 @@ for (i in 1:nrow(tfInfo)) {
   )
 
 
-  plot(chipSummary$figure)
+  # plot(chipSummary$figure)
 
   allPlotData <- dplyr::bind_rows(allPlotData, chipSummary$data)
   
 }
 
-dev.off()
+# dev.off()
 
 bestReplicate <- dplyr::left_join(x = tfInfo, y = peakCountsDf, by = "sampleId") %>% 
   dplyr::select(!!!colnames(peakCountsDf), SM_TF, copyNumber, condition, timePoint, rep) %>% 
@@ -163,7 +163,7 @@ theme_plot_matrix <- theme_bw() +
     strip.background = element_rect(fill = "white")
   )
 
-facetCols <- 15
+facetCols <- 14
 
 ## combined summary plot matrix: peak enrichment
 gg_all_enrichment <- ggplot(
@@ -178,7 +178,7 @@ gg_all_enrichment <- ggplot(
 
 # pdf(file = paste(outPrefix, ".macs2_enrichment.pdf", sep = ""), width = 16, height = 16, onefile = TRUE)
 png(filename = paste(outPrefix, ".macs2_enrichment.png", sep = ""), width = 15000, height = 9000, res = 300)
-gg_all_enrichment
+print(gg_all_enrichment)
 dev.off()
 
 ## combined summary plot matrix: peak p-value
@@ -194,7 +194,7 @@ gg_all_pval <- ggplot(
 
 # pdf(file = paste(outPrefix, ".macs2_enrichment.pdf", sep = ""), width = 16, height = 16, onefile = TRUE)
 png(filename = paste(outPrefix, ".macs2_pval.png", sep = ""), width = 15000, height = 9000, res = 300)
-gg_all_pval
+print(gg_all_pval)
 dev.off()
 
 
@@ -211,7 +211,7 @@ gg_all_width <- ggplot(
 
 # pdf(file = paste(outPrefix, ".peak_width.png", sep = ""), width = 16, height = 16, onefile = TRUE)
 png(filename = paste(outPrefix, ".peak_width.png", sep = ""), width = 15000, height = 9000, res = 300)
-gg_all_width
+print(gg_all_width)
 dev.off()
 
 

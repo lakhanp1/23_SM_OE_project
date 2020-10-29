@@ -12,10 +12,10 @@ rm(list = ls())
 
 ##################################################################################
 analysisName <- "PolII_replicate"
-outDir <- here::here("analysis", "02_QC_polII", "production_data_QC")
+outDir <- here::here("analysis", "02_QC_polII")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
-file_replicates <- here::here("analysis", "02_QC_polII", "production_data_QC", "polII_DESeq2_replicates.txt")
+file_replicates <- here::here("analysis", "02_QC_polII", "polII_replicates.txt")
 
 file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
 
@@ -25,7 +25,7 @@ txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
 
 polII_dataPath <- here::here("data", "polII_data")
 
-file_polII <- paste(polII_dataPath, "/", "sample_polII.list", sep = "")
+file_polII <- paste(polII_dataPath, "/", "samples_polII.all.list", sep = "")
 
 ##################################################################################
 
@@ -34,7 +34,7 @@ geneSet <- suppressMessages(readr::read_tsv(
   col_names = c("chr", "start", "end", "geneId", "score", "strand"))) %>%
   dplyr::select(geneId)
 
-polIIsamples <- readr::read_tsv(file = file_polII, col_names = c("sampleId"),  comment = "#")
+polIIsamples <- readr::read_tsv(file = file_polII,  comment = "#")
 
 polIIInfo <- get_sample_information(
   exptInfoFile = file_exptInfo,
@@ -51,8 +51,8 @@ i <- 1
 
 corrDf <- NULL
 
-# pdf(file = paste(outPrefix, ".correlation.pdf", sep = ""), width = 15, height = 10,
-#     onefile = TRUE, pointsize = 8)
+pdf(file = paste(outPrefix, ".correlation.pdf", sep = ""), width = 15, height = 10,
+    onefile = TRUE, pointsize = 8)
 
 
 for (i in 1:nrow(replicatePairs)) {
@@ -76,15 +76,15 @@ for (i in 1:nrow(replicatePairs)) {
   pairCor <- compare_replicates(data = exprDf, rep1Col = rep1Col, rep2Col = rep2Col,
                                 trans = "log2", pseudoCount = 0.2)
   
-  # plot(pairCor$figure)
+  plot(pairCor$figure)
   
   pairCorrDf <- dplyr::mutate(.data = pairCor$data, rep1 = rep1Col, rep2 = rep2Col)
   corrDf <- dplyr::bind_rows(corrDf, pairCorrDf)
   
-  # Sys.sleep(5)
+  Sys.sleep(5)
 }
 
-# dev.off()
+dev.off()
 
 ##################################################################################
 corrDf <- dplyr::mutate(corrDf, fractionPer = forcats::as_factor(fractionPer)) %>% 
@@ -127,10 +127,10 @@ gg_pearsonScatter <- dplyr::filter(corrDf, fractionPer %in% c("100%", "50%", "10
   )
 
 
-png(filename =  paste(outPrefix, ".pearson_scatter.png", sep = ""), width = 2000, height = 2000, res = 280)
-# pdf(file = paste(outPrefix, ".pearson_scatter.pdf", sep = ""), width = 7, height = 7)
-gg_pearsonScatter
-dev.off()
+ggsave(filename = paste(outPrefix, ".pearson_scatter.png", sep = ""),
+       plot = gg_pearsonScatter, width = 8, height = 8)
+ggsave(filename = paste(outPrefix, ".pearson_scatter.pdf", sep = ""),
+       plot = gg_pearsonScatter, width = 8, height = 8)
 
 
 

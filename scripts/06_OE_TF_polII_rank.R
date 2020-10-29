@@ -32,7 +32,7 @@ geneSet <- suppressMessages(readr::read_tsv(
   col_names = c("chr", "start", "end", "geneId", "score", "strand"))) %>%
   dplyr::select(geneId)
 
-polIIsamples <- readr::read_tsv(file = file_polII, col_names = c("sampleId"),  comment = "#")
+polIIsamples <- readr::read_tsv(file = file_polII, comment = "#")
 
 polIIInfo <- get_sample_information(
   exptInfoFile = file_exptInfo,
@@ -84,7 +84,7 @@ for (i in 1:nrow(polIIInfo)) {
 
 
 ## add TF gene rank in WT polII data
-wtPolIIInfo <- dplyr::filter(polIIInfo, condition == "MH11036" & timePoint == "16h")
+wtPolIIInfo <- dplyr::filter(polIIInfo, condition == "WT" & timePoint == "16h")
 
 wtPolIIData <- get_polII_expressions(genesDf = geneSet, exptInfo = wtPolIIInfo)
 
