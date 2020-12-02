@@ -8,7 +8,7 @@ suppressPackageStartupMessages(library(ggrepel))
 
 ## 1) peak enrichment distribution
 ## 2) peak p-value distribution
-## 3) peak annottion pie chart
+## 3) peak annotation pie chart
 ## 4) combined matrix of peak enrichment distribution plots
 ## 5) combined matrix of peak p-value distribution plots
 
@@ -69,8 +69,8 @@ peakCountsDf <- tibble::tibble(
 )
 
 
-# pdf(file = paste(outPrefix, ".macs2.pdf", sep = ""), width = 15, height = 10,
-#     onefile = TRUE, pointsize = 10)
+pdf(file = paste(outPrefix, ".macs2.pdf", sep = ""), width = 15, height = 10,
+    onefile = TRUE, pointsize = 10)
 
 i <- 3
 
@@ -127,13 +127,13 @@ for (i in 1:nrow(tfInfo)) {
   )
 
 
-  # plot(chipSummary$figure)
+  plot(chipSummary$figure)
 
   allPlotData <- dplyr::bind_rows(allPlotData, chipSummary$data)
   
 }
 
-# dev.off()
+dev.off()
 
 bestReplicate <- dplyr::left_join(x = tfInfo, y = peakCountsDf, by = "sampleId") %>% 
   dplyr::select(!!!colnames(peakCountsDf), SM_TF, copyNumber, condition, timePoint, rep) %>% 

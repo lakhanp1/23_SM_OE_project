@@ -36,7 +36,7 @@ matrixDim = c(c(up, body, down)/bin, bin)
 
 ##################################################################################
 
-tfSampleList <- readr::read_tsv(file = file_tf_macs2, col_names = c("sampleId"),  comment = "#")
+tfSampleList <- readr::read_tsv(file = file_tf_macs2, comment = "#")
 
 tfInfo <- get_sample_information(
   exptInfoFile = file_exptInfo,
@@ -108,7 +108,7 @@ dev.off()
 
 
 fig_pval_distribution <- ggarrange(plotlist = plotList_pval_distibution,
-                                   nrow = 8, ncol = 10, hjust = 0.5)
+                                   nrow = 8, ncol = 11, hjust = 0.5)
 
 png(filename = paste(outPrefix, ".pval_distribution.png", sep = ""),
     width = 12000, height = 9000, res = 160)

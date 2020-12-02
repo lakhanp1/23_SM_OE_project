@@ -12,7 +12,6 @@ suppressPackageStartupMessages(library(argparse))
 suppressPackageStartupMessages(library(org.Anidulans.FGSCA4.eg.db))
 suppressPackageStartupMessages(require(openxlsx))
 
-
 ## This script:
 ## 1. Runs the DESeq2 pipeline on count matrix (CSV) generated from StringTie
 ## 2. Writes the normalized count matrix and rlog transformed counts
@@ -70,7 +69,7 @@ parser$add_argument(
 # parser$print_help()
 
 # file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
-# analysisName <- "AN0148_sCopy_OE_vs_MH11036"
+# analysisName <- "AN2553_msCopy_OE_vs_WT"
 
 args <- parser$parse_args()
 
@@ -129,7 +128,8 @@ if(isFALSE(setequal(compare, exptInfo[[col_compare]]))){
 # ## ensure that reference level is same as compare[2] in the factor
 exptInfo <- exptInfo %>% dplyr::mutate(
   !!col_compare := forcats::fct_relevel(.f = !!sym(col_compare), compare[2], compare[1])
-)
+) %>% 
+  dplyr::arrange(!!sym(col_compare))
 
 rownames(exptInfo) <- exptInfo$sampleId
 
@@ -208,21 +208,21 @@ if(any(duplicated(geneInfo$geneId))){
 
 ## raw counts
 rawCounts <- tibble::rownames_to_column(as.data.frame(counts(dds, normalized = FALSE)), var = "geneId")
-readr::write_tsv(x = rawCounts, path = paste(outPrefix, ".rawCounts.tab", sep = ""))
+readr::write_tsv(x = rawCounts, file = paste(outPrefix, ".rawCounts.tab", sep = ""))
 
 # ## FPKM
 # fpkmCounts <- tibble::rownames_to_column(as.data.frame(fpkm(dds)), var = "geneId")
-# readr::write_tsv(x = fpkmCounts, path = paste0(c(outPrefix,".FPKM.tab"), collapse = ""))
+# readr::write_tsv(x = fpkmCounts, file = paste0(c(outPrefix,".FPKM.tab"), collapse = ""))
 
 ## normalized counts matrix
 normCounts <- tibble::rownames_to_column(as.data.frame(counts(dds, normalized = TRUE)), var = "geneId")
-readr::write_tsv(x = normCounts, path = paste0(c(outPrefix,".normCounts.tab"), collapse = ""))
+readr::write_tsv(x = normCounts, file = paste0(c(outPrefix,".normCounts.tab"), collapse = ""))
 
 
 ## r-log normalized counts
 rld <- rlog(dds, blind = FALSE)
 rldCount <- rownames_to_column(as.data.frame(assay(rld)), var = "geneId")
-readr::write_tsv(x = rldCount, path = paste(outPrefix, ".rlogCounts.tab", sep = ""))
+readr::write_tsv(x = rldCount, file = paste(outPrefix, ".rlogCounts.tab", sep = ""))
 
 
 ###########################################################################
@@ -535,9 +535,9 @@ significant_down <- filter(degData, padj < cutoff_fdr, log2FoldChange <= cutoff_
 ###########################################################################
 ## store data
 
-readr::write_tsv(x = resDf, path = paste(outPrefix, ".DESeq2.tab", sep = ""))
-readr::write_tsv(x = resShrinkDf, path = paste(outPrefix, ".DESeq2_shrunken.tab", sep = ""))
-readr::write_tsv(x = degData, path = paste(outPrefix, ".DEG_all.txt", sep = ""))
+readr::write_tsv(x = resDf, file = paste(outPrefix, ".DESeq2.tab", sep = ""))
+readr::write_tsv(x = resShrinkDf, file = paste(outPrefix, ".DESeq2_shrunken.tab", sep = ""))
+readr::write_tsv(x = degData, file = paste(outPrefix, ".DEG_all.txt", sep = ""))
 
 
 ## write data to excel file
@@ -576,7 +576,7 @@ pt_volc <- volcano_plot(df = diffData,
                         lfc_col = "log2FoldChange",
                         fdr_cut = cutoff_fdr, lfc_cut = cutoff_lfc, 
                         markGenes = markGenes,
-                        ylimit = 4, xlimit = c(-4, 4))
+                        ylimit = 10, xlimit = c(-4, 4))
 
 # png(filename = paste(outPrefix, ".volcano.png", sep = ""), width = 2500, height = 3000, res = 280)
 # plot(pt_volc$plot)
