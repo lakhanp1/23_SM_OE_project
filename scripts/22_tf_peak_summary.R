@@ -21,7 +21,7 @@ outDir <- here::here("analysis", "09_TF_binding")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
 file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
-file_tfSamples <- here::here("data", "reference_data", "tf_sample_ids.best_rep.txt")
+file_tfSamples <- here::here("data", "reference_data", "production_data.tf_samples.txt")
 file_peakSummary <- here::here("analysis", "02_QC_TF", "TF_ChIP_summary.best_replicates.tab")
 TF_dataPath <- here::here("data", "TF_data")
 
@@ -46,6 +46,7 @@ tfInfoList <- purrr::transpose(tfInfo)  %>%
   purrr::set_names(nm = purrr::map(., "sampleId"))
 
 tfSummary <- suppressMessages(readr::read_tsv(file = file_peakSummary))
+# unname(AnnotationDbi::mapIds(x = orgDb, keys = anDf$SM_TF, column = "GENE_NAME", keytype = "GID"))
 
 ##################################################################################
 ## generate combinatorial binding matrix using
@@ -75,15 +76,6 @@ colnames(matPeakOccupancy) <- stringr::str_replace(
   string = colnames(matPeakOccupancy), pattern = "overlap.", replacement = ""
 )
 
-
-## peakEnrichment matrix
-enrichmentMat <- dplyr::select(matFiltered, name, starts_with("peakEnrichment")) %>% 
-  dplyr::mutate_at(.vars = vars(starts_with("peakEnrichment.")), .funs = ~ replace_na(., 0)) %>% 
-  tibble::column_to_rownames(var = "name") %>% 
-  as.matrix() %>% 
-  scale_matrix_columns(add_attr = F)
-
-colnames(enrichmentMat) <- gsub(pattern = "peakEnrichment.", replacement = "", x = colnames(enrichmentMat))
 
 ## transpose the matrices to plot data horizontally
 matPeakOccupancy <- t(matPeakOccupancy)

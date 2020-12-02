@@ -131,10 +131,19 @@ plotData <- dplyr::bind_rows(oeGeneRanks, wtGeneRanks) %>%
   ) %>% 
   dplyr::arrange(geneId, copyNumber)
 
+plotData$geneName <- AnnotationDbi::mapIds(
+  x = orgDb, keys = plotData$geneId, column = "GENE_NAME", keytype = "GID"
+)
+
+plotData <- dplyr::mutate(
+  plotData,
+  geneLabel = paste(geneId, " (", geneName, ")", sep = ""),
+  geneLabel = if_else(condition = geneId == geneName, true = geneId, false = geneLabel)
+)
 
 ## plot the data
 pt_oe_gene_rank <- dplyr::filter(plotData, copyNumber != "deletion") %>% 
-  ggplot(mapping = aes(x = geneId, y = rank, color = copyNumber)) +
+  ggplot(mapping = aes(x = geneLabel, y = rank, color = copyNumber)) +
   geom_hline(yintercept = nrow(geneSet), linetype = "dashed") +
   geom_point(size = 3) +
   coord_cartesian(ylim = c(0, nrow(geneSet))) +
@@ -164,7 +173,7 @@ pt_oe_gene_rank <- dplyr::filter(plotData, copyNumber != "deletion") %>%
   )
 
 
-ggsave(filename = paste(outPrefix, ".png", sep = ""), plot = pt_oe_gene_rank, width = 10, height = 8)
+ggsave(filename = paste(outPrefix, ".png", sep = ""), plot = pt_oe_gene_rank, width = 12, height = 8)
 ggsave(filename = paste(outPrefix, ".pdf", sep = ""), plot = pt_oe_gene_rank, width = 12, height = 8)
 
 
