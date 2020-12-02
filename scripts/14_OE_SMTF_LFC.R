@@ -36,7 +36,7 @@ col_geneId <- "GID"
 degIds <- suppressMessages(readr::read_tsv(file = file_degIds))
 
 rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath) %>% 
-  dplyr::filter(comparison %in% degIds$comparison)
+  dplyr::filter(comparison %in% degIds$degId)
 
 rnaseqInfo$log2FoldChange <- NA
 rnaseqInfo$pvalue <- NA
@@ -54,12 +54,23 @@ for (row in 1:nrow(rnaseqInfo)) {
   
 }
 
+rnaseqInfo$geneName <- AnnotationDbi::mapIds(
+  x = orgDb, keys = rnaseqInfo$SM_TF, column = "GENE_NAME", keytype = "GID"
+)
+
+rnaseqInfo <- dplyr::mutate(
+  rnaseqInfo,
+  geneLabel = paste(SM_TF, " (", geneName, ")", sep = ""),
+  geneLabel = if_else(condition = SM_TF == geneName, true = SM_TF, false = geneLabel)
+)
+
 plotData <-  rnaseqInfo %>% 
   dplyr::arrange(log2FoldChange) %>% 
   dplyr::mutate(
     log10_padj = -log10(padj),
     significant = if_else(condition = padj <= 0.05, "significant", "non-significant"),
-    SM_TF = forcats::as_factor(SM_TF)
+    SM_TF = forcats::as_factor(SM_TF),
+    geneLabel = forcats::as_factor(geneLabel)
   )
 
 
@@ -74,7 +85,7 @@ scaleLabels <- c(format(1/(10^c(1, 1.30103, 2:scaleLim)), drop0trailing = T, sci
 
 pt <- ggplot(
   data = plotData,
-  mapping = aes(x = log2FoldChange, y = SM_TF)) +
+  mapping = aes(x = log2FoldChange, y = geneLabel)) +
   geom_point(mapping = aes(fill = log10_padj, color = significant),
              shape = 21, size = 5, stroke = 1) +
   scale_fill_gradientn(
@@ -107,7 +118,7 @@ pt <- ggplot(
   )
 
 ggsave(filename = paste(outPrefix, ".SM_gene_LFC.pdf", sep = ""), plot = pt, width = 10, height = 10)
-ggsave(filename = paste(outPrefix, ".SM_gene_LFC.png", sep = ""), plot = pt, width = 10, height = 10, scale = 1.1)
+ggsave(filename = paste(outPrefix, ".SM_gene_LFC.png", sep = ""), plot = pt, width = 10, height = 8, scale = 1.1)
 
 
 
