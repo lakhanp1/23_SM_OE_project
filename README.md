@@ -1,14 +1,12 @@
+# SMTF overexpression analysis
 
-##############################################
-#########	Aspergillus nidulans		######
-##############################################
-
-#bowtie2 mapping
+## bowtie2 mapping
+```bash
 bowtie2 -p 6 --local  -x <bt2-idx> -1 <> -2 <> | samtools view -bS - | samtools sort  -O bam -o <>.bam
+```
 
-
-#Index and alignment stats
-{
+## Index and alignment stats
+```bash
 for i in `cat sample_ANidulans.list`
 do
 cd $i
@@ -16,11 +14,11 @@ bash /home/lakhanp/scripts/ChIPseq_scripts/template_ChIPseq_config.sh -c /home/l
 sed "s/SAMPLE_ID/$i/g" /home/lakhanp/scripts/ChIPseq_scripts/template_ChIPseq_process.sh >> generalJob.sh
 cd ..
 done
-}
+```
 
 
 ## Calculate GC bias
-{
+```bash
 for i in `cat sample_ANidulans.list`
 do
 cd $i
@@ -29,25 +27,12 @@ computeGCBias -b %s_bt2.bam --effectiveGenomeSize 29850950 -g /home/lakhanp/data
 error_exit \$? \n\n" $i $i $i >> generalJob.sh
 cd ..
 done
-}
+```
 
-
-#### Generate profile matrix
-##{
-##for i in `cat sample_ANidulans.list`
-##do
-##cd $i
-##printf "##generate profile matris (-2kb == normalized(geneBody) to 2kb == +1kb)
-##computeMatrix scale-regions -S %s_normalized.bw  -R /home/lakhanp/database/A_nidulans_FGSC_A4/annotation/A_nidulans_FGSC_A4_version_s10-m04-r03_CDS_Unique.bed -m 2000 -b 2000 -a 1000 --numberOfProcessors 2  --outFileName %s_normalized_profile.tab.gz
-##error_exit \$? \n\n" $i $i >> generalJob.sh
-##cd ..
-##done
-##}
-####
 
 
 ## Print control information and peak type (narrow/broad) information
-{
+```bash
 ## IMP
 ## use the printf information from the excel file
 for i in `cat sample_tf_macs2.list`
@@ -55,25 +40,23 @@ do cd $i
 printf "peakType=\'narrow\'\n\n" >> generalJob.sh
 cd ..
 done
-}
+```
 
 
 ## MACS2 peak calling: use template
-{
+```bash
 for i in `cat sample_tf_macs2.list`
 do cd $i
 sed "s/SAMPLE_ID/$i/g" /home/lakhanp/scripts/ChIPseq_scripts/template_ChIPseq_macs2.sh >> generalJob.sh
 cd ..
 done
-}
-
-
-
+```
 
 
 
 
 ## copy data to local
+```bash
 for i in `cat sample_ANidulans.list`
 do 
 cd $i
@@ -85,13 +68,11 @@ for i in `cat tf_AN.list`; do cd $i;
 cp macs2_*/${i}*{.narrowPeak,.broadPeak,.tab} ../localCopy/
 cd ..
 done
+```
 
 
-## Rscript E:\Chris_UM\Codes\Shuhui_SM_OE_project\kmeans_all.R > kmeasns_all.log
-
-
-##############################################
 ## read count for polII data: deeptools
+```bash
 multiBamSummary BED-file \
 --BED /home/lakhanp/database/A_nidulans_FGSC_A4/annotation/AN_genes_for_polII.bed \
 --bamfiles /home/lakhanp/Analysis/23_Shuhui_SM_OE_project/mapping/*_polII_*/*bam \
@@ -102,14 +83,13 @@ multiBamSummary BED-file \
 ## read count for polII data: bedtools
 bedtools multicov -bams /home/lakhanp/Analysis/23_Shuhui_SM_OE_project/mapping/*_polII_*/*bam \
 -bed /home/lakhanp/database/A_nidulans_FGSC_A4/annotation/AN_genesForPolII.bed > raw_count.polII.bedtools.tab
+```
 
 
+## bigwig correlation using deeptools
 
-###################################################
-##### bigwig correlation using deeptools     ######
-###################################################
-###############
-## generate the counts using deeptools multiBigwigSummary: gene body
+### generate the counts using deeptools multiBigwigSummary: gene body
+```bash
 multiBigwigSummary BED-file \
 --bwfiles /home/lakhanp/Analysis/23_Shuhui_SM_OE_project/mapping/*/*_normalized.bw \
 /home/lakhanp/Analysis/19_ChIPMix_process/CL2019_ChIPmix_46/mapping/AN*_xyl_*/*_normalized.bw \
@@ -126,8 +106,10 @@ plotCorrelation --corData An_bigwig_summary_gene.npz --corMethod pearson --skipZ
 ## plotCorrelation for all samples: spearman
 plotCorrelation --corData An_bigwig_summary_gene.npz --corMethod spearman --skipZeros --plotTitle "spearman Correlation at gene body" --whatToPlot heatmap --colorMap RdYlBu --plotNumbers -o An_bigwig_spearman_gene.png --outFileCorMatrix An_bigwig_spearman_gene.tab --plotHeight 100 --plotWidth 100
 
-###############
-## generate the counts using deeptools multiBigwigSummary: promoter
+```
+
+### generate the counts using deeptools multiBigwigSummary: promoter region
+```bash
 multiBigwigSummary BED-file \
 --bwfiles /home/lakhanp/Analysis/23_Shuhui_SM_OE_project/mapping/*/*_normalized.bw \
 /home/lakhanp/Analysis/19_ChIPMix_process/CL2019_ChIPmix_46/mapping/AN*_xyl_*/*_normalized.bw \
@@ -144,9 +126,10 @@ plotCorrelation --corData An_bigwig_summary_promoter.npz --corMethod pearson --s
 ## plotCorrelation for all samples: spearman
 plotCorrelation --corData An_bigwig_summary_promoter.npz --corMethod spearman --skipZeros --plotTitle "spearman Correlation at promoter region" --whatToPlot heatmap --colorMap RdYlBu --plotNumbers -o An_bigwig_spearman_promoter.png --outFileCorMatrix An_bigwig_spearman_promoter.tab --plotHeight 100 --plotWidth 100
 
+```
 
-################
-## generate the counts using deeptools multiBigwigSummary: 1kb bins
+### generate the counts using deeptools multiBigwigSummary: 1kb bins
+```bash
 multiBigwigSummary bins \
 --bwfiles /home/lakhanp/Analysis/23_Shuhui_SM_OE_project/mapping/*/*_normalized.bw \
 /home/lakhanp/Analysis/19_ChIPMix_process/CL2019_ChIPmix_46/mapping/AN*_xyl_*/*_normalized.bw \
@@ -160,13 +143,13 @@ plotCorrelation --corData An_bigwig_summary_bin.npz --corMethod pearson --skipZe
 
 ## plotCorrelation for all samples: spearman
 plotCorrelation --corData An_bigwig_summary_bin.npz --corMethod spearman --skipZeros --plotTitle "spearman Correlation at 1kb bin regions" --whatToPlot heatmap --colorMap RdYlBu --plotNumbers -o An_bigwig_spearman_bin.png --outFileCorMatrix An_bigwig_spearman_bin.tab --plotHeight 100 --plotWidth 100
+```
 
-######################################
-####   Motif enrichment analysis  ####
-######################################
+##   Motif enrichment analysis  ####
 
-{
-## meme-chip analysis: with control
+
+### meme-chip analysis: with control
+```bash
 while IFS=$'\t' read -r name fasta neg
 do
 	printf "## meme-chip: ${name}\n"
@@ -177,10 +160,10 @@ do
 	"
 	printf "## done...\n\n"
 done < memechip_de_conf.tab
-}
+```
 
-{
-## meme-chip analysis: without control
+### meme-chip analysis: without control
+```bash
 while IFS=$'\t' read -r name fasta
 do
 	printf "## meme-chip: ${name}\n"
@@ -191,20 +174,21 @@ do
 	#"
 	printf "## done...\n\n"
 done < memechip_conf.tab
-}
+```
 
 
 
 ##fimo motif scanning in polII DEG promoter
+```bash
 fimo -oc fimo.AN0153_OE_vs_WT_DEG --thresh 0.001 --bfile /home/lakhanp/database/A_nidulans_FGSC_A4/reference/promoter_sequences/A_nidulans_promoters.500_TSS_100.meme_background.m2.model AN0153_motif.meme AN0153_OE_vs_WT.DEG_promoter.fasta
+```
 
 
-##########################
-####   AflR analysis  ####
-##########################
-##fimo motif scanning in whole genome
+## AflR analysis
+### fimo motif scanning in whole genome
+```bash
 fimo -oc fimo.AN7820_genome --thresh 0.001 --bfile /home/lakhanp/database/A_nidulans_FGSC_A4/reference/promoter_sequences/A_nidulans_promoters.500_TSS_100.meme_background.m2.model AN7820_motifs.meme /home/lakhanp/database/A_nidulans_FGSC_A4/reference/A_nidulans_FGSC_A4_version_s10-m04-r03_chromosomes.fasta
-
+```
 
 
 
