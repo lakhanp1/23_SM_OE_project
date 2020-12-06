@@ -25,8 +25,8 @@ polII_dataPath <- here::here("data", "polII_data")
 hist_dataPath <- here::here("data", "histone_data")
 other_dataPath <- here::here("data", "other_data")
 
-file_tf_macs2 <- paste(TF_dataPath, "/", "sample_tf_macs2.list", sep = "")
-file_tf <- paste(TF_dataPath, "/", "sample_tf.list", sep = "")
+file_tfSamples <- here::here("data", "reference_data", "production_data.tf_samples.txt")
+
 
 matrixType <- "2kb_summit"
 up <- 2000
@@ -42,7 +42,7 @@ if(!dir.exists(outDir)){
   dir.create(path = outDir, recursive = TRUE)
 }
 
-tfSampleList <- readr::read_tsv(file = file_tf_macs2, col_names = c("sampleId"),  comment = "#")
+tfSampleList <- readr::read_tsv(file = file_tfSamples, comment = "#")
 
 tfInfo <- get_sample_information(
   exptInfoFile = file_exptInfo,
@@ -173,9 +173,7 @@ pt_width <- ggplot(
 
 
 png(filename = paste(outPrefix, ".summary.png", sep = ""), width = 3000, height = 2000, res = 250)
-
 print(pt_width)
-
 dev.off()
 
 ##################################################################################
@@ -252,7 +250,7 @@ itgPeakStats <- dplyr::mutate(
   gapType = forcats::fct_relevel(gapType, "tandem", "convergent", "divergent")
 )
 
-readr::write_tsv(x = itgPeakStats, path = paste(outPrefix, ".all_TF_distriution.data.tab", sep = ""))
+readr::write_tsv(x = itgPeakStats, file = paste(outPrefix, ".all_TF_distriution.data.tab", sep = ""))
 
 pt2 <- ggplot(
   data = itgPeakStats,
