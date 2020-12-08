@@ -48,21 +48,25 @@ degIds <- suppressMessages(readr::read_tsv(file = file_degIds))
 rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath) %>% 
   dplyr::filter(comparison %in% degIds$degId)
 
-clusterInfo <- AnnotationDbi::select(
+
+dataAnnotations <- AnnotationDbi::select(
   x = orgDb, keys = rnaseqInfo$SM_TF, columns = c("GENE_NAME", "SM_CLUSTER"), keytype = "GID"
 ) %>% 
   dplyr::group_by(GID) %>% 
   dplyr::summarise(
-    geneName = unique(GENE_NAME),
-    SM_cluster = paste(unique(SM_CLUSTER), collapse = "/")
-  )
+    smtfName = unique(GENE_NAME),
+    SM_cluster = paste(na.exclude(unique(SM_CLUSTER)), collapse = "/")
+  ) %>% 
+  dplyr::arrange(desc(SM_cluster))
 
-rnaseqInfo <- dplyr::left_join(x = rnaseqInfo, y = clusterInfo, by = c("SM_TF" = "GID")) %>% 
+
+rnaseqInfo <- dplyr::left_join(x = rnaseqInfo, y = dataAnnotations, by = c("SM_TF" = "GID")) %>% 
   dplyr::mutate(
-    geneLabel = paste(SM_TF, " (", geneName, ")", sep = ""),
-    geneLabel = if_else(condition = SM_TF == geneName, true = SM_TF, false = geneLabel),
-    degLabel = paste(geneLabel, ": ", SM_cluster, sep = "")
-  )
+    smtfLabel = paste(SM_TF, " (", smtfName, ")", sep = ""),
+    smtfLabel = if_else(condition = SM_TF == smtfName, true = SM_TF, false = smtfLabel),
+    dataLabel = paste(smtfName, ": ", SM_cluster, sep = "")
+  ) %>% 
+  dplyr::arrange(desc(SM_cluster))
 
 ## extract genes belonging to "GO:0022900 electron transport chain"
 geneset <- AnnotationDbi::select(
@@ -96,7 +100,7 @@ for (rowId in 1:nrow(rnaseqInfo)) {
     dplyr::mutate(
       comparison = rnaseqInfo$comparison[rowId],
       SM_TF = rnaseqInfo$SM_TF[rowId],
-      degLabel = rnaseqInfo$degLabel[rowId]
+      degLabel = rnaseqInfo$dataLabel[rowId]
       )
   
   subData <- dplyr::left_join(
@@ -131,7 +135,7 @@ fcHeatmap <- Heatmap(
   cluster_columns = FALSE,
   show_row_names = TRUE,
   column_labels = geneset$geneLabel,
-  row_labels = rnaseqInfo$degLabel,
+  row_labels = rnaseqInfo$dataLabel,
   row_names_gp = gpar(fontsize = 16),
   row_names_max_width = unit(12, "cm"),
   column_names_gp = gpar(fontsize = 16), 
