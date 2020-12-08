@@ -1,7 +1,6 @@
 suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(ggforce))
 suppressPackageStartupMessages(library(scales))
-suppressPackageStartupMessages(library(ComplexHeatmap))
-suppressPackageStartupMessages(library(circlize))
 suppressPackageStartupMessages(library(RColorBrewer))
 suppressPackageStartupMessages(library(org.Anidulans.FGSCA4.eg.db))
 suppressPackageStartupMessages(library(TxDb.Anidulans.FGSCA4.AspGD.GFF))
@@ -47,26 +46,26 @@ degIds <- suppressMessages(readr::read_tsv(file = file_degIds))
 rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath) %>% 
   dplyr::filter(comparison %in% degIds$degId)
 
-clusterInfo <- AnnotationDbi::select(
+dataAnnotations <- AnnotationDbi::select(
   x = orgDb, keys = rnaseqInfo$SM_TF, columns = c("GENE_NAME", "SM_CLUSTER"), keytype = "GID"
 ) %>% 
   dplyr::group_by(GID) %>% 
   dplyr::summarise(
-    geneName = unique(GENE_NAME),
+    smtfName = unique(GENE_NAME),
     SM_cluster = paste(na.exclude(unique(SM_CLUSTER)), collapse = "/")
   ) %>% 
   dplyr::arrange(desc(SM_cluster))
 
-rnaseqInfo <- dplyr::left_join(x = rnaseqInfo, y = clusterInfo, by = c("SM_TF" = "GID")) %>% 
+rnaseqInfo <- dplyr::left_join(x = rnaseqInfo, y = dataAnnotations, by = c("SM_TF" = "GID")) %>% 
   dplyr::mutate(
-    geneLabel = paste(SM_TF, " (", geneName, ")", sep = ""),
-    geneLabel = if_else(condition = SM_TF == geneName, true = SM_TF, false = geneLabel),
-    degLabel = paste(geneLabel, ": ", SM_cluster, sep = "")
+    smtfLabel = paste(SM_TF, " (", smtfName, ")", sep = ""),
+    smtfLabel = if_else(condition = SM_TF == smtfName, true = SM_TF, false = smtfLabel),
+    dataLabel = paste(smtfName, ": ", SM_cluster, sep = "")
   ) %>% 
   dplyr::arrange(desc(SM_cluster))
 
 
-## extract genes belonging to "GO:0022900 electron transport chain"
+## extract all SM cluster genes
 geneset <- AnnotationDbi::select(
   x = orgDb, keys = keys(x = orgDb, keytype = "SM_ID"),
   columns = c("GID", "GENE_NAME", "SM_CLUSTER"), keytype = "SM_ID"
@@ -97,7 +96,7 @@ for (rowId in 1:nrow(rnaseqInfo)) {
     dplyr::mutate(
       comparison = rnaseqInfo$comparison[rowId],
       SM_TF = rnaseqInfo$SM_TF[rowId],
-      degLabel = rnaseqInfo$degLabel[rowId]
+      dataLabel = rnaseqInfo$dataLabel[rowId]
     )
   
   subData <- dplyr::left_join(
@@ -108,14 +107,6 @@ for (rowId in 1:nrow(rnaseqInfo)) {
   
 }
 
-
-# readr::write_tsv(x = degData, file = paste(outPrefix, ".combined_DEGs.tab", sep = ""))
-
-
-
-###########################################################################
-## combined plot
-
 ## for diagonal symmetry of polII DEG data and SM clusters
 clusterLevels <- unname(
   AnnotationDbi::mapIds(
@@ -125,6 +116,15 @@ clusterLevels <- unname(
 
 clusterLevels <- unique(clusterLevels[!is.na(clusterLevels)])
 
+degData <- dplyr::mutate(
+  degData,
+  dataLabel = forcats::fct_relevel(dataLabel, !!!rnaseqInfo$dataLabel),
+  SM_CLUSTER = forcats::fct_relevel(SM_CLUSTER, !!!clusterLevels)
+)
+
+###########################################################################
+## combined plot
+
 smDegSummary <- dplyr::mutate(
   degData,
   diff = dplyr::case_when(
@@ -133,13 +133,11 @@ smDegSummary <- dplyr::mutate(
     TRUE ~ "noDEG"
   )
 ) %>% 
-  dplyr::count(comparison, degLabel, SM_CLUSTER, diff) %>% 
-  dplyr::add_count(comparison, degLabel, SM_CLUSTER, wt = n, name = "total") %>% 
+  dplyr::count(comparison, dataLabel, SM_CLUSTER, diff) %>% 
+  dplyr::add_count(comparison, dataLabel, SM_CLUSTER, wt = n, name = "total") %>% 
   dplyr::mutate(
     fraction = n/total,
-    diff = forcats::fct_relevel(diff, "up", "noDEG", "down"),
-    degLabel = forcats::fct_relevel(degLabel, !!!rnaseqInfo$degLabel),
-    SM_CLUSTER = forcats::fct_relevel(SM_CLUSTER, !!!clusterLevels)
+    diff = forcats::fct_relevel(diff, "up", "noDEG", "down")
   )
 
 
@@ -164,8 +162,8 @@ pt_degPi <- smDegSummary %>%
   ) +
   labs(title = "SMTF OE DEG proportion for all SM clusters") +
   facet_grid(
-    facets = degLabel ~ SM_CLUSTER,
-    labeller = labeller(degLabel = trim_label, SM_CLUSTER = trim_label)
+    facets = dataLabel ~ SM_CLUSTER,
+    labeller = labeller(SM_CLUSTER = trim_label)
   ) +
   theme_no_axes() +
   theme(
@@ -180,15 +178,15 @@ pt_degPi <- smDegSummary %>%
     strip.text.x = element_text(size = 15, angle = 90, hjust = 0),
     strip.text.y = element_text(size = 15, angle = 0, hjust = 0),
     legend.text = element_text(size = 15),
-    legend.position = "right",
-    legend.title = element_text(size = 15, face = "bold", angle = 90)
+    legend.position = c(1, 1), legend.justification = c(0, 0),
+    legend.title = element_text(size = 15, face = "bold")
   )
 
 
-ggsave(filename = paste(outPrefix, ".pie.png", sep = ""), plot = pt_degPi, width = 20, height = 12)
+ggsave(filename = paste(outPrefix, ".pie3.png", sep = ""), plot = pt_degPi, width = 22, height = 12)
 
 ###########################################################################
-
+## plot showing polII log2FoldChange for all SM clusters in each TFOE dataset
 pdf(file = paste(outPrefix, ".TFOE_wise.pdf", sep = ""), width = 15, height = 8, onefile = TRUE)
 
 rowId2 <- 1
@@ -207,7 +205,7 @@ for (rowId2 in 1:nrow(rnaseqInfo)) {
       )
     )
   
-  pltTitle <- paste(rnaseqInfo$degLabel[rowId2], " || log2(", rnaseqInfo$SM_TF[rowId2],
+  pltTitle <- paste(rnaseqInfo$dataLabel[rowId2], " || log2(", rnaseqInfo$SM_TF[rowId2],
                     "-OE/WT) for all SM clusters", sep = "")
   
   pt_tiles <- ggplot() +
@@ -254,4 +252,76 @@ for (rowId2 in 1:nrow(rnaseqInfo)) {
 }
 
 dev.off()
+
+###########################################################################
+## plot showing polII log2FoldChange for all TFOE datasets in each SM cluster
+
+pdf(file = paste(outPrefix, ".SM_cluster_wise.pdf", sep = ""), width = 15, height = 8, onefile = TRUE)
+
+smCluster <- "Asperfuranone (afo) cluster"
+
+for (smCluster in levels(smDegSummary$SM_CLUSTER)) {
+  
+  plotData <- dplyr::filter(degData, SM_CLUSTER == smCluster) %>% 
+    dplyr::group_by(dataLabel) %>% 
+    dplyr::arrange(chr, start, .by_group = TRUE) %>% 
+    dplyr::mutate(index = row_number()) %>% 
+    dplyr::ungroup() %>% 
+    dplyr::mutate(
+      significance = if_else(
+        condition = !!sym(col_pval) <= cutoff_fdr, true = "significant",
+        false = "non-significant", missing = "non-significant"
+      )
+    )
+  
+  
+  pltTitle <- paste("log2(SMTF-OE/WT) for \"", smCluster,
+                    "\" in all TFOE datasets",sep = "")
+  
+  pt_tiles <- ggplot() +
+    geom_tile(
+      data = plotData,
+      mapping = aes(x = index, y = dataLabel, fill = shrinkLog2FC, color = significance),
+      size = 0.2, height = 1) +
+    scale_fill_gradient2(
+      name = paste("log2(", "OE/WT", ")", sep = ""),
+      low = "#313695", mid = "#F7F7F7", high = "#d73027", midpoint = 0,
+      limit = c(-2.5, 2.5), oob = scales::squish
+    ) +
+    scale_colour_manual(
+      name = "p-value <= 0.05",
+      values = c("significant" = "black", "non-significant" = "white")
+    ) +
+    scale_x_continuous(expand = expansion(add = c(0.0, 0.0))) +
+    facet_wrap(
+      facets = . ~ dataLabel, scales = "free_y",
+      ncol = 5, dir = "v"
+    ) +
+    ggtitle(pltTitle) +
+    guides(color = guide_legend(override.aes = list(shape = 22, size = 2, fill = "grey"))) +
+    theme_bw() +
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+      axis.text = element_blank(),
+      axis.title = element_blank(),
+      axis.ticks = element_blank(),
+      panel.grid = element_blank(),
+      panel.spacing = unit(0.15, "lines"),
+      strip.background = element_rect(fill="white", size = 0.2),
+      strip.text.x = element_text(size = 13, hjust = 0),
+      legend.text = element_text(size = 14),
+      legend.position = "bottom",
+      legend.title = element_text(size = 14, face = "bold"),
+      plot.margin = unit(rep(0.2, 4), "cm")
+    )
+  
+  print(pt_tiles)
+}
+
+
+dev.off()
+
+
+
+
 
