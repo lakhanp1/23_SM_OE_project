@@ -3,6 +3,7 @@ suppressPackageStartupMessages(library(ComplexHeatmap))
 suppressPackageStartupMessages(library(circlize))
 suppressPackageStartupMessages(library(chipmine))
 suppressPackageStartupMessages(library(argparse))
+suppressPackageStartupMessages(library(org.Anidulans.FGSCA4.eg.db))
 
 
 
@@ -19,11 +20,13 @@ file_sampleInfo <- here::here("data", "reference_data", "polII_sample_info.txt")
 file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
 file_fpkm <- here::here("data", "polII_data", "polII_signal_matrix.tab")
 
+orgDb <- org.Anidulans.FGSCA4.eg.db
+
 cutoff_rank <- 5
 cutoff_rankUp <- cutoff_rank
 cutoff_rankDown <- cutoff_rank * -1
 cutoff_fdr <- 0.05
-cutoff_lfc <- 1
+cutoff_lfc <- 0.585
 cutoff_up <- cutoff_lfc
 cutoff_down <- cutoff_lfc * -1
 
@@ -42,7 +45,7 @@ parser$add_argument(
 
 # parser$print_help()
 
-# analysisName <- "AN0153_sCopy_OE_vs_MH11036"
+# analysisName <- "AN0153_sCopy_OE_vs_WT"
 
 args <- parser$parse_args()
 
@@ -62,7 +65,26 @@ sampleInfo <- read.table(file = file_sampleInfo, header = T, sep = "\t", strings
 fpkmMat <- suppressMessages(readr::read_tsv(file = file_fpkm))
 
 ##################################################################################
+geneDesc <- suppressMessages(
+  AnnotationDbi::select(x = orgDb, keys = keys(x = orgDb),
+                        columns = c("DESCRIPTION"), keytype = "GID")
+) %>% 
+  dplyr::rename(geneId = GID)
 
+smInfo <- suppressMessages(
+  AnnotationDbi::select(x = orgDb, keys = keys(orgDb, keytype = "SM_CLUSTER"),
+                        columns = c("GID", "SM_ID"), keytype = "SM_CLUSTER")) %>% 
+  dplyr::group_by(GID) %>% 
+  dplyr::mutate(SM_CLUSTER = paste(SM_CLUSTER, collapse = ";"),
+                SM_ID = paste(SM_ID, collapse = ";")) %>% 
+  dplyr::slice(1L) %>% 
+  dplyr::ungroup()
+
+geneInfo <- dplyr::left_join(x = geneDesc, y = smInfo, by = c("geneId" = "GID"))
+
+glimpse(geneInfo)
+
+##################################################################################
 
 file_deseq <- paste(diffDataPath, "/", analysisName, "/", analysisName, ".DEG_all.txt", sep = "")
 file_normCounts <- paste(diffDataPath, "/", analysisName, "/", analysisName, ".normCounts.tab", sep = "")
@@ -110,13 +132,14 @@ mergedData <- dplyr::left_join(x = deseqData, y = rankcompData, by = "geneId") %
     group = paste("DESeq2:", deseq2_diff, "; RankComp2:", rankcomp_diff,
                   "; rank change direction:", consensus, sep = "")
   ) %>% 
-  dplyr::filter(deseq2_diff != "noDEG" | rankcomp_diff != "noDEG")
+  # dplyr::filter(deseq2_diff != "noDEG" | rankcomp_diff != "noDEG") %>% 
+  dplyr::left_join(y = geneInfo, by = "geneId")
 
 # glimpse(mergedData)
 dplyr::group_by(mergedData, deseq2_diff, rankcomp_diff, consensus, group) %>% 
   dplyr::summarise(n = n())
 
-readr::write_tsv(x = mergedData, path = paste(outPrefix, ".deseq2.rankcomp.comp.tab", sep = ""))
+readr::write_tsv(x = mergedData, file = paste(outPrefix, ".deseq2.rankcomp.comp.tab", sep = ""))
 
 #########################
 ## prepare data

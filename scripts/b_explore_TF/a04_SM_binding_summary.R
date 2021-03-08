@@ -13,7 +13,7 @@ analysisName <- "SM_cluster_summary"
 outDir <- here::here("analysis", "06_SM_cluster_summary")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
-file_exptInfo <- here::here("data", "referenceData/sample_info.txt")
+file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
 
 file_genes <- here::here("data", "referenceData/AN_genes_for_polII.bed")
 orgDb <- org.Anidulans.FGSCA4.eg.db

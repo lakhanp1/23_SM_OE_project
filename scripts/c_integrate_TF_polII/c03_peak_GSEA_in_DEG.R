@@ -26,7 +26,7 @@ file_dataSummary <- here::here("data", "reference_data", "raw_data_summary.tab")
 file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
 
 file_peakSummary <- here::here("analysis", "02_QC_TF", "TF_ChIP_summary.best_replicates.tab")
-file_degSummary <- here::here("analysis", "06_polII_diff", "polII_DEG.stats.tab")
+file_degSummary <- here::here("analysis", "08_polII_diff_downstream", "01_polII_DEGs_summary", "polII_DEGs_summary.stats.tab")
 
 TF_dataPath <- here::here("data", "TF_data")
 diffDataPath <- here::here("analysis", "06_polII_diff")
