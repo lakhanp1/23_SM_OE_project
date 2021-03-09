@@ -101,6 +101,25 @@ groupCols <- sapply(
   simplify = F, USE.NAMES = T
 )
 
+
+geneDesc <- suppressMessages(
+  AnnotationDbi::select(x = orgDb, keys = keys(orgDb), columns = c("DESCRIPTION"), keytype = "GID")
+) %>% 
+  dplyr::rename(geneId = GID)
+
+smInfo <- suppressMessages(
+  AnnotationDbi::select(x = orgDb, keys = keys(orgDb, keytype = "SM_CLUSTER"),
+                        columns = c("GID", "SM_ID"), keytype = "SM_CLUSTER")) %>% 
+  dplyr::group_by(GID) %>% 
+  dplyr::mutate(SM_CLUSTER = paste(SM_CLUSTER, collapse = ";"),
+                SM_ID = paste(SM_ID, collapse = ";")) %>% 
+  dplyr::slice(1L) %>% 
+  dplyr::ungroup()
+
+geneInfo <- dplyr::left_join(x = geneDesc, y = smInfo, by = c("geneId" = "GID"))
+
+glimpse(geneInfo)
+
 ##################################################################################
 ## diffBind analysis
 # 
@@ -230,12 +249,6 @@ dplyr::group_by(diffData, diffBind, peakOccupancy) %>%
 ## assign peak category based on diffbind and peakOccupancy
 diffData <- diffData %>% 
   dplyr::mutate(
-    # categoryDiffbind = dplyr::case_when(
-    #   diffBind == "up" | peakOccupancy == grp1SpecificOcc ~ paste(grp1, ":enriched", sep = ""),
-    #   diffBind == "down" | peakOccupancy == grp2SpecificOcc ~ paste(grp2, ":enriched", sep = ""),
-    #   diffBind == "noDiff" & peakOccupancy == "common" ~ "common",
-    #   TRUE ~ "NA"
-    # ),
     categoryDiffbind = dplyr::case_when(
       peakOccupancy == grp1SpecificOcc ~ grp1SpecificOcc,
       peakOccupancy == grp2SpecificOcc ~ grp2SpecificOcc,
@@ -259,25 +272,25 @@ readr::write_tsv(x = diffData, file = paste(outPrefix, ".all.tab", sep = ""))
 ##################################################################################
 ## diffbind report with target genes
 
-# 
+# ## annotate DiffBind regions
 # ## prepare txIds excluding rRNA and tRNA transcripts
-# geneInfo <- AnnotationDbi::select(x = orgDb,
+# geneInfo2 <- AnnotationDbi::select(x = orgDb,
 #                                   keys = keys(orgDb, keytype = "GID"),
 #                                   columns = c("GENE_NAME", "TYPE"),
 #                                   keytype = "GID") %>% 
 #   dplyr::rename(geneId = GID)
 # 
-# geneInfo %>% dplyr::filter(!grepl(pattern = "ORF\\|", x = TYPE, perl = TRUE)) %>% 
+# geneInfo2 %>% dplyr::filter(!grepl(pattern = "ORF\\|", x = TYPE, perl = TRUE)) %>% 
 #   dplyr::select(geneId, GENE_NAME, TYPE) %>%
 #   dplyr::count(TYPE)
 # 
-# geneInfo <- dplyr::filter(geneInfo, !grepl(pattern = "(rRNA|tRNA)\\|", x = TYPE, perl = TRUE))
+# geneInfo2 <- dplyr::filter(geneInfo2, !grepl(pattern = "(rRNA|tRNA)\\|", x = TYPE, perl = TRUE))
 # 
-# txInfo <- AnnotationDbi::select(x = txDb, keys = geneInfo$geneId,
+# txInfo <- AnnotationDbi::select(x = txDb, keys = geneInfo2$geneId,
 #                                 columns = "TXID", keytype = "GENEID")
 # 
-# ## annotate DiffBind regions
 # diffGrAn <- annotate_ranges(peaks = diffGr, txdb = txDb, promoterLength = 500, txIds = txInfo$TXID)
+#
 
 
 ## import peak annotation for sample1 and add new column with pval cutoff pass result
@@ -357,7 +370,8 @@ diffAnn <- diffAnn %>%
   )
 
 
-diffAnn <- diffAnn %>% dplyr::select(seqnames, start, end, name, geneId, peakPosition, everything())
+diffAnn <- diffAnn %>% dplyr::select(seqnames, start, end, name, geneId, peakPosition, everything()) %>% 
+  dplyr::left_join(y = geneInfo, by = "geneId")
 
 readr::write_tsv(x = diffAnn, file = paste(outPrefix, ".all.annotation.tab", sep = ""))
 
@@ -398,9 +412,10 @@ common <- dplyr::filter(
 finalDiffbind <- dplyr::bind_rows(tf1Specific, tf2Specific, common) %>% 
   dplyr::arrange(seqnames, start) %>% 
   dplyr::select(-starts_with("targetGene.")) %>% 
-  dplyr::select(seqnames, start, end, name, geneId, peakPosition, Fold, p.value, FDR, diffBind,
-                peakOccupancy, categoryDiffbind, starts_with("peakCall"), contains(bestGrp1Id),
-                contains(bestGrp2Id), everything(), -starts_with("Conc_")
+  dplyr::select(
+    seqnames, start, end, name, geneId, !!!colnames(geneInfo), peakPosition, Fold,
+    p.value, FDR, diffBind, peakOccupancy, categoryDiffbind, starts_with("peakCall"),
+    contains(bestGrp1Id), contains(bestGrp2Id), everything(), -starts_with("Conc_")
   )
 
 
