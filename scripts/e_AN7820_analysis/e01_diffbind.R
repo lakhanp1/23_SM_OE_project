@@ -19,8 +19,8 @@ if(!dir.exists(outDir)){
 }
 
 ## the denominator or WT in log2(fold_change) should be second
-col_compare <- "Condition"
-compare <- c("AN7820_sCopy_OE_minor_Xyl", "AN7820_sCopy_OE")
+col_compare <- "diffbind_condition"
+diffbindCompare <- c("high_Xylose", "low_Xylose")
 
 analysisName <- "AflR_diffbind"
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
@@ -49,7 +49,10 @@ exptData <- get_sample_information(
   dataPath = TF_dataPath
 )
 
-exptData$bam <- paste(here::here("data"), "/bams/", exptData$sampleId, "_bt2.bam", sep = "")
+exptData <- dplyr::left_join(x = exptData, y = diffbindInfo, by = "sampleId") %>% 
+  dplyr::mutate(
+    bam = paste(here::here("data"), "/bams/", sampleId, "_bt2.bam", sep = "")
+  )
 
 exptDataList <- purrr::transpose(exptData) %>%
   purrr::set_names(nm = purrr::map(., "sampleId"))
@@ -64,7 +67,7 @@ tfCols <- sapply(
 diffbindInfo <- dplyr::select(
   exptData,
   SampleID = sampleId,
-  Condition = condition,
+  Condition = !!sym(col_compare),
   Replicate = rep,
   bamReads = bam,
   Peaks = peakFile,
@@ -76,28 +79,28 @@ if(is.null(diffbindInfo$pval_cutoff)){
   diffbindInfo$pval_cutoff <- 20
 }
 
-## ensure that reference level is same as compare[2] in the factor
+## ensure that reference level is same as diffbindCompare[2] in the factor
 diffbindInfo <- diffbindInfo %>% dplyr::mutate(
-  !!col_compare := forcats::fct_relevel(.f = !!sym(col_compare), compare[2], compare[1])
+  Condition := forcats::fct_relevel(.f = Condition, diffbindCompare[2], diffbindCompare[1])
 ) %>% 
-  dplyr::arrange(!!sym(col_compare))
+  dplyr::arrange(Condition)
 
 
-grp1 <- compare[1]        ## numerator
-grp2 <- compare[2]        ## denominator
-grp1Index <- which(diffbindInfo[[col_compare]] == grp1)
-grp2Index <- which(diffbindInfo[[col_compare]] == grp2)
-grp1Samples <- diffbindInfo$SampleID[grp1Index]
-grp2Samples <- diffbindInfo$SampleID[grp2Index]
+grp1 <- diffbindCompare[1]        ## numerator
+grp2 <- diffbindCompare[2]        ## denominator
+grp1Index <- which(exptData[[col_compare]] == grp1)
+grp2Index <- which(exptData[[col_compare]] == grp2)
+grp1Samples <- exptData$sampleId[grp1Index]
+grp2Samples <- exptData$sampleId[grp2Index]
 grp1SpecificOcc = paste(grp1, ":specific", sep = "")
 grp2SpecificOcc = paste(grp2, ":specific", sep = "")
 
-bestGrp1Id <- diffbindInfo$SampleID[diffbindInfo[[col_compare]] == grp1 & diffbindInfo$repRank == 1]
-bestGrp2Id <- diffbindInfo$SampleID[diffbindInfo[[col_compare]] == grp2 & diffbindInfo$repRank == 1]
+bestGrp1Id <- exptData$sampleId[exptData[[col_compare]] == grp1 & exptData$repRank == 1]
+bestGrp2Id <- exptData$sampleId[exptData[[col_compare]] == grp2 & exptData$repRank == 1]
 
 groupCols <- sapply(
   X = c("peakCall", "pvalGood"),
-  FUN = function(x){ structure(paste(x, ".", compare, sep = ""), names = compare) },
+  FUN = function(x){ structure(paste(x, ".", diffbindCompare, sep = ""), names = diffbindCompare) },
   simplify = F, USE.NAMES = T
 )
 
@@ -135,7 +138,7 @@ glimpse(geneInfo)
 # 
 # contrastDba <- DiffBind::dba.contrast(
 #   DBA = normDba, design = "~Condition", minMembers = 2,
-#   contrast = c(col_compare, compare)
+#   contrast = c("Condition", diffbindCompare)
 # )
 # 
 # dba.show(contrastDba, bContrasts=TRUE)
