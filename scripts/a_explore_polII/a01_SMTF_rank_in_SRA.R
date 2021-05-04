@@ -15,7 +15,7 @@ source("E:/Chris_UM/GitHub/omics_util/02_RNAseq_scripts/s02_DESeq2_functions.R")
 
 ##################################################################################
 analysisName <- "SMTF_rank_SRA"
-outDir <- here::here("analysis", "02_QC_polII", "production_data_QC")
+outDir <- here::here("analysis", "08_polII_analysis", "01_polII_DEGs_summary")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
 polII_dataPath <- here::here("data", "polII_data")
@@ -25,6 +25,7 @@ file_genes <- here::here("data", "reference_data", "AN_genes_for_polII.bed")
 file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
 file_degIds <- here::here("data", "reference_data", "production_data.polII_DEG_ids.txt")
 file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
+file_sraFpkm <- here::here("data", "Aspergillus_nidulans_FGSC_A4.RNAseq_SRA.FPKM.txt")
 
 orgDb <- org.Anidulans.FGSCA4.eg.db
 txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
@@ -78,10 +79,10 @@ plotData <- dplyr::left_join(
   by = "sampleId"
 ) %>% 
   dplyr::filter(geneId == SM_TF | condition == "WT") %>% 
-  tidyr::replace_na(replace = list(copyNumber = "WT"))
-dplyr::mutate(
-  copyNumber = factor(copyNumber, levels = c("sCopy_OE", "mCopy_OE", "WT"))
-) %>% 
+  tidyr::replace_na(replace = list(copyNumber = "WT")) %>% 
+  dplyr::mutate(
+    copyNumber = factor(copyNumber, levels = c("sCopy_OE", "mCopy_OE", "WT"))
+  ) %>% 
   dplyr::arrange(geneId, copyNumber)
 
 

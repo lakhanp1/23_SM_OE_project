@@ -12,7 +12,7 @@ rm(list = ls())
 
 ##################################################################################
 analysisName <- "OE_TF_polII_rank"
-outDir <- here::here("analysis", "02_QC_polII", "production_data_QC")
+outDir <- here::here("analysis", "08_polII_analysis", "01_polII_DEGs_summary")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
 file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
