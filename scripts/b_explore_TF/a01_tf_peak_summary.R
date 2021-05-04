@@ -16,8 +16,8 @@ rm(list = ls())
 
 ##################################################################################
 
-analysisName <- "TF_peak_summary"
-outDir <- here::here("analysis", "09_TF_binding")
+analysisName <- "TF_binding"
+outDir <- here::here("analysis", "09_TF_binding", "01_summary")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
 file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
@@ -31,7 +31,6 @@ txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
 cutoff_macs2Pval <- 20
 
 ##################################################################################
-
 
 tfSampleList <- suppressMessages(readr::read_tsv(file = file_tfSamples))
 
@@ -50,7 +49,7 @@ tfSummary <- suppressMessages(readr::read_tsv(file = file_peakSummary))
 
 ##################################################################################
 ## generate combinatorial binding matrix using
-mat <- combinatorial_binding_matrix(
+mat <- chipmine::combinatorial_binding_matrix(
   sampleInfo = tfInfo, peakFormat = "narrowPeak", summitRegion = 50
 )
 
@@ -85,7 +84,7 @@ matPeakOccupancy <- t(matPeakOccupancy)
 mergedRegions <- GenomicRanges::makeGRangesFromDataFrame(df = matFiltered)
 mergedRegions$name <- matFiltered$name
 
-regionCov <- region_coverage_matrix(regions = mergedRegions, exptInfo = tfInfo)
+regionCov <- chipmine::region_coverage_matrix(regions = mergedRegions, exptInfo = tfInfo)
 
 ## z-score of coverage across samples for each region
 regionCovMat <- tibble::column_to_rownames(regionCov, var = "name") %>% 
@@ -99,6 +98,10 @@ corrMat <- cor(x = regionCovMat)
 anDf <- tibble::tibble(sampleId = rownames(corrMat)) %>% 
   dplyr::left_join(y = tfSummary, by = "sampleId")
 
+anDf$geneName <- AnnotationDbi::mapIds(
+  x = orgDb, keys = anDf$SM_TF, column = "GENE_NAME", keytype = "GID"
+)
+
 ## row clustering for samples
 rowClust <- hclust(dist(matPeakOccupancy))
 
@@ -110,11 +113,11 @@ an_peakCount <- HeatmapAnnotation(
     axis_param = list(gp = gpar(fontsize = 14))
   ),
   which = "row",
-  width = unit(5, "cm"),
+  width = unit(3, "cm"),
   annotation_name_side = "top",
   annotation_name_rot = 0,
   annotation_name_gp = gpar(fontface = "bold", fontsize = 16),
-  annotation_label = c("Peak count\n")
+  annotation_label = c("Peak count")
 )
 
 
@@ -122,21 +125,16 @@ an_peakCount <- HeatmapAnnotation(
 ht_corr <- ComplexHeatmap::Heatmap(
   matrix = corrMat,
   col = colorRamp2(breaks = c(-1, 0, 1), colors = c("#276419", "#f7f7f7", "#8e0152")),
-  # right_annotation = an_peakCount,
   cluster_rows = rowClust, cluster_columns = rowClust,
+  show_column_dend = FALSE,
   column_title = "TF ChIPseq correlation",
   column_title_gp = gpar(fontface = "bold", fontsize = 16),
   width = 6,
   # row_names_gp = gpar(fontsize = 12),
-  column_names_gp = gpar(fontsize = 12),
-  row_labels = stringr::str_replace(
-    string = rownames(corrMat), pattern = "_sCopy_OE_16h_(HA|HIS|FLAG)_.*", replacement = ""
-  ),
-  column_labels = stringr::str_replace(
-    string = rownames(corrMat), pattern = "_sCopy_OE_16h_(HA|HIS|FLAG)_.*", replacement = ""
-  ),
-  row_dend_reorder = T,
-  column_dend_reorder = T,
+  column_labels = anDf$geneName, column_names_gp = gpar(fontsize = 13),
+  show_row_names = FALSE,
+  # row_dend_reorder = T,
+  # column_dend_reorder = T,
   heatmap_legend_param = list(
     title = "correlation", title_gp = gpar(fontsize = 14, fontface = "bold"),
     direction = "horizontal", title_position = "leftcenter",
@@ -149,43 +147,41 @@ ht_corr <- ComplexHeatmap::Heatmap(
 ht_occupancy <- Heatmap(
   matrix = matPeakOccupancy,
   name = "matPeakOccupancy",
-  col = c("1" = "#ff7f00", "0" = "#e6e6e6"),
-  width = 5,
+  col = c("1" = "#ff7f00", "0" = "black"),
+  width = 7,
   column_title = "Peak occupancy",
   column_title_gp = gpar(fontface = "bold", fontsize = 16),
-  column_km = 6, column_gap = unit(0, "mm"),
+  # column_km = 6, column_gap = unit(0, "mm"),
   cluster_columns = TRUE, show_column_dend = FALSE,
   cluster_rows = FALSE,
   show_column_names = FALSE,
-  row_labels = stringr::str_replace(
-    string = rownames(matPeakOccupancy), pattern = "_sCopy_OE_16h_(HA|HIS|FLAG)_.*", replacement = ""
-  ),
+  row_labels = anDf$geneName, row_names_side = "left",
+  row_names_gp = gpar(fontsize = 13),
   heatmap_legend_param = list(
-    title = "Peak occupancy", title_gp = gpar(fontsize = 14),
+    title = "",
     at = c(1), labels = "has peak",
     grid_height = unit(1, "cm"), grid_width = unit(1, "cm"),
-    direction = "horizontal", title_position = "leftcenter"
+    direction = "horizontal", title_position = "leftcenter",
+    labels_gp = gpar(fontsize = 14)
   ),
   use_raster = TRUE, raster_quality = 5,
 )
 
 
-ptList <- ht_corr + an_peakCount + ht_occupancy
+ptList <- ht_corr + ht_occupancy + an_peakCount
 
-png(filename = paste(outPrefix, ".binding_matrix.png", sep = ""), width = 6000, height = 3500, res = 350)
+png(filename = paste(outPrefix, ".overall_comparison.png", sep = ""), width = 6500, height = 3500, res = 350)
 
 draw(
   ptList,
-  padding = unit(c(2, 0.5, 0.5, 0.5), "cm"),
+  # padding = unit(c(2, 0.5, 0.5, 0.5), "cm"),
   heatmap_legend_side = "bottom",
   legend_gap = unit(10, "cm"),
-  gap = unit(2, "mm")
+  gap = unit(2, "mm"),
+  auto_adjust = FALSE
 )
 
 dev.off()
-
-
-
 
 
 
