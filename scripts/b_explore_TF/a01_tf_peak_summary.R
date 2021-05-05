@@ -64,6 +64,18 @@ matFiltered <- dplyr::filter_at(
 
 # glimpse(matFiltered)
 
+ggplot(data = matFiltered, mapping = aes(x = width)) +
+  geom_histogram(bins = 50) +
+  labs(
+    title = paste("Region width density plot, n =", nrow(matFiltered))
+  ) +
+  theme_bw() +
+  theme(
+    panel.grid = element_blank(),
+    axis.text = element_text(size = 14, face = "bold"),
+    axis.title = element_text(size = 16, face = "bold"),
+    plot.title = element_text(size = 16, face = "bold")
+  )
 
 ## peak occupancy binary matrix
 matPeakOccupancy <- dplyr::select(matFiltered, name, starts_with("overlap.")) %>% 
