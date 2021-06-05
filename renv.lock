@@ -789,8 +789,8 @@
       "RemoteRepo": "chipmine",
       "RemoteUsername": "lakhanp1",
       "RemoteRef": "dev_v2",
-      "RemoteSha": "5c554a016991b60b8a81d824a0d80f58f921a1df",
-      "Hash": "e6889b4c325520b344d6ae92f7748623"
+      "RemoteSha": "b8530a56d7a32ce882c19a4568c72132e83353e1",
+      "Hash": "9e80932df9270cd5e0c608e1b5948346"
     },
     "circlize": {
       "Package": "circlize",
@@ -1600,9 +1600,9 @@
       "RemoteHost": "api.github.com",
       "RemoteRepo": "markPeaks",
       "RemoteUsername": "lakhanp1",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "939e71aa3aa4bfff88951a078f2602c5ba97cd83",
-      "Hash": "ef3fa0fd0913b8d145068e32b54de32f"
+      "RemoteRef": "dev",
+      "RemoteSha": "01cdb4c65ba66741b904a47d7fce0449e615b006",
+      "Hash": "726890d7bfbbc90fe81507df983d688d"
     },
     "markdown": {
       "Package": "markdown",

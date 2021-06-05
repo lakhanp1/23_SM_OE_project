@@ -1,0 +1,18 @@
+---
+default:
+  path:
+    exptInfo: "data/reference_data/sample_info.txt"
+    tfSamples: "data/reference_data/production_data.tf_samples.txt"
+    peakSummary: "analysis/02_QC_TF/TF_ChIP_summary.best_replicates.tab"	
+    tfData: "data/TF_data"
+    polIIData: "data/polII_data"
+    histoneData: "data/histone_data"
+    otherData: "data/other_data"
+    polIISamples: "samples_polII.all.list"
+  var:
+    cutoff_macs2Pval: 20
+
+
+production:
+
+...

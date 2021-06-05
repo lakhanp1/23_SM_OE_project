@@ -21,7 +21,7 @@ cluster_19	has_tf	no_data	has_tf:no_data	no_data	has_tf:no_data
 cluster_20	has_tf	has_data	has_tf:has_data	has_data	has_tf:has_data
 cluster_21	has_tf	has_data	has_tf:has_data	has_data	has_tf:has_data
 cluster_22	has_tf	has_data	has_tf:has_data	has_data	has_tf:has_data
-cluster_23	no_tf	no_data	no_tf:no_data	no_data	no_tf:no_data
+cluster_23	has_tf	no_data	no_tf:no_data	no_data	no_tf:no_data
 cluster_24	has_tf	no_data	has_tf:no_data	no_data	has_tf:no_data
 cluster_25	no_tf	no_data	no_tf:no_data	no_data	no_tf:no_data
 cluster_26	has_tf	has_data	has_tf:has_data	has_data	has_tf:has_data
@@ -57,7 +57,7 @@ cluster_55	no_tf	no_data	no_tf:no_data	no_data	no_tf:no_data
 cluster_56	has_tf	has_data	has_tf:has_data	has_data	has_tf:has_data
 cluster_57	has_tf	has_data	has_tf:has_data	has_data	has_tf:has_data
 cluster_58	no_tf	no_data	no_tf:no_data	no_data	no_tf:no_data
-cluster_59	no_tf	no_data	no_tf:no_data	no_data	no_tf:no_data
+cluster_59	has_tf	no_data	no_tf:no_data	no_data	no_tf:no_data
 cluster_60	has_tf	has_data	has_tf:has_data	has_data	has_tf:has_data
 cluster_61	has_tf	no_data	has_tf:no_data	no_data	has_tf:no_data
 cluster_62	has_tf	has_data	has_tf:has_data	has_data	has_tf:has_data

@@ -5,7 +5,6 @@ AN7896_sCopy_OE_vs_WT
 AN7919_sCopy_OE_vs_WT
 AN7921_sCopy_OE_vs_WT
 AN7923_sCopy_OE_vs_WT
-AN2553_msCopy_OE_vs_WT
 AN3501_sCopy_OE_vs_WT
 AN3502_sCopy_OE_vs_WT
 AN3391_sCopy_OE_vs_WT
@@ -18,9 +17,7 @@ AN7072_sCopy_OE_vs_WT
 AN2036_sCopy_OE_vs_WT
 AN7820_sCopy_OE_vs_WT
 AN8509_sCopy_OE_vs_WT
-AN8506_msCopy_OE_vs_WT
 AN6788_sCopy_OE_vs_WT
-AN6790_msCopy_OE_vs_WT
 AN10294_sCopy_OE_vs_WT
 AN10295_sCopy_OE_vs_WT
 AN10300_sCopy_OE_vs_WT

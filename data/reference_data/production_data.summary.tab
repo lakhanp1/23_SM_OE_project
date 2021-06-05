@@ -1,4 +1,4 @@
-geneId	copyNumber	has_TF_ChIP	has_polII_Chip	tfId	degId	SM_ID
+geneId	copyNumber	has_TF_ChIP	has_polII_ChIP	tfId	degId	SM_ID
 AN8414	sCopy	has_data	has_data	apdR_sCopy_OE_16h_FLAG_ChIPMix64_3	apdR_sCopy_OE_vs_WT	cluster_03
 AN8391	sCopy	has_data	has_data	AN8391_sCopy_OE_16h_HA_ChIPMix55_2	AN8391_sCopy_OE_vs_WT	cluster_05
 AN7896	sCopy	has_data	has_data	AN7896_sCopy_OE_16h_HA_ChIPMix55_3	AN7896_sCopy_OE_vs_WT	cluster_06
