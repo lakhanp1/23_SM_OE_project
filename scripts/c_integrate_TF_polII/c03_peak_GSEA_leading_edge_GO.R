@@ -13,8 +13,8 @@ suppressPackageStartupMessages(library(fgsea))
 
 rm(list = ls())
 
-source("E:/Chris_UM/GitHub/omics_util/02_RNAseq_scripts/s02_DESeq2_functions.R")
-source(file = "E:/Chris_UM/GitHub/omics_util/04_GO_enrichment/s01_enrichment_functions.R")
+source("D:/work_lakhan/github/omics_utils/02_RNAseq_scripts/s02_DESeq2_functions.R")
+source("D:/work_lakhan/github/omics_utils/04_GO_enrichment/s01_enrichment_functions.R")
 
 ##################################################################################
 
@@ -65,7 +65,7 @@ plotTitle <- paste(
   leadingEdgeGO$inputSize[1], ")", sep = ""
 )
 
-pt_leadingEdgeGO <- enrichment_scatter(df = leadingEdgeGO[1:20,], title = plotTitle)
+pt_leadingEdgeGO <- enrichment_scatter(df = leadingEdgeGO[1:30,], title = plotTitle)
 
 ggsave(filename = paste(outPrefix, ".", smTf, ".png", sep = ""), plot = pt_leadingEdgeGO, width = 10, height = 10)
 

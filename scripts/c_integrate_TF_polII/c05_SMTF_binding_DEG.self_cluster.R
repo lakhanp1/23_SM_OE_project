@@ -12,12 +12,12 @@ suppressPackageStartupMessages(library(gginnards))
 
 rm(list = ls())
 
-source("E:/Chris_UM/GitHub/omics_util/02_RNAseq_scripts/s02_DESeq2_functions.R")
+source("D:/work_lakhan/github/omics_utils/02_RNAseq_scripts/s02_DESeq2_functions.R")
 
 ##################################################################################
 
-analysisName <- "OESMTF_regulation.self_clusters"
-outDir <- here::here("analysis", "10_TF_polII_integration", "OESMTF_regulation")
+analysisName <- "OESMTF_binding_DEG.self_clusters"
+outDir <- here::here("analysis", "10_TF_polII_integration", "OESMTF_binding_DEG")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
 file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")

@@ -13,7 +13,7 @@ suppressPackageStartupMessages(library(fgsea))
 
 rm(list = ls())
 
-source("E:/Chris_UM/GitHub/omics_util/02_RNAseq_scripts/s02_DESeq2_functions.R")
+source("D:/work_lakhan/github/omics_utils/02_RNAseq_scripts/s02_DESeq2_functions.R")
 ##################################################################################
 
 analysisName <- "peak_DEG_overlap"

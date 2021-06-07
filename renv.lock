@@ -516,9 +516,9 @@
       "RemoteRepo": "fungal_resources",
       "RemoteUsername": "lakhanp1",
       "RemoteRef": "HEAD",
-      "RemoteSha": "b66f9bf9750beca96da815b2ba8ecd7673696a74",
+      "RemoteSha": "4e79b4784272a837f343eea9d23e1eae87699137",
       "RemoteSubdir": "A_nidulans/TxDb.Anidulans.FGSCA4.AspGD.GFF",
-      "Hash": "874fb711bc96ea2841e78c49ed038397"
+      "Hash": "066f4c25efdf7338226dd7d7e19bc0d1"
     },
     "TxDb.Hsapiens.UCSC.hg19.knownGene": {
       "Package": "TxDb.Hsapiens.UCSC.hg19.knownGene",
@@ -1229,6 +1229,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "4adaf6b01b41f243ba0c62801de3331e"
+    },
+    "gginnards": {
+      "Package": "gginnards",
+      "Version": "0.0.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "70320d2169540d896acbca26858b3a18"
     },
     "ggplot2": {
       "Package": "ggplot2",

@@ -6,17 +6,16 @@ suppressPackageStartupMessages(library(here))
 suppressPackageStartupMessages(library(cowplot))
 suppressPackageStartupMessages(library(gginnards))
 
-## This script plots the SMTF's binding to self and other SMTFs and the transcription response
+## This script plots the SMTF's binding and log2(OE/WT) data for all the SMTFs as matrix
 
 rm(list = ls())
 
-source("E:/Chris_UM/GitHub/omics_util/02_RNAseq_scripts/s02_DESeq2_functions.R")
+source("D:/work_lakhan/github/omics_utils/02_RNAseq_scripts/s02_DESeq2_functions.R")
 
 ##################################################################################
 
-analysisName <- "OESMTF_regulation.SMTFs"
-outDir <- here::here("analysis", "10_TF_polII_integration", "OESMTF_regulation")
-outPrefix <- paste(outDir, "/", analysisName, sep = "")
+outDir <- here::here("analysis", "10_TF_polII_integration", "OESMTF_binding_DEG")
+outPrefix <- paste(outDir, "/", sep = "")
 
 file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
 file_dataSummary <- here::here("data", "reference_data", "production_data.summary.tab")
@@ -195,12 +194,12 @@ pt_bindingLfc <- gginnards::move_layers(x = pt_bindingLfc, match_type = "GeomPoi
 aligned_plots <- cowplot::align_plots(plotlist = list(pt_binding, pt_bindingLfc), align = "v")
 
 ggsave(
-  filename = paste(outPrefix, ".binding.png", sep = ""), plot = ggdraw(aligned_plots[[1]]),
+  filename = paste(outPrefix, "OESMTF_binding.SMTFs.png", sep = ""), plot = ggdraw(aligned_plots[[1]]),
   width = 16, height = 10
 )
 
 ggsave(
-  filename = paste(outPrefix, ".bindingLfc.png", sep = ""), plot = ggdraw(aligned_plots[[2]]),
+  filename = paste(outPrefix, "OESMTF_binding_DEG.SMTFs.png", sep = ""), plot = ggdraw(aligned_plots[[2]]),
   width = 16, height = 10
 )
 
