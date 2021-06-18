@@ -11,7 +11,7 @@ suppressPackageStartupMessages(library(ggridges))
 ## rank of SMTF in public RNAseq data from SRA: geom_density_ridges
 
 rm(list = ls())
-source("E:/Chris_UM/GitHub/omics_util/02_RNAseq_scripts/s02_DESeq2_functions.R")
+source("D:/work_lakhan/github/omics_utils/02_RNAseq_scripts/s02_DESeq2_functions.R")
 
 ##################################################################################
 analysisName <- "SMTF_rank_SRA"
@@ -21,28 +21,25 @@ outPrefix <- paste(outDir, "/", analysisName, sep = "")
 polII_dataPath <- here::here("data", "polII_data")
 diffDataPath <- here::here("analysis", "06_polII_diff")
 
+file_productionData <- here::here("data", "reference_data", "production_data.summary.tab")
 file_genes <- here::here("data", "reference_data", "AN_genes_for_polII.bed")
 file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
-file_degIds <- here::here("data", "reference_data", "production_data.polII_DEG_ids.txt")
 file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
 file_sraFpkm <- here::here("data", "Aspergillus_nidulans_FGSC_A4.RNAseq_SRA.FPKM.txt")
+file_sraMetadata <- here::here("data", "reference_data", "SRA_RNAseq_data.metadata.txt")
 
 orgDb <- org.Anidulans.FGSCA4.eg.db
 txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
 
 ##################################################################################
-
-geneSet <- suppressMessages(readr::read_tsv(
-  file = file_genes,
-  col_names = c("chr", "start", "end", "geneId", "score", "strand"))) %>%
-  dplyr::select(geneId)
-
-degIds <- suppressMessages(readr::read_tsv(file = file_degIds))
+productionData <- suppressMessages(readr::read_tsv(file = file_productionData)) %>% 
+  dplyr::filter(has_polII_ChIP == "has_data", has_TF_ChIP == "has_data", copyNumber == "sCopy")
 
 rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath) %>% 
-  dplyr::filter(comparison %in% degIds$degId)
+  dplyr::filter(comparison %in% productionData$degId)
 
 polIIsamples <- unique(unlist(stringr::str_split(string = rnaseqInfo$samples, pattern = ";")))
+
 
 polIIInfo <- get_sample_information(
   exptInfoFile = file_exptInfo,
@@ -55,6 +52,18 @@ polIICols <- sapply(
   simplify = F, USE.NAMES = T) %>% 
   append(
     list(exp = structure(polIIInfo$sampleId, names = polIIInfo$sampleId))
+  )
+
+
+geneSet <- suppressMessages(readr::read_tsv(
+  file = file_genes,
+  col_names = c("chr", "start", "end", "geneId", "score", "strand"))) %>%
+  dplyr::select(geneId)
+
+sraMetadata <- suppressMessages(readr::read_tsv(file = file_sraMetadata)) %>% 
+  dplyr::filter(
+    strain %in% c("FGSC A4", "FGSC", "wild type", NA),
+    genotype %in% c("wild type", "wildtype", "parental strain", NA)
   )
 
 ##################################################################################
@@ -98,7 +107,7 @@ plotData <- dplyr::mutate(
 
 ## add SRA FPKM data
 sraData <- suppressMessages(readr::read_tsv(file = file_sraFpkm)) %>% 
-  dplyr::rename(geneId = geneName)
+  dplyr::select(geneId = geneName, sraMetadata$run_accession)
 
 sraRanks <- dplyr::mutate_at(
   .tbl = sraData, .vars = vars(!matches("geneId")),
@@ -151,10 +160,13 @@ pt_oe_gene_rank <- ggplot(
     expand = expansion(mult = c(0.01, 0.01))
   ) +
   scale_fill_manual(
-    values = c("sCopy_OE" = "red", "mCopy_OE" = "orange", "WT" = "green")
+    values = c("sCopy_OE" = "red", "WT" = "green"),
+    labels = c("sCopy_OE" = "OE", "WT" = "WT")
   ) +
   labs(
-    title = "Rank of SM cluster TF gene in its own OE and WT polII ChIPseq data (points) and rank distribution of SMTF in public RNAseq data",
+    title = paste(
+      "Rank of SM cluster TF gene in its own OE and WT polII ChIPseq data (points)",
+      "and rank distribution of SMTFs in public RNAseq data (n=", nrow(sraMetadata), ")"),
     # subtitle = paste("min rank = 0, max rank =", nrow(geneSet)),
     x = "rank(FPKM)"
   ) +

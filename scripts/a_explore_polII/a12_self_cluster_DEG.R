@@ -12,12 +12,12 @@ suppressPackageStartupMessages(library(TxDb.Anidulans.FGSCA4.AspGD.GFF))
 
 rm(list = ls())
 
-source("E:/Chris_UM/GitHub/omics_util/02_RNAseq_scripts/s02_DESeq2_functions.R")
+source("D:/work_lakhan/github/omics_utils/02_RNAseq_scripts/s02_DESeq2_functions.R")
 
 ###########################################################################
 
 analysisName <- "self_cluster_DEG"
-outDir <- here::here("analysis", "08_polII_diff_downstream", "02_self_cluster_DEG")
+outDir <- here::here("analysis", "08_polII_analysis", "02_self_cluster_DEG")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
 if(!dir.exists(outDir)){

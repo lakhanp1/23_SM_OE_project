@@ -22,8 +22,8 @@ suppressPackageStartupMessages(library(org.Anidulans.FGSCA4.eg.db))
 
 rm(list = ls())
 
-source(file = "E:/Chris_UM/GitHub/omics_util/04_GO_enrichment/s01_topGO_functions.R")
-source("E:/Chris_UM/GitHub/omics_util/02_RNAseq_scripts/s02_DESeq2_functions.R")
+source("D:/work_lakhan/github/omics_utils/04_GO_enrichment/topGO_functions.R")
+source("D:/work_lakhan/github/omics_utils/02_RNAseq_scripts/s02_DESeq2_functions.R")
 
 ####################################################################
 
