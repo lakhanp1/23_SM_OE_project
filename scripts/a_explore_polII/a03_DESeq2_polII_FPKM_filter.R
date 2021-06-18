@@ -53,17 +53,17 @@ for (rowId in 1:nrow(rnaseqInfo)) {
   outPrefix <- paste(degDir, "/", degInfo$comparison, sep = "")
   sampleIds <- unlist(stringr::str_split(string = degInfo$samples, pattern = ";"))
   
-  degData <- suppressMessages(
-    readr::read_tsv(
-      file = paste(degDir, "/", degInfo$comparison, ".DEG_all.txt", sep = "")
-    )
-  )
+  degData <- suppressMessages(readr::read_tsv(file = degInfo$deg)) %>% 
+    dplyr::select(
+      geneId, log2FoldChange, shrinkLog2FC, pvalue, padj, diff_l2fc, GENE_NAME, DESCRIPTION
+    ) %>% 
+    dplyr::mutate(comparison = degInfo$comparison)
   
   fpkmData <- dplyr::select(fpkmMat, geneId, !!!sampleIds) %>% 
     dplyr::mutate(
+      sampleIds = paste(!!!sampleIds, sep = ";"),
       maxFpkm = pmax(!!!syms(sampleIds)),
-      minFpkm = pmin(!!!syms(sampleIds)),
-      sampleIds = paste(!!!sampleIds, sep = ";")
+      minFpkm = pmin(!!!syms(sampleIds))
     ) %>% 
     tidyr::unite(col = fpkms, !!!syms(sampleIds), sep = ";")
   
