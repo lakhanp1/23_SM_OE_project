@@ -1,7 +1,7 @@
 suppressPackageStartupMessages(library(chipmine))
 suppressPackageStartupMessages(library(org.Anidulans.FGSCA4.eg.db))
-# suppressPackageStartupMessages(library(TxDb.Anidulans.FGSCA4.AspGD.GFF))
-suppressPackageStartupMessages(library(TxDb.Anidulans.tRNA.removed))
+suppressPackageStartupMessages(library(TxDb.Anidulans.FGSCA4.AspGD.GFF))
+# suppressPackageStartupMessages(library(TxDb.Anidulans.tRNA.removed))
 suppressPackageStartupMessages(library(here))
 suppressPackageStartupMessages(library(ChIPpeakAnno))
 suppressPackageStartupMessages(library(ChIPseeker))
@@ -19,7 +19,8 @@ file_exptInfo <- here::here("data", "reference_data/sample_info.txt")
 
 file_genes <- here::here("data", "reference_data/AN_genes_for_polII.bed")
 orgDb <- org.Anidulans.FGSCA4.eg.db
-txDb <- TxDb.Anidulans.tRNA.removed
+# txDb <- TxDb.Anidulans.tRNA.removed
+txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
 
 TF_dataPath <- here::here("data", "TF_data")
 polII_dataPath <- here::here("data", "polII_data")

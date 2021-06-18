@@ -2,7 +2,7 @@ suppressPackageStartupMessages(library(DESeq2))
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(data.table))
 suppressPackageStartupMessages(library(ggrepel))
-suppressPackageStartupMessages(library("ggpubr"))
+suppressPackageStartupMessages(library(ggpubr))
 suppressPackageStartupMessages(library(tximport))
 suppressPackageStartupMessages(library(here))
 suppressPackageStartupMessages(library(RColorBrewer))
@@ -24,7 +24,7 @@ suppressPackageStartupMessages(require(openxlsx))
 
 rm(list = ls())
 
-source("E:/Chris_UM/GitHub/omics_util/02_RNAseq_scripts/s02_DESeq2_functions.R")
+source("D:/work_lakhan/github/omics_utils/02_RNAseq_scripts/s02_DESeq2_functions.R")
 
 ###########################################################################
 ## configuration and cutoffs
