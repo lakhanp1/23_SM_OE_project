@@ -1,8 +1,8 @@
 suppressPackageStartupMessages(library(tidyverse))
-suppressPackageStartupMessages(library(scales))
+suppressPackageStartupMessages(library(ggpubr))
 suppressPackageStartupMessages(library(org.Anidulans.FGSCA4.eg.db))
 
-## plot fold change of SM gene in its own OE strain
+## Figure to show the log2(OE/WT) for SMTF in its own overexpression polII-ChIPseq data
 
 rm(list = ls())
 
@@ -11,14 +11,16 @@ source("D:/work_lakhan/github/omics_utils/02_RNAseq_scripts/s02_DESeq2_functions
 ###########################################################################
 
 analysisName <- "SM_OE_diff_summary"
-outDir <- here::here("analysis", "08_polII_diff_downstream")
-outPrefix <- paste(outDir, "/", analysisName, sep = "")
+outDir <- here::here("analysis", "08_polII_analysis", "01_polII_DEGs_summary")
+outPrefix <- paste(outDir, "/", sep = "")
 
 
+file_productionData <- here::here("data", "reference_data", "production_data.summary.tab")
 diffDataPath <- here::here("analysis", "06_polII_diff")
-file_sampleInfo <- here::here("data", "reference_data", "polII_sample_info.txt")
 file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
-file_degIds <- here::here("data", "reference_data", "production_data.polII_DEG_ids.txt")
+file_degStats <- here::here(
+  "analysis", "08_polII_analysis", "01_polII_DEGs_summary", "polII_DEGs_summary.stats.tab"
+)
 
 useAllGroupsSamples <- FALSE
 
@@ -30,50 +32,54 @@ cutoff_down <- cutoff_lfc * -1
 orgDb <- org.Anidulans.FGSCA4.eg.db
 col_geneId <- "GID"
 
-
 ###########################################################################
+productionData <- suppressMessages(readr::read_tsv(file = file_productionData)) %>% 
+  dplyr::filter(has_polII_ChIP == "has_data", has_TF_ChIP == "has_data", copyNumber == "sCopy")
 
-degIds <- suppressMessages(readr::read_tsv(file = file_degIds))
+degStats <- suppressMessages(readr::read_tsv(file = file_degStats))
+
+productionData <- dplyr::left_join(
+  x = productionData, y = degStats, by = c("degId" = "comparison")
+)
 
 rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath) %>% 
-  dplyr::filter(comparison %in% degIds$degId)
+  dplyr::filter(comparison %in% productionData$degId)
 
-rnaseqInfo$log2FoldChange <- NA
-rnaseqInfo$pvalue <- NA
-rnaseqInfo$padj <- NA
+rnaseqInfoList <- purrr::transpose(rnaseqInfo)  %>% 
+  purrr::set_names(nm = purrr::map(., "comparison"))
+
+productionData$log2FoldChange <- NA
+productionData$pvalue <- NA
+productionData$padj <- NA
 
 
-row <- 1
-for (row in 1:nrow(rnaseqInfo)) {
-  diffData <- suppressMessages(readr::read_tsv(file = rnaseqInfo$deseq2[row])) %>% 
-    dplyr::filter(geneId == rnaseqInfo$SM_TF[row])
+rowId <- 1
+
+for (rowId in 1:nrow(productionData)) {
   
-  rnaseqInfo$log2FoldChange[row] <- diffData$log2FoldChange
-  rnaseqInfo$pvalue[row] <- diffData$pvalue
-  rnaseqInfo$padj[row] <- diffData$padj
+  degInfo <- purrr::pluck(.x = rnaseqInfoList, productionData$degId[[rowId]])
+  
+  diffData <- suppressMessages(readr::read_tsv(file = degInfo$deseq2)) %>% 
+    dplyr::filter(geneId == degInfo$SM_TF)
+  
+  productionData$log2FoldChange[rowId] <- diffData$log2FoldChange
+  productionData$pvalue[rowId] <- diffData$pvalue
+  productionData$padj[rowId] <- diffData$padj
   
 }
 
-rnaseqInfo$geneName <- AnnotationDbi::mapIds(
-  x = orgDb, keys = rnaseqInfo$SM_TF, column = "GENE_NAME", keytype = "GID"
-)
 
-rnaseqInfo <- dplyr::mutate(
-  rnaseqInfo,
-  geneLabel = paste(SM_TF, " (", geneName, ")", sep = ""),
-  geneLabel = if_else(condition = SM_TF == geneName, true = SM_TF, false = geneLabel)
-)
-
-plotData <-  rnaseqInfo %>% 
+plotData <-  productionData %>% 
   dplyr::arrange(log2FoldChange) %>% 
   dplyr::mutate(
     log10_padj = -log10(padj),
     significant = if_else(condition = padj <= 0.05, "significant", "non-significant"),
     SM_TF = forcats::as_factor(SM_TF),
-    geneLabel = forcats::as_factor(geneLabel)
+    geneName = forcats::as_factor(geneName)
   )
 
 
+###########################################################################
 
 ## color scales
 # scaleLim <- ceiling(min(5, max(goData[[logPvalCol]])))
@@ -83,9 +89,9 @@ scaleLabels <- c(format(1/(10^c(1, 1.30103, 2:scaleLim)), drop0trailing = T, sci
 
 
 
-pt <- ggplot(
+pt_lfc <- ggplot(
   data = plotData,
-  mapping = aes(x = log2FoldChange, y = geneLabel)) +
+  mapping = aes(x = log2FoldChange, y = geneName)) +
   geom_point(mapping = aes(fill = log10_padj, color = significant),
              shape = 21, size = 5, stroke = 1) +
   scale_fill_gradientn(
@@ -99,7 +105,8 @@ pt <- ggplot(
     limits = c(1, scaleLim + 1)
   ) +
   scale_color_manual(
-    values = c("significant" = "black", "non-significant" = "red") 
+    name = "p-adjusted <= 0.05",
+    values = c("significant" = "black", "non-significant" = "red")
   ) +
   labs(
     title = stringr::str_wrap("log2(fold-change) for SM TF genes in its own overexpression polII ChIPseq data"),
@@ -117,12 +124,34 @@ pt <- ggplot(
     legend.text = element_text(size = 12)
   )
 
-ggsave(filename = paste(outPrefix, ".SM_gene_LFC.pdf", sep = ""), plot = pt, width = 10, height = 10)
-ggsave(filename = paste(outPrefix, ".SM_gene_LFC.png", sep = ""), plot = pt, width = 10, height = 8, scale = 1.1)
+ggsave(filename = paste(outPrefix, "SMTF_LFC_in_self_OE.pdf", sep = ""), plot = pt_lfc, width = 10, height = 10)
+ggsave(filename = paste(outPrefix, "SMTF_LFC_in_self_OE.png", sep = ""), plot = pt_lfc, width = 10, height = 8, scale = 1.1)
 
 
+## scatter plot to show correlation between SMTF overexpression level and number of DEGs
+pt_scatter <- ggplot(data = plotData, mapping = aes(x = total, y = log2FoldChange)) +
+  geom_point(size = 3) +
+  geom_smooth(method=lm, se = FALSE, formula = y ~ x, color = "red") +
+  ggpubr::stat_cor(method = "pearson", size = 6, label.x.npc = 0.5) +
+  labs(
+    x = "# of DEGs",
+    y = "log2(OE / WT) for SMTFs",
+    title = "Correlation between the level of over-expression and number of DEGs"
+  ) +
+  theme_bw() +
+  theme(
+    plot.title = element_text(hjust = 0),
+    panel.grid = element_blank(),
+    axis.text = element_text(size = 14, color = "black"),
+    axis.title = element_text(size = 15, face = "bold"),
+    title = element_text(size =14, face = "bold"),
+    legend.text = element_text(size = 12)
+  )
 
-
+ggsave(
+  filename = paste(outPrefix, "SMTF_LFC_vs_DEGs_count.pdf", sep = ""),
+  plot = pt_scatter, width = 9, height = 9
+)
 
 
 

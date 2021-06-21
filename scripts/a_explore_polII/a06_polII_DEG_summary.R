@@ -15,17 +15,18 @@ source("D:/work_lakhan/github/omics_utils/02_RNAseq_scripts/s02_DESeq2_functions
 ###########################################################################
 
 analysisName <- "polII_DEGs_summary"
-outDir <- here::here("analysis", "08_polII_diff_downstream", "polII_DEGs_summary")
+outDir <- here::here("analysis", "08_polII_analysis", "01_polII_DEGs_summary")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
 if(!dir.exists(outDir)){
   dir.create(outDir, recursive = T)
 }
 
+file_productionData <- here::here("data", "reference_data", "production_data.summary.tab")
 diffDataPath <- here::here("analysis", "06_polII_diff")
 file_sampleInfo <- here::here("data", "reference_data", "polII_sample_info.txt")
 file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
-file_degIds <- here::here("data", "reference_data", "production_data.polII_DEG_ids.txt")
+file_polIIDegs <- here::here("analysis", "06_polII_diff", "polII_DEGs.fpkm_filtered.combined.tab")
 
 useAllGroupsSamples <- FALSE
 
@@ -41,53 +42,38 @@ col_lfc <- "log2FoldChange"
 col_pval <- "padj"
 
 ###########################################################################
-degIds <- suppressMessages(readr::read_tsv(file = file_degIds))
+productionData <- suppressMessages(readr::read_tsv(file = file_productionData)) %>% 
+  dplyr::filter(has_polII_ChIP == "has_data", has_TF_ChIP == "has_data", copyNumber == "sCopy")
 
-rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath) %>% 
-  dplyr::filter(comparison %in% degIds$degId)
-
-
-clusterInfo <- AnnotationDbi::select(
-  x = orgDb, keys = rnaseqInfo$SM_TF, columns = c("GENE_NAME", "SM_CLUSTER"), keytype = "GID"
-) %>% 
+geneInfo <- AnnotationDbi::select(
+  x = orgDb, keys = productionData$geneId,
+  columns = c("GENE_NAME", "SM_CLUSTER"), keytype = "GID"
+) %>%
+  tidyr::replace_na(replace = list(SM_CLUSTER = "-")) %>% 
   dplyr::group_by(GID) %>% 
   dplyr::summarise(
     geneName = unique(GENE_NAME),
     SM_cluster = paste(unique(SM_CLUSTER), collapse = "/")
   )
 
-rnaseqInfo <- dplyr::left_join(x = rnaseqInfo, y = clusterInfo, by = c("SM_TF" = "GID")) %>% 
-  dplyr::mutate(
-    geneLabel = paste(SM_TF, " (", geneName, ")", sep = ""),
-    geneLabel = if_else(condition = SM_TF == geneName, true = SM_TF, false = geneLabel)
-  )
+productionData <- dplyr::left_join(x = productionData, y = geneInfo, by = c("geneId" = "GID"))
 
-degLabels <- structure(rnaseqInfo$geneLabel, names = rnaseqInfo$comparison)
+degLabels <- structure(productionData$geneName, names = productionData$degId)
 
-rowId <- 1
-degData <- NULL
 
-for (rowId in 1:nrow(rnaseqInfo)) {
-  
-  tmpDf <- suppressMessages(readr::read_tsv(file = rnaseqInfo$deg[rowId])) %>% 
-    dplyr::select(geneId, contrast, !!col_lfc, !!col_pval, GENE_NAME) %>% 
-    dplyr::mutate(comparison = rnaseqInfo$comparison[rowId])
-  
-  degData <- dplyr::bind_rows(degData, tmpDf)
-  
-}
+degData <- suppressMessages(readr::read_tsv(file = file_polIIDegs)) %>% 
+  dplyr::filter(comparison %in% productionData$degId)
 
 
 degData <- dplyr::mutate(
   degData,
-  # contrast = stringr::str_replace(string = contrast, pattern = "(condition_|SM_TF_)", replacement = ""),
   diff = dplyr::case_when(
     !!sym(col_pval) <= cutoff_fdr & !!sym(col_lfc) <= cutoff_down ~ "down",
     !!sym(col_pval) <= cutoff_fdr & !!sym(col_lfc) >= cutoff_up ~ "up",
     TRUE ~ "noDEG"
   )
 ) %>% 
-  dplyr::filter(diff != "noDEG")
+  dplyr::filter(diff != "noDEG", fpkmFilter == "pass")
 
 
 ## a dataframe with DEG status column for each comparison
@@ -111,8 +97,8 @@ degStats <- dplyr::group_by(degData, comparison, diff) %>%
   dplyr::ungroup() %>% 
   dplyr::mutate(total = up + down) %>% 
   dplyr::left_join(
-    y = dplyr::select(rnaseqInfo, comparison, SM_TF, geneName, SM_cluster, geneLabel),
-    by = "comparison"
+    y = dplyr::select(productionData, degId, SM_TF = geneId, geneName, SM_cluster),
+    by = c("comparison" = "degId")
   )
 
 
@@ -131,17 +117,19 @@ ptTheme <- theme_bw() +
     legend.text = element_text(size = 14)
   )
 
+
 statsPlotData <- dplyr::mutate(degStats, down = -1*down) %>% 
   tidyr::pivot_longer(
     cols = c("up", "down"), names_to = "degGroup", values_to = "n"
   ) %>% 
   dplyr::arrange(desc(total)) %>% 
   dplyr::mutate(
-    geneLabel = forcats::as_factor(geneLabel),
+    # geneLabel = forcats::as_factor(geneLabel),
+    geneName = forcats::as_factor(geneName),
     labelHjust = if_else(condition = sign(n) == -1, true = 1, false = 0)
   )
 
-pt_degStats <- ggplot(data = statsPlotData, mapping = aes(y = geneLabel)) +
+pt_degStats <- ggplot(data = statsPlotData, mapping = aes(y = geneName)) +
   geom_bar(mapping = aes(x = n, fill = degGroup), stat = "identity") +
   geom_text(
     mapping = aes(x = n+(20*sign(n)), label = abs(n), hjust = labelHjust)
@@ -155,7 +143,7 @@ pt_degStats <- ggplot(data = statsPlotData, mapping = aes(y = geneLabel)) +
   scale_x_continuous(
     breaks = seq(-1500, 1000, 500),
     expand = expansion(add = c(300, 1100))
-    ) +
+  ) +
   labs(title = "TFOE/WT polII ChIPseq DEG count") +
   ptTheme
 
