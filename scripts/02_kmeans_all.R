@@ -1,6 +1,6 @@
-library(chipmine)
-library(foreach)
-library(doParallel)
+suppressPackageStartupMessages(library(chipmine))
+suppressPackageStartupMessages(library(foreach))
+suppressPackageStartupMessages(library(doParallel))
 
 rm(list = ls())
 

@@ -1,8 +1,8 @@
-library(chipmine)
-library(org.Anidulans.eg.db)
-library(TxDb.Anidulans.AspGD.GFF)
-library(here)
-library(ggridges)
+suppressPackageStartupMessages(library(chipmine))
+suppressPackageStartupMessages(library(org.Anidulans.FGSCA4.eg.db))
+suppressPackageStartupMessages(library(TxDb.Anidulans.FGSCA4.AspGD.GFF))
+suppressPackageStartupMessages(library(here))
+suppressPackageStartupMessages(library(ggridges))
 
 
 ## 1) peak enrichment distribution

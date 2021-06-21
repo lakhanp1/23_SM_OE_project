@@ -55,7 +55,7 @@ for (rowId in 1:nrow(rnaseqInfo)) {
   
   degData <- suppressMessages(readr::read_tsv(file = degInfo$deg)) %>% 
     dplyr::select(
-      geneId, log2FoldChange, shrinkLog2FC, pvalue, padj, diff_l2fc, GENE_NAME, DESCRIPTION
+      geneId, contrast, log2FoldChange, shrinkLog2FC, pvalue, padj, diff_l2fc, GENE_NAME, DESCRIPTION
     ) %>% 
     dplyr::mutate(comparison = degInfo$comparison)
   

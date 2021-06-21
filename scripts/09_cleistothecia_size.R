@@ -1,6 +1,6 @@
-library(tidyverse)
-library(here)
-library(data.table)
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(here))
+suppressPackageStartupMessages(library(data.table))
 
 rm(list = ls())
 
