@@ -1,0 +1,70 @@
+SM_ID	SM_CLUSTER	PKS	NRPS	terpene	DMATS	PKS_NRPS	NADH_dehydrogenase_complex 	Acetyl_CoA_synthetase	amino_acid_synthase	FAS
+cluster_01	Asperfuranone (afo) cluster	2	0	0	0	0	0	0	0	0
+cluster_02	Asperthecin cluster	1	0	0	0	0	0	0	0	0
+cluster_03	Aspyridone (asp) cluster	0	0	0	0	1	0	0	0	0
+cluster_04	Austinol (aus) AN9244 cluster	0	2	0	0	0	0	0	0	0
+cluster_05	Austinol (aus) cluster	1	0	0	0	0	0	0	0	0
+cluster_06	DBA and F9775 hybrid cluster 1	1	0	0	0	0	0	0	0	0
+cluster_07	DBA and F9775 hybrid cluster 2	1	0	0	0	0	0	0	0	0
+cluster_08	Emericellamide (eas) cluster	1	1	0	0	0	0	0	0	0
+cluster_09	inp cluster	0	2	0	0	0	0	1	0	0
+cluster_10	ivo cluster	0	1	0	0	0	0	0	0	0
+cluster_11	Microperfuranone cluster	0	1	0	0	0	0	0	0	0
+cluster_12	Monodictyphenone (mdp) cluster	1	0	0	0	0	0	0	0	0
+cluster_13	Penicillin cluster	0	1	0	0	0	0	0	0	0
+cluster_14	pkb cluster	1	1	0	0	0	0	0	0	0
+cluster_15	pkdA cluster	1	0	0	0	0	0	0	0	0
+cluster_16	pkf cluster	1	0	0	0	0	0	0	0	0
+cluster_17	pkg cluster	1	0	0	0	0	0	0	0	0
+cluster_18	pkh cluster	2	0	0	0	0	0	0	0	0
+cluster_19	pki cluster	1	0	0	0	0	0	0	0	0
+cluster_20	Sterigmatocystin (stc) cluster	2	0	0	0	0	0	0	0	0
+cluster_21	Terriquinone (tdi) cluster	0	1	0	1	0	0	0	0	0
+cluster_22	xptA-containing cluster	1	0	0	1	0	0	0	0	0
+cluster_23	xptB-containing cluster	0	0	0	1	0	0	0	0	0
+cluster_24	AN0016 cluster	0	1	0	0	0	0	0	0	0
+cluster_25	AN0607 (sidC) cluster	0	1	0	0	0	0	0	0	0
+cluster_26	AN10289 cluster	0	0	0	1	0	0	0	0	0
+cluster_27	AN10297 cluster	0	1	0	0	0	0	0	0	0
+cluster_28	AN10396 cluster	0	0	1	0	0	0	0	0	0
+cluster_29	AN10430 cluster	2	0	0	0	0	0	0	0	0
+cluster_30	AN10486 cluster	0	1	0	0	0	0	0	0	0
+cluster_31	AN11065 cluster	0	0	1	0	0	0	0	0	0
+cluster_32	AN11080 cluster	0	0	0	1	0	0	0	0	0
+cluster_33	Asperlin cluster	1	1	0	2	0	0	0	0	0
+cluster_34	AN11194 cluster	0	1	0	2	0	0	0	0	0
+cluster_35	AN12331 cluster	1	0	0	0	0	0	0	0	0
+cluster_36	Nidulanin A cluster	0	1	0	0	0	0	0	0	0
+cluster_37	Ent-pimara-8(14),15-diene cluster	0	0	1	0	0	0	0	0	0
+cluster_38	AN1680 cluster	0	1	0	0	0	0	0	0	0
+cluster_39	Aspernidgulenes cluster	1	0	0	0	0	0	0	0	0
+cluster_40	AN1793 cluster	0	0	1	0	0	0	0	0	0
+cluster_42	AN2924 cluster	0	1	0	0	0	0	0	0	0
+cluster_43	AN3252 cluster	0	0	1	0	0	0	0	0	0
+cluster_44	AN3273 cluster	1	0	1	0	0	0	0	0	0
+cluster_45	AN3612 cluster	2	0	0	0	0	0	0	0	0
+cluster_46	AN4827 cluster	0	1	0	0	0	0	0	0	0
+cluster_47	AN5318 cluster	0	1	0	0	0	0	0	0	0
+cluster_48	AN5475 cluster	1	0	0	0	0	0	0	0	0
+cluster_49	AN5610 cluster	0	0	0	0	0	0	0	1	0
+cluster_50	AN6236 cluster	0	1	0	0	0	0	0	0	0
+cluster_51	AN6431 cluster	1	0	0	0	0	0	0	0	0
+cluster_52	AN6791 cluster	1	0	0	0	0	0	0	0	0
+cluster_53	AN7084 cluster	1	0	0	0	0	0	0	0	0
+cluster_54	AN7489 (mirC) cluster	0	0	0	0	0	0	0	0	1
+cluster_55	AN7838 (AN12331) cluster	1	0	0	0	0	0	0	0	0
+cluster_56	Aspercryptin cluster	0	1	0	0	0	0	0	0	1
+cluster_57	AN8105 cluster	0	1	0	0	0	0	0	0	0
+cluster_58	AN8142 cluster	1	0	0	1	0	0	0	0	0
+cluster_59	AN8209 (wA) cluster	1	0	0	0	0	0	0	0	0
+cluster_60	AN8249 cluster	0	0	1	0	0	0	0	0	0
+cluster_61	AN8504 cluster	0	0	0	0	0	0	1	0	0
+cluster_62	AN8910 cluster	1	0	0	0	0	0	0	0	0
+cluster_63	AN9005 cluster	1	0	0	0	0	0	0	0	0
+cluster_64	AN9129 Cluster	0	1	0	0	0	0	0	0	0
+cluster_65	4′-Methoxyviridicatin cluster	1	1	0	2	0	0	0	0	0
+cluster_66	AN9291 cluster	0	1	0	0	0	0	0	0	0
+cluster_67	AN9314 cluster	0	0	1	0	0	0	0	0	0
+cluster_68	No PKS/NRPS backbone 1	0	0	1	0	0	0	0	0	0
+cluster_70	No PKS/NRPS backbone 3	0	0	1	0	0	0	0	0	0
+cluster_71	No PKS/NRPS backbone 4	0	0	0	0	0	1	0	0	0
