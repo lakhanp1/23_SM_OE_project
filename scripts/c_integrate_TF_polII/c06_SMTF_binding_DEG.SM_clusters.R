@@ -17,12 +17,13 @@ source("D:/work_lakhan/github/omics_utils/02_RNAseq_scripts/s02_DESeq2_functions
 ##################################################################################
 
 analysisName <- "OESMTF_binding_DEG.SM_clusters"
-outDir <- here::here("analysis", "10_TF_polII_integration", "OESMTF_binding_DEG")
+outDir <- here::here("analysis", "10_TF_polII_integration", "02_OESMTF_binding_DEG")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
+file_productionData <- here::here("data", "reference_data", "production_data.summary.tab")
 file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
-file_dataSummary <- here::here("data", "reference_data", "production_data.summary.tab")
 file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
+file_polIIDegs <- here::here("analysis", "06_polII_diff", "polII_DEGs.fpkm_filtered.combined.tab")
 
 TF_dataPath <- here::here("data", "TF_data")
 diffDataPath <- here::here("analysis", "06_polII_diff")
@@ -41,28 +42,30 @@ col_lfc <- "log2FoldChange"
 col_pval <- "pvalue"
 ##################################################################################
 
-dataSummary <- suppressMessages(readr::read_tsv(file = file_dataSummary)) %>% 
-  dplyr::filter(has_TF_ChIP == "has_data", has_polII_ChIP == "has_data", copyNumber == "sCopy") %>% 
+productionData <- suppressMessages(readr::read_tsv(file = file_productionData)) %>% 
+  dplyr::filter(has_polII_ChIP == "has_data", has_TF_ChIP == "has_data", copyNumber == "sCopy") %>% 
   dplyr::arrange(SM_ID, geneId)
 
-dataSummary$OESMTF_name <- AnnotationDbi::mapIds(
-  x = orgDb, keys = dataSummary$geneId, column = "GENE_NAME", keytype = "GID"
+productionData$OESMTF_name <- AnnotationDbi::mapIds(
+  x = orgDb, keys = productionData$geneId, column = "GENE_NAME", keytype = "GID"
 )
 
 tfInfo <- get_sample_information(
   exptInfoFile = file_exptInfo,
-  samples = dataSummary$tfId,
+  samples = productionData$tfId,
   dataPath = TF_dataPath)
 
 tfInfoList <- purrr::transpose(tfInfo)  %>% 
   purrr::set_names(nm = purrr::map(., "sampleId"))
 
 rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath) %>% 
-  dplyr::filter(comparison %in% dataSummary$degId)
+  dplyr::filter(comparison %in% productionData$degId)
 
 
 rnaseqInfoList <- purrr::transpose(rnaseqInfo)  %>% 
   purrr::set_names(nm = purrr::map(., "comparison"))
+
+combinedDegs <- suppressMessages(readr::read_tsv(file = file_polIIDegs))
 
 ## extract all SM cluster genes
 geneset <- AnnotationDbi::select(
@@ -86,10 +89,10 @@ rowId <- 1
 mergedData <- NULL
 
 
-for (rowId in 1:nrow(dataSummary)) {
+for (rowId in 1:nrow(productionData)) {
   
-  tfSampleId <- dataSummary$tfId[rowId]
-  degId <- dataSummary$degId[rowId]
+  tfSampleId <- productionData$tfId[rowId]
+  degId <- productionData$degId[rowId]
   
   ## extract peak annotation
   peakAn <- suppressMessages(readr::read_tsv(tfInfoList[[tfSampleId]]$peakAnno)) %>% 
@@ -102,18 +105,16 @@ for (rowId in 1:nrow(dataSummary)) {
     dplyr::select(geneId, peakPval, peakAnnotation, peakCategory, peakPosition, hasPeak)
   
   ## extract DEG data
-  diffData <- suppressMessages(readr::read_tsv(file = rnaseqInfoList[[degId]]$deg)) %>% 
-    dplyr::select(geneId, !!col_lfc, shrinkLog2FC, pvalue, padj) %>% 
-    dplyr::mutate(comparison = degId)
-  
+  diffData <- dplyr::filter(combinedDegs, comparison == degId) %>% 
+    dplyr::select(geneId, comparison, !!col_lfc, shrinkLog2FC, pvalue, padj, maxFpkm, fpkmFilter)
   
   bindingDegData <- dplyr::left_join(
     x = geneset, y = diffData, by = "geneId"
   ) %>% 
     dplyr::left_join(y = peakAn, by = "geneId") %>% 
     dplyr::mutate(
-      OESMTF = !!dataSummary$geneId[rowId],
-      OESMTF_name = !!dataSummary$OESMTF_name[rowId]
+      OESMTF = !!productionData$geneId[rowId],
+      OESMTF_name = !!productionData$OESMTF_name[rowId]
     ) %>% 
     dplyr::select(
       OESMTF, geneId, GENE_NAME, everything()
@@ -126,9 +127,9 @@ for (rowId in 1:nrow(dataSummary)) {
 
 mergedData2 <- dplyr::mutate(
   mergedData,
-  significance = if_else(
-    condition = !!sym(col_pval) <= cutoff_fdr, true = "significant",
-    false = "non-significant", missing = "non-significant"
+  significance = dplyr::case_when(
+    !!sym(col_pval) <= cutoff_fdr & fpkmFilter == "pass" ~ "significant",
+    TRUE ~ "non-significant"
   ),
   binding = dplyr::if_else(
     condition = hasPeak, true = "bound", false = "not-bound", missing = "not-bound"
@@ -144,12 +145,14 @@ pdf(file = paste(outPrefix, ".tiles.pdf", sep = ""), width = 15, height = 8, one
 
 rowId2 <- 1
 
-for (rowId2 in 1:nrow(dataSummary)) {
+for (rowId2 in 1:nrow(productionData)) {
   
-  plotData <- dplyr::filter(mergedData2, comparison == dataSummary$degId[rowId2]) %>% 
+  print(productionData$degId[rowId2])
+  
+  plotData <- dplyr::filter(mergedData2, comparison == productionData$degId[rowId2]) %>% 
     dplyr::mutate(
       SM_CLUSTER = dplyr::if_else(
-        condition = SM_ID %in% geneset$SM_ID[which(geneset$geneId == dataSummary$geneId[rowId2])],
+        condition = SM_ID %in% geneset$SM_ID[which(geneset$geneId == productionData$geneId[rowId2])],
         true = paste("*", SM_CLUSTER),
         false = SM_CLUSTER
       )
@@ -164,7 +167,7 @@ for (rowId2 in 1:nrow(dataSummary)) {
     )
   
   pltTitle <- paste(
-    dataSummary$OESMTF_name[rowId2], " binding and log2(OE/WT) for all SM clusters", sep = ""
+    productionData$OESMTF_name[rowId2], " binding and log2(OE/WT) for all SM clusters", sep = ""
   )
   
   pt_bindingLfc <- ggplot(
@@ -174,6 +177,7 @@ for (rowId2 in 1:nrow(dataSummary)) {
       mapping = aes(x = index, y = "DEG", fill = log2FoldChange, alpha = significance),
       size = 0.2, height = 1, color = "grey") +
     geom_point(
+      # data = dplyr::filter(plotData, binding == "bound"),
       mapping = aes(x = index , y = "peak", color = binding, shape = tfGene),
       size = 3
     ) +
@@ -188,7 +192,7 @@ for (rowId2 in 1:nrow(dataSummary)) {
     ) +
     scale_colour_manual(
       name = "Peak", breaks = "bound",
-      values = c("bound" = "black", "not-bound" = NA),
+      values = c("bound" = "black", "not-bound" = alpha("white", alpha = 0)),
     ) +
     scale_shape_manual(
       name = "Gene type", breaks = c("TF", "non-TF"),
@@ -229,9 +233,4 @@ for (rowId2 in 1:nrow(dataSummary)) {
 
 dev.off()
 
-
-g <- ggplot_gtable(ggplot_build(pt_bindingLfc))
-
-stript <- which(grepl('strip-t', g$layout$name))
-fills <- c("red","green","blue","yellow")
 

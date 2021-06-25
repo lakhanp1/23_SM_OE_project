@@ -24,10 +24,10 @@ if(!dir.exists(outDir)){
   dir.create(outDir, recursive = T)
 }
 
-diffDataPath <- here::here("analysis", "06_polII_diff")
+file_productionData <- here::here("data", "reference_data", "production_data.summary.tab")
 file_sampleInfo <- here::here("data", "reference_data", "polII_sample_info.txt")
 file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
-file_degIds <- here::here("data", "reference_data", "production_data.polII_DEG_ids.txt")
+diffDataPath <- here::here("analysis", "06_polII_diff")
 
 useAllGroupsSamples <- FALSE
 
@@ -44,12 +44,11 @@ col_lfc <- "log2FoldChange"
 col_pval <- "pvalue"
 
 ###########################################################################
-
-degIds <- suppressMessages(readr::read_tsv(file = file_degIds))
+productionData <- suppressMessages(readr::read_tsv(file = file_productionData)) %>% 
+  dplyr::filter(has_polII_ChIP == "has_data", has_TF_ChIP == "has_data", copyNumber == "sCopy")
 
 rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath) %>% 
-  dplyr::filter(comparison %in% degIds$degId)
-
+  dplyr::filter(comparison %in% productionData$degId)
 
 clusterInfo <- AnnotationDbi::select(
   x = orgDb, keys = rnaseqInfo$SM_TF, columns = c("GENE_NAME", "SM_CLUSTER", "SM_ID"), keytype = "GID"

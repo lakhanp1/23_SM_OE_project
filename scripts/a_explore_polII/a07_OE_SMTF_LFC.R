@@ -78,6 +78,10 @@ plotData <-  productionData %>%
     geneName = forcats::as_factor(geneName)
   )
 
+readr::write_tsv(
+  file = paste(outPrefix, "SMTF_LFC_in_self_OE.tab", sep = ""),
+  x = plotData
+)
 
 ###########################################################################
 
@@ -142,8 +146,8 @@ pt_scatter <- ggplot(data = plotData, mapping = aes(x = total, y = log2FoldChang
   theme(
     plot.title = element_text(hjust = 0),
     panel.grid = element_blank(),
-    axis.text = element_text(size = 14, color = "black"),
-    axis.title = element_text(size = 15, face = "bold"),
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, face = "bold"),
     title = element_text(size =14, face = "bold"),
     legend.text = element_text(size = 12)
   )
@@ -152,8 +156,6 @@ ggsave(
   filename = paste(outPrefix, "SMTF_LFC_vs_DEGs_count.pdf", sep = ""),
   plot = pt_scatter, width = 9, height = 9
 )
-
-
 
 
 
