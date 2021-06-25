@@ -145,7 +145,45 @@ smtf_sraRanks <- dplyr::mutate(
 )
 
 ##################################################################################
-## plot the data
+## plot the data: only RNAseq FPKM
+pt_sra_rank <- ggplot(
+  mapping = aes(x = rank, y = geneName)
+) +
+  geom_density_ridges(
+    data = smtf_sraRanks
+  ) +
+  # geom_point(data = plotData, mapping = aes(fill = copyNumber), size = 3, shape = 21) +
+  geom_vline(xintercept = nrow(geneSet), linetype = "dashed") +
+  coord_cartesian(xlim = c(0, nrow(geneSet))) +
+  scale_x_continuous(
+    breaks = c(1, 3000, 6000, 9000, nrow(geneSet))
+  ) +
+  scale_fill_manual(
+    values = c("sCopy_OE" = "red", "WT" = "green"),
+    labels = c("sCopy_OE" = "OE", "WT" = "WT")
+  ) +
+  labs(
+    title = paste(
+      "Rank distribution of SMTFs in the public RNAseq data (n=",
+      nrow(sraMetadata), ")", sep = ""),
+    x = "rank(FPKM)"
+  ) +
+  guides(fill = guide_legend(override.aes = list(size = 6))) +
+  theme_bw() +
+  theme(
+    panel.grid = element_blank(),
+    legend.position = "right",
+    legend.text = element_text(size = 14),
+    legend.title = element_text(size = 16, face = "bold"),
+    axis.text = element_text(size = 14),
+    axis.title = element_text(size = 14),
+    axis.title.y = element_blank()
+  )
+
+ggsave(filename = paste(outPrefix, ".pdf", sep = ""), plot = pt_sra_rank, width = 14, height = 8)
+
+#################
+## plot the data: RNAseq and polII ChIPseq
 pt_oe_gene_rank <- ggplot(
   mapping = aes(x = rank, y = geneName)
 ) +
@@ -156,8 +194,7 @@ pt_oe_gene_rank <- ggplot(
   geom_vline(xintercept = nrow(geneSet), linetype = "dashed") +
   coord_cartesian(xlim = c(0, nrow(geneSet))) +
   scale_x_continuous(
-    breaks = c(1, 3000, 6000, 9000, nrow(geneSet)),
-    expand = expansion(mult = c(0.01, 0.01))
+    breaks = c(1, 3000, 6000, 9000, nrow(geneSet))
   ) +
   scale_fill_manual(
     values = c("sCopy_OE" = "red", "WT" = "green"),
@@ -183,8 +220,8 @@ pt_oe_gene_rank <- ggplot(
   )
 
 
-ggsave(filename = paste(outPrefix, ".png", sep = ""), plot = pt_oe_gene_rank, width = 14, height = 8)
-ggsave(filename = paste(outPrefix, ".pdf", sep = ""), plot = pt_oe_gene_rank, width = 14, height = 8)
+# ggsave(filename = paste(outPrefix, "_and_polII.png", sep = ""), plot = pt_oe_gene_rank, width = 14, height = 8)
+ggsave(filename = paste(outPrefix, "_and_polII.pdf", sep = ""), plot = pt_oe_gene_rank, width = 14, height = 8)
 
 
 
