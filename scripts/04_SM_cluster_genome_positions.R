@@ -36,6 +36,7 @@ smInfo <- suppressMessages(
   dplyr::rename(geneId = GID) %>% 
   dplyr::mutate(hasData = "no_TF")
 
+
 ## BGCs with TF
 bgcWithTf <- productionData %>% 
   dplyr::filter(!is.na(SM_ID)) %>%
@@ -66,7 +67,27 @@ smGr <- GenomicFeatures::genes(
 seqlevels(smGr) <- seqlevels(txDb)
 seqinfo(smGr) <- seqinfo(txDb)
 
-# smGr <- keepSeqlevels(x = smGr, value = sort(seqlevels(smGr)))
+
+## extract individual cluster range as GRanges and save as BED
+clusterGrl <- GenomicRanges::split(x = smGr, f = smGr$SM_ID)
+clusterGr <- sort(unlist(range(clusterGrl, ignore.strand = TRUE)))
+mcols(clusterGr)$SM_ID <- names(clusterGr)
+
+mcols(clusterGr)$SM_CLUSTER <- AnnotationDbi::mapIds(
+  x = orgDb, keys = mcols(clusterGr)$SM_ID,
+  column = "SM_CLUSTER", keytype = "SM_ID"
+)
+
+mcols(clusterGr)$name <- paste(
+  mcols(clusterGr)$SM_ID, "::", mcols(clusterGr)$SM_CLUSTER, sep = ""
+) %>% 
+  stringr::str_replace_all(pattern = "\\s+", replacement = "_")
+
+rtracklayer::export.bed(
+  object = clusterGr,
+  con = here::here("data", "reference_data", "SM_cluster_regions.bed")
+)
+
 ##################################################################################
 ## plot the data
 pt_theme <- theme(
