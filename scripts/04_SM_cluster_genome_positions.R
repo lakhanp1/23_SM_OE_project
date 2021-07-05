@@ -21,9 +21,11 @@ txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
 
 
 ##################################################################################
-productionData <- suppressMessages(readr::read_tsv(file = file_productionData)) %>% 
-  dplyr::filter(has_polII_ChIP == "has_data", has_TF_ChIP == "has_data", copyNumber == "sCopy")
+## process the data
+productionData <- suppressMessages(readr::read_tsv(file = file_productionData))
 
+prodDataFiltered <- productionData %>% 
+  dplyr::filter(has_polII_ChIP == "has_data", has_TF_ChIP == "has_data", copyNumber == "sCopy")
 
 
 smInfo <- suppressMessages(
@@ -31,11 +33,28 @@ smInfo <- suppressMessages(
     x = orgDb, keys = keys(orgDb, keytype = "SM_ID"),
     columns = c("GID", "SM_ID", "SM_CLUSTER"), keytype = "SM_ID")
 ) %>% 
-  dplyr::rename(geneId = GID)
+  dplyr::rename(geneId = GID) %>% 
+  dplyr::mutate(hasData = "no_TF")
 
-bgcWithData <- unique(smInfo$SM_ID[which(smInfo$geneId %in% productionData$geneId)])
+## BGCs with TF
+bgcWithTf <- productionData %>% 
+  dplyr::filter(!is.na(SM_ID)) %>%
+  dplyr::select(SM_ID) %>% 
+  dplyr::distinct() %>% 
+  tibble::deframe()
 
-smInfo$hasData <- smInfo$SM_ID %in% bgcWithData
+## BGCs with TF+polII data
+bgcWithData <- productionData %>% 
+  dplyr::filter(
+    has_polII_ChIP == "has_data", has_TF_ChIP == "has_data",
+    copyNumber == "sCopy", !is.na(SM_ID)
+  ) %>%
+  dplyr::select(SM_ID) %>% 
+  dplyr::distinct() %>% 
+  tibble::deframe()
+
+smInfo$hasData[which(smInfo$SM_ID %in% bgcWithTf)] <- "has_TF"
+smInfo$hasData[which(smInfo$SM_ID %in% bgcWithData)] <- "has_TF_data"
 
 smGr <- GenomicFeatures::genes(
   x = txDb, filter = list(gene_id = smInfo$geneId)
@@ -48,7 +67,8 @@ seqlevels(smGr) <- seqlevels(txDb)
 seqinfo(smGr) <- seqinfo(txDb)
 
 # smGr <- keepSeqlevels(x = smGr, value = sort(seqlevels(smGr)))
-
+##################################################################################
+## plot the data
 pt_theme <- theme(
   plot.title = element_text(size = 18, face = "bold", hjust = 1),
   axis.text = element_text(size = 16, face = "bold", color = "black"),
@@ -75,7 +95,7 @@ pt_all <- autoplot(object = seqinfo(smGr), layout = "karyogram") +
     values = c("black" = "black"),
     labels = c("black" = "BGCs")
   ) +
-  labs(title = "Distribution of secondary metabolism gene clusters in A. nidulans genome") +
+  labs(title = "Distribution of BGCs in A. nidulans genome") +
   theme_clear() +
   pt_theme
 
@@ -93,15 +113,15 @@ pt_data <- autoplot(object = seqinfo(smGr), layout = "karyogram") +
   ) +
   scale_color_manual(
     name = NULL,
-    values = c("TRUE" = "blue", "FALSE" = "black"),
-    labels = c("TRUE" = "has data", "FALSE" = "no data")
+    values = c("has_TF_data" = "blue", "has_TF" = "black", "no_TF" = "grey"),
+    labels = c("has_TF_data" = "TF + data", "has_TF" = "TF & no data", "no_TF" = "no TF")
   ) +
   scale_fill_manual(
     name = NULL,
-    values = c("TRUE" = "blue", "FALSE" = "black"),
-    labels = c("TRUE" = "has data", "FALSE" = "no data")
+    values = c("has_TF_data" = "blue", "has_TF" = "black", "no_TF" = "grey"),
+    labels = c("has_TF_data" = "TF + data", "has_TF" = "TF & no data", "no_TF" = "no TF")
   ) +
-  labs(title = "Distribution of secondary metabolism gene clusters in A. nidulans genome") +
+  labs(title = "Distribution of BGCs in A. nidulans genome") +
   theme_clear() +
   pt_theme
 
