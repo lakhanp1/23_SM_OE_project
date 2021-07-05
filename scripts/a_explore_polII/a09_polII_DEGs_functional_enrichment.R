@@ -165,7 +165,7 @@ geneList[is.infinite(geneList) & geneList < 0] <- min(geneList[is.finite(geneLis
 #   dplyr::mutate(contrast = contrast)
 # 
 # 
-# readr::write_tsv(x = ego_res, path = paste(outPrefix, ".clusterProfiler.GO.tab", sep = ""))
+# readr::write_tsv(x = ego_res, file = paste(outPrefix, ".clusterProfiler.GO.tab", sep = ""))
 # 
 # 
 # ego_degs <- compareCluster(geneClusters = geneId ~ category,
@@ -208,7 +208,7 @@ topgo_res <- dplyr::bind_rows(
 
 # dplyr::glimpse(topgo_res)
 
-readr::write_tsv(x = topgo_res, path = paste(outPrefix, ".topGO.tab", sep = ""))
+readr::write_tsv(x = topgo_res, file = paste(outPrefix, ".topGO.tab", sep = ""))
 
 # ## top 10 GO term bar plot
 # topgoPlotDf <- dplyr::group_by(topgo_res, category) %>% 
@@ -251,7 +251,7 @@ ekegg_res <- dplyr::bind_rows(
   dplyr::mutate(contrast = contrast)
 
 
-readr::write_tsv(x = ekegg_res, path = paste(outPrefix, ".kegg_clusterProiler.tab", sep = ""))
+readr::write_tsv(x = ekegg_res, file = paste(outPrefix, ".kegg_clusterProfiler.tab", sep = ""))
 
 
 # ## up and down DEG
@@ -296,7 +296,7 @@ readr::write_tsv(x = ekegg_res, path = paste(outPrefix, ".kegg_clusterProiler.ta
 # 
 # # dplyr::glimpse(keggp_res)
 # 
-# readr::write_tsv(x = keggp_res, path = paste(outPrefix, ".keggProfile.tab", sep = ""))
+# readr::write_tsv(x = keggp_res, file = paste(outPrefix, ".keggProfile.tab", sep = ""))
 # 
 # ## top 10 KEGG pathway bar plot
 # keggPlotDf <- dplyr::group_by(keggp_res, category) %>% 

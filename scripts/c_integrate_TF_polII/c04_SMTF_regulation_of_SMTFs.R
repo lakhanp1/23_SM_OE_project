@@ -14,12 +14,13 @@ source("D:/work_lakhan/github/omics_utils/02_RNAseq_scripts/s02_DESeq2_functions
 
 ##################################################################################
 
-outDir <- here::here("analysis", "10_TF_polII_integration", "OESMTF_binding_DEG")
+outDir <- here::here("analysis", "10_TF_polII_integration", "02_OESMTF_binding_DEG")
 outPrefix <- paste(outDir, "/", sep = "")
 
+file_productionData <- here::here("data", "reference_data", "production_data.summary.tab")
 file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
-file_dataSummary <- here::here("data", "reference_data", "production_data.summary.tab")
 file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
+file_polIIDegs <- here::here("analysis", "06_polII_diff", "polII_DEGs.fpkm_filtered.combined.tab")
 
 TF_dataPath <- here::here("data", "TF_data")
 diffDataPath <- here::here("analysis", "06_polII_diff")
@@ -42,69 +43,80 @@ if(!dir.exists(outDir)){
   dir.create(path = outDir)
 }
 
-dataSummary <- suppressMessages(readr::read_tsv(file = file_dataSummary)) %>% 
-  dplyr::filter(has_TF_ChIP == "has_data", has_polII_ChIP == "has_data", copyNumber == "sCopy") %>% 
+productionData <- suppressMessages(readr::read_tsv(file = file_productionData)) %>% 
+  dplyr::filter(has_polII_ChIP == "has_data", has_TF_ChIP == "has_data", copyNumber == "sCopy") %>% 
   dplyr::arrange(SM_ID, geneId)
 
+productionData$OESMTF_name <- AnnotationDbi::mapIds(
+  x = orgDb, keys = productionData$geneId, column = "GENE_NAME", keytype = "GID"
+)
 
 tfInfo <- get_sample_information(
   exptInfoFile = file_exptInfo,
-  samples = dataSummary$tfId,
+  samples = productionData$tfId,
   dataPath = TF_dataPath)
 
 tfInfoList <- purrr::transpose(tfInfo)  %>% 
   purrr::set_names(nm = purrr::map(., "sampleId"))
 
 rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath) %>% 
-  dplyr::filter(comparison %in% dataSummary$degId)
+  dplyr::filter(comparison %in% productionData$degId)
 
 rnaseqInfoList <- purrr::transpose(rnaseqInfo)  %>% 
   purrr::set_names(nm = purrr::map(., "comparison"))
+
+combinedDegs <- suppressMessages(readr::read_tsv(file = file_polIIDegs))
 
 genesDf <- as.data.frame(GenomicFeatures::genes(x = txDb)) %>% 
   dplyr::select(geneId = gene_id, strand)
 
 ##################################################################################
 
-smTfs <- AnnotationDbi::select(
-  x = orgDb, keys = keys(x = orgDb, keytype = "SM_CLUSTER"),
-  columns = c("SM_ID", "GID", "TF_GENE"), keytype = "SM_CLUSTER"
-) %>% 
-  dplyr::rename(geneId = GID) %>% 
-  dplyr::filter(!is.na(TF_GENE))
+smTfs <- suppressMessages(readr::read_tsv(file = file_productionData)) %>% 
+  dplyr::select(geneId) %>% 
+  dplyr::distinct()
 
 rowId <- 1
 
 mergedData <- NULL
 
-for (rowId in 1:nrow(dataSummary)) {
+for (rowId in 1:nrow(productionData)) {
   
-  tfSampleId <- dataSummary$tfId[rowId]
-  degId <- dataSummary$degId[rowId]
+  tfSampleId <- productionData$tfId[rowId]
+  degId <- productionData$degId[rowId]
   
   ## extract peak annotation
   peakAn <- suppressMessages(readr::read_tsv(tfInfoList[[tfSampleId]]$peakAnno)) %>% 
     dplyr::mutate(
       tfSampleId = tfSampleId,
     ) %>% 
-    dplyr::filter(peakPval >= cutoff_macs2Pval)
+    dplyr::filter(peakPval >= cutoff_macs2Pval) %>% 
+    dplyr::select(peakId, tfSampleId, peakPval, geneId, peakAnnotation, peakDist, summitDist)
   
   
   ## extract DEG data
-  diffData <- suppressMessages(readr::read_tsv(file = rnaseqInfoList[[degId]]$deg)) %>% 
-    dplyr::select(geneId, !!col_lfc, shrinkLog2FC, pvalue, padj) %>% 
+  diffData <-dplyr::filter(combinedDegs, comparison == degId) %>% 
+    dplyr::select(
+      geneId, comparison, !!col_lfc, shrinkLog2FC,
+      pvalue, padj, maxFpkm, fpkmFilter
+    ) %>% 
     dplyr::mutate(comparison = degId)
   
   bindingDegData <- dplyr::left_join(
-    x = diffData, y = peakAn, by = "geneId"
+    x = smTfs, y = diffData, by = "geneId"
   ) %>% 
+    dplyr::left_join(y = peakAn, by = "geneId") %>% 
     dplyr::mutate(
-      OESMTF = !!tfInfoList[[tfSampleId]]$SM_TF
+      OESMTF = !!productionData$geneId[rowId],
+      OESMTF_name = !!productionData$OESMTF_name[rowId]
     ) %>% 
-    dplyr::left_join(
-      y = smTfs, by = "geneId"
-    ) %>% 
-    dplyr::filter(!is.na(SM_ID))
+    dplyr::group_by(geneId) %>% 
+    dplyr::arrange(desc(peakPval), .by_group = TRUE) %>% 
+    dplyr::slice(1L) %>% 
+    dplyr::ungroup() %>% 
+    dplyr::select(
+      OESMTF, geneId, everything()
+    )
   
   mergedData <- dplyr::bind_rows(mergedData, bindingDegData)
   
@@ -112,15 +124,14 @@ for (rowId in 1:nrow(dataSummary)) {
 
 mergedData2 <- dplyr::mutate(
   mergedData,
-  significance = if_else(
-    condition = !!sym(col_pval) <= cutoff_fdr, true = "significant",
-    false = "non-significant", missing = "non-significant"
+  significance = dplyr::case_when(
+    !!sym(col_pval) <= cutoff_fdr & fpkmFilter == "pass" ~ "significant",
+    TRUE ~ "non-significant"
   ),
-  selfBinding = dplyr::if_else(
-    condition = OESMTF == geneId, true = "self", false = "cross"
-  ),
-  selfBinding = dplyr::if_else(
-    condition = is.na(peakId), true = "no-binding", false = selfBinding
+  selfBinding = dplyr::case_when(
+    !is.na(peakId) & OESMTF == geneId ~ "self",
+    !is.na(peakId) & OESMTF != geneId ~ "cross",
+    TRUE ~ "no-binding"
   ),
   selfBinding = forcats::fct_relevel(.f = selfBinding, "self")
 ) %>% 
@@ -130,25 +141,53 @@ mergedData2$geneName <- AnnotationDbi::mapIds(
   x = orgDb, keys = mergedData2$geneId, column = "GENE_NAME", keytype = "GID"
 )
 
-mergedData2$OESMTF_name <- AnnotationDbi::mapIds(
-  x = orgDb, keys = mergedData2$OESMTF, column = "GENE_NAME", keytype = "GID"
+
+## clusters the data to determine the row and column orders
+dataMat <- mergedData2 %>% 
+  dplyr::mutate(
+    matrixVal = dplyr::case_when(
+      significance == "significant" & !is.na(peakId) ~ 3*sign(log2FoldChange),
+      significance == "significant" & is.na(peakId) ~ 2*sign(log2FoldChange),
+      significance == "non-significant" & !is.na(peakId) ~ 1,
+      TRUE ~ 0
+    )
+  ) %>% 
+  tidyr::pivot_wider(
+    id_cols = c(OESMTF_name),
+    names_from = geneName,
+    values_from = matrixVal
+  ) %>% 
+  tibble::column_to_rownames(var = "OESMTF_name") %>% 
+  as.matrix()
+
+hc_oeTf <- hclust(d = dist(x = t(dataMat[, rownames(dataMat)])))
+
+oetf_levels <- hc_oeTf$labels[hc_oeTf$order]
+
+
+hc_nonoeTf <- hclust(
+  d = dist(t(dataMat[, setdiff(x = colnames(dataMat), y = rownames(dataMat))]))
 )
 
-
-fctLevels <- intersect(mergedData2$geneName, mergedData2$OESMTF_name)
+smtf_levels <- c(oetf_levels, hc_nonoeTf$labels[hc_nonoeTf$order])
+  
+# smtf_levels <- intersect(mergedData2$geneName, mergedData2$OESMTF_name)
+# oetf_levels <- intersect(mergedData2$geneName, mergedData2$OESMTF_name)
 
 mergedData2 <- dplyr::mutate(
   mergedData2,
-  geneName = forcats::fct_relevel(.f = geneName, fctLevels),
-  OESMTF_name = forcats::fct_relevel(.f = OESMTF_name, fctLevels)
+  geneName = forcats::fct_relevel(.f = geneName, smtf_levels),
+  OESMTF_name = forcats::fct_relevel(.f = OESMTF_name, oetf_levels)
 )
+
+##################################################################################
 
 pt_binding <- ggplot(data = mergedData2, mapping = aes(x = geneName, y = OESMTF_name)) +
   geom_point(
     mapping = aes(color = selfBinding), size = 3
   ) +
   scale_color_manual(
-    values = c("self" = "green", "cross" = "black", "no-binding" = NA),
+    values = c("self" = "green", "cross" = "black", "no-binding" = alpha("white", alpha = 0)),
     breaks = c("self", "cross"), name = "TF binding"
     
   ) +
@@ -192,6 +231,8 @@ pt_bindingLfc <- pt_binding +
 pt_bindingLfc <- gginnards::move_layers(x = pt_bindingLfc, match_type = "GeomPoint", position = "top")
 
 aligned_plots <- cowplot::align_plots(plotlist = list(pt_binding, pt_bindingLfc), align = "v")
+
+ggdraw(aligned_plots[[2]])
 
 ggsave(
   filename = paste(outPrefix, "OESMTF_binding.SMTFs.png", sep = ""), plot = ggdraw(aligned_plots[[1]]),
