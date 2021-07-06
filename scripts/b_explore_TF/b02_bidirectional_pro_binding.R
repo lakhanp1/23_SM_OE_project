@@ -3,8 +3,11 @@ suppressPackageStartupMessages(library(org.Anidulans.FGSCA4.eg.db))
 suppressPackageStartupMessages(library(TxDb.Anidulans.FGSCA4.AspGD.GFF))
 suppressPackageStartupMessages(library(here))
 suppressPackageStartupMessages(library(ggbeeswarm))
+suppressPackageStartupMessages(library(ggrepel))
 suppressPackageStartupMessages(library(viridis))
 
+## intergenic region types and width distribution 
+## SMTF peak overlap with intergenic regions
 
 rm(list = ls())
 
@@ -14,19 +17,16 @@ analysisName <- "intergenic_regions"
 outDir <- here::here("analysis", "02_QC_TF", "intergenic_regions")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
+file_productionData <- here::here("data", "reference_data", "production_data.summary.tab")
 file_exptInfo <- here::here("data", "reference_data/sample_info.txt")
-
 file_genes <- here::here("data", "reference_data/AN_genes_for_polII.bed")
+
 orgDb <- org.Anidulans.FGSCA4.eg.db
 txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
 
 TF_dataPath <- here::here("data", "TF_data")
-polII_dataPath <- here::here("data", "polII_data")
-hist_dataPath <- here::here("data", "histone_data")
-other_dataPath <- here::here("data", "other_data")
 
-file_tfSamples <- here::here("data", "reference_data", "production_data.tf_samples.txt")
-
+cutoff_macs2Pval <- 20
 
 matrixType <- "2kb_summit"
 up <- 2000
@@ -42,14 +42,21 @@ if(!dir.exists(outDir)){
   dir.create(path = outDir, recursive = TRUE)
 }
 
-tfSampleList <- readr::read_tsv(file = file_tfSamples, comment = "#")
+productionData <- suppressMessages(readr::read_tsv(file = file_productionData)) %>% 
+  dplyr::filter(has_polII_ChIP == "has_data", has_TF_ChIP == "has_data", copyNumber == "sCopy") %>% 
+  dplyr::arrange(SM_ID, geneId)
+
+productionData$OESMTF_name <- AnnotationDbi::mapIds(
+  x = orgDb, keys = productionData$geneId, column = "GENE_NAME", keytype = "GID"
+)
 
 tfInfo <- get_sample_information(
   exptInfoFile = file_exptInfo,
-  samples = tfSampleList$sampleId,
-  dataPath = TF_dataPath,
-  profileMatrixSuffix = matrixType)
+  samples = productionData$tfId,
+  dataPath = TF_dataPath)
 
+tfInfoList <- purrr::transpose(tfInfo)  %>% 
+  purrr::set_names(nm = purrr::map(., "sampleId"))
 
 txInfo <- suppressMessages(
   AnnotationDbi::select(
@@ -131,12 +138,12 @@ itgSummary <- gapDf %>%
   dplyr::tally(name = "regionsN")
 
 
-
 fun_summary <- function(x){
   return(
     data.frame(ymin = quantile(x, 0.25), y = quantile(x, 0.5), ymax = quantile(x, 0.75))
   )
 }
+
 
 ## plot intergenic region width statistics
 pt_width <- ggplot(
@@ -147,9 +154,9 @@ pt_width <- ggplot(
   stat_summary(fun.data = fun_summary, color="red", size = 1) +
   scale_x_discrete(
     labels = c(
-      "tandem" = "(tandem)\n>=(+)=>     >=(+)=>\n<=(-)=<     <=(-)=<",
-      "convergent" = "(convergent)\n>=(+)=>     <=(-)=<",
-      "divergent" = "(divergent)\n<=(-)=<     >=(+)=>"
+      "tandem" = "tandem",
+      "convergent" = "convergent",
+      "divergent" = "divergent"
     )
   ) +
   geom_text(
@@ -171,37 +178,36 @@ pt_width <- ggplot(
     axis.ticks.length = unit(2, "mm")
   )
 
-
-png(filename = paste(outPrefix, ".summary.png", sep = ""), width = 3000, height = 2000, res = 250)
-print(pt_width)
-dev.off()
+ggplot2::ggsave(filename = paste(outPrefix, ".summary.pdf", sep = ""),
+                plot = pt_width, width = 12, height = 8)
 
 ##################################################################################
-
-
 ## for each TF ChIPseq peaks, find the % of peaks in different intergenic regions
-i <- 1
+rowId <- 1
 
 itgPeakStats <- NULL
 
-for (i in 1:nrow(tfInfo)) {
+for (rowId in 1:nrow(productionData)) {
   
-  peakType <- tfInfo$peakType[i]  
+  tfId <- productionData$tfId[rowId]
+  peakType <- tfInfoList[[tfId]]$peakType
   
-  peaksGr <- rtracklayer::import(con = tfInfo$peakFile[i], format = peakType)
+  peaksGr <- rtracklayer::import(con = tfInfoList[[tfId]]$peakFile, format = peakType)
+  
+  peaksGr <- peaksGr[peaksGr$pValue >= cutoff_macs2Pval, ]
   
   if(length(peaksGr) == 0){
-    # cat(tfInfo$sampleId[i], "\n")
+    # cat(tfInfo$sampleId[rowId], "\n")
     next()
   }
-
+  
   ## use peak summit instead of whole peak
   peakSummitGr <- GenomicRanges::resize(
     x = GenomicRanges::shift(x = peaksGr, shift = peaksGr$peak),
     width = 1, fix = "start"
   )
   
-    
+  
   ## peaks falling within intergenic regions
   ovHits <- GenomicRanges::findOverlaps(
     query = peakSummitGr,
@@ -212,7 +218,6 @@ for (i in 1:nrow(tfInfo)) {
   
   
   # peakSummitGr[ovHits@from]
-  
   ovlpGr <- as.data.frame(mcols(intergenicGr)[ovHits@to, ]) %>% 
     dplyr::mutate(
       peakId = peakSummitGr$name[ovHits@from]
@@ -226,13 +231,17 @@ for (i in 1:nrow(tfInfo)) {
   ## add a row for non-intergenic row
   tfSummary <- tfSummary %>% 
     dplyr::bind_rows(
-      tibble(gapType = "non-intergenic",
-             intergenicPeaks = length(peakSummitGr) - sum(tfSummary$intergenicPeaks))
+      tibble(
+        gapType = "non-intergenic",
+        intergenicPeaks = length(peakSummitGr) - sum(tfSummary$intergenicPeaks)
+      )
     ) %>% 
     dplyr::mutate(
       totalIntergenicPeaks = length(ovHits),
       totalPeaks = length(peakSummitGr),
-      sampleId = tfInfo$sampleId[i]
+      sampleId = tfInfo$sampleId[rowId],
+      OESMTF = !!productionData$geneId[rowId],
+      OESMTF_name = !!productionData$OESMTF_name[rowId]
     )
   
   itgPeakStats <- dplyr::bind_rows(itgPeakStats, tfSummary) 
@@ -257,16 +266,17 @@ pt2 <- ggplot(
   mapping = aes(x = gapType, y = fraction)
 ) +
   geom_quasirandom(mapping = aes(fill = totalPeaks), shape = 21, size = 3) +
+  geom_text_repel(
+    data = dplyr::filter(itgPeakStats, fraction >= 0.5),
+    mapping = aes(x = gapType, y = fraction, label = OESMTF_name),
+    size = 5, fontface = "italic",
+    seed = 42, box.padding = 0.5,
+    min.segment.length = 0,
+    segment.size = unit(1, "mm")
+  ) +
   stat_summary(fun.data = fun_summary, color="red", size = 1) +
   scale_fill_viridis(name = "log2(#peaks)", option = "viridis", direction = -1, trans = "log2") +
   scale_y_continuous(labels = scales::percent_format()) +
-  scale_x_discrete(
-    labels = c(
-      "tandem" = "(tandem)\n>=(+)=>     >=(+)=>\n<=(-)=<     <=(-)=<",
-      "convergent" = "(convergent)\n>=(+)=>     <=(-)=<",
-      "divergent" = "(divergent)\n<=(-)=<     >=(+)=>"
-    )
-  ) +
   labs(
     x = "Gene orientation around intergenic region",
     y = "% of peaks for a TF ChIPseq data",
@@ -288,11 +298,8 @@ pt2 <- ggplot(
     legend.title = element_text(size = 16, face = "bold", angle = 90, vjust = 1)
   )
 
+ggplot2::ggsave(filename = paste(outPrefix, ".all_TF_distriution.pdf", sep = ""),
+                plot = pt2, width = 12, height = 8)
 
-png(filename = paste(outPrefix, ".all_TF_distriution.png", sep = ""), width = 3000, height = 2000, res = 250)
-
-print(pt2)
-
-dev.off()
 
 
