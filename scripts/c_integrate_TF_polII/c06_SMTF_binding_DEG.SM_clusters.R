@@ -44,11 +44,7 @@ col_pval <- "pvalue"
 
 productionData <- suppressMessages(readr::read_tsv(file = file_productionData)) %>% 
   dplyr::filter(has_polII_ChIP == "has_data", has_TF_ChIP == "has_data", copyNumber == "sCopy") %>% 
-  dplyr::arrange(SM_ID, geneId)
-
-productionData$OESMTF_name <- AnnotationDbi::mapIds(
-  x = orgDb, keys = productionData$geneId, column = "GENE_NAME", keytype = "GID"
-)
+  dplyr::arrange(SM_ID, SMTF)
 
 tfInfo <- get_sample_information(
   exptInfoFile = file_exptInfo,
@@ -113,8 +109,8 @@ for (rowId in 1:nrow(productionData)) {
   ) %>% 
     dplyr::left_join(y = peakAn, by = "geneId") %>% 
     dplyr::mutate(
-      OESMTF = !!productionData$geneId[rowId],
-      OESMTF_name = !!productionData$OESMTF_name[rowId]
+      OESMTF = !!productionData$SMTF[rowId],
+      OESMTF_name = !!productionData$SMTF_name[rowId]
     ) %>% 
     dplyr::select(
       OESMTF, geneId, GENE_NAME, everything()
@@ -152,7 +148,7 @@ for (rowId2 in 1:nrow(productionData)) {
   plotData <- dplyr::filter(mergedData2, comparison == productionData$degId[rowId2]) %>% 
     dplyr::mutate(
       SM_CLUSTER = dplyr::if_else(
-        condition = SM_ID %in% geneset$SM_ID[which(geneset$geneId == productionData$geneId[rowId2])],
+        condition = SM_ID %in% geneset$SM_ID[which(geneset$geneId == productionData$SMTF[rowId2])],
         true = paste("*", SM_CLUSTER),
         false = SM_CLUSTER
       )
@@ -167,7 +163,7 @@ for (rowId2 in 1:nrow(productionData)) {
     )
   
   pltTitle <- paste(
-    productionData$OESMTF_name[rowId2], " binding and log2(OE/WT) for all SM clusters", sep = ""
+    productionData$SMTF_name[rowId2], " binding and log2(OE/WT) for all SM clusters", sep = ""
   )
   
   pt_bindingLfc <- ggplot(

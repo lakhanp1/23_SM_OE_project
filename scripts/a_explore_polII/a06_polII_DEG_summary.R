@@ -45,21 +45,14 @@ col_pval <- "padj"
 productionData <- suppressMessages(readr::read_tsv(file = file_productionData)) %>% 
   dplyr::filter(has_polII_ChIP == "has_data", has_TF_ChIP == "has_data", copyNumber == "sCopy")
 
-geneInfo <- AnnotationDbi::select(
-  x = orgDb, keys = productionData$geneId,
-  columns = c("GENE_NAME", "SM_CLUSTER"), keytype = "GID"
-) %>%
-  tidyr::replace_na(replace = list(SM_CLUSTER = "-")) %>% 
-  dplyr::group_by(GID) %>% 
-  dplyr::summarise(
-    geneName = unique(GENE_NAME),
-    SM_cluster = paste(unique(SM_CLUSTER), collapse = "/")
-  )
+smInfo <- AnnotationDbi::select(
+  x = orgDb, keys = unique(na.exclude(productionData$SM_ID)),
+  columns = c("SM_CLUSTER"), keytype = "SM_ID"
+)
 
-productionData <- dplyr::left_join(x = productionData, y = geneInfo, by = c("geneId" = "GID"))
+productionData <- dplyr::left_join(x = productionData, y = smInfo, by = "SM_ID")
 
-degLabels <- structure(productionData$geneName, names = productionData$degId)
-
+degLabels <- structure(productionData$SMTF_name, names = productionData$degId)
 
 degData <- suppressMessages(readr::read_tsv(file = file_polIIDegs)) %>% 
   dplyr::filter(comparison %in% productionData$degId)
@@ -97,7 +90,7 @@ degStats <- dplyr::group_by(degData, comparison, diff) %>%
   dplyr::ungroup() %>% 
   dplyr::mutate(total = up + down) %>% 
   dplyr::left_join(
-    y = dplyr::select(productionData, degId, SM_TF = geneId, geneName, SM_cluster),
+    y = dplyr::select(productionData, degId, SMTF, SMTF_name, SM_CLUSTER),
     by = c("comparison" = "degId")
   )
 
@@ -125,17 +118,17 @@ statsPlotData <- dplyr::mutate(degStats, down = -1*down) %>%
   dplyr::arrange(desc(total)) %>% 
   dplyr::mutate(
     # geneLabel = forcats::as_factor(geneLabel),
-    geneName = forcats::as_factor(geneName),
+    SMTF_name = forcats::as_factor(SMTF_name),
     labelHjust = if_else(condition = sign(n) == -1, true = 1, false = 0)
   )
 
-pt_degStats <- ggplot(data = statsPlotData, mapping = aes(y = geneName)) +
+pt_degStats <- ggplot(data = statsPlotData, mapping = aes(y = SMTF_name)) +
   geom_bar(mapping = aes(x = n, fill = degGroup), stat = "identity") +
   geom_text(
     mapping = aes(x = n+(20*sign(n)), label = abs(n), hjust = labelHjust)
   ) +
   geom_text(
-    mapping = aes(x = max(n)+300, label = SM_cluster), hjust = 0,
+    mapping = aes(x = max(n)+300, label = SM_CLUSTER), hjust = 0,
   ) +
   scale_fill_manual(
     values = c("up" = "#d73027", "down" = "#313695")
@@ -246,82 +239,5 @@ draw(
 dev.off()
 
 ###########################################################################
-## overlap of all TF genes with DEG list
-
-smGenes <- AnnotationDbi::select(
-  x = orgDb, keys = keys(x = orgDb, keytype = "SM_GENE"),
-  columns = c("SM_GENE", "SM_CLUSTER")
-)
-
-tfGenes <- AnnotationDbi::select(
-  x = orgDb, keys = keys(x = orgDb, keytype = "TF_GENE"),
-  columns = c("GID")
-)
-
-geneSets <- list(
-  deg_up = unique(degData$geneId[degData$diff == "up"]),
-  deg_down = unique(degData$geneId[degData$diff == "down"]),
-  SM_genes = unique(smGenes$GID),
-  tf = unique(tfGenes$GID)
-)
-
-# ## Venn diagram
-# VennDiagram::venn.diagram(
-#   x = geneSets,
-#   filename = paste(outPrefix, ".SM_DEG_Venn.png"),
-#   fill = c("#8dd3c7", "#ffffb3", "#bebada", "#fb8072"),
-#   fontface = "bold", cex = 1.2, 
-#   cat.fontface = "bold", cat.cex = 1.2
-# )
-
-
-## Upset plot
-cm = make_comb_mat(geneSets)
-
-
-set_size(cm)
-comb_name(cm)
-comb_size(cm)
-comb_degree(cm)
-
-pt_upset <- UpSet(
-  m = cm,
-  pt_size = unit(7, "mm"), lwd = 3,
-  comb_col = RColorBrewer::brewer.pal(n = 4, name = "Dark2")[comb_degree(cm)],
-  set_order = names(geneSets),
-  top_annotation = HeatmapAnnotation(
-    foo = anno_empty(border = FALSE),
-    "combSize" = anno_text(
-      x = paste("(", comb_size(cm), ")", sep = ""),
-      just = "left", location = 0.5, rot = 90
-    ),
-    "Intersection\nsize" = anno_barplot(
-      x = comb_size(cm),
-      border = FALSE,
-      gp = gpar(fill = "black"),
-      height = unit(2, "cm")
-    ),
-    annotation_name_side = "left",
-    annotation_name_rot = 0
-  ),
-  right_annotation = upset_right_annotation(
-    m = cm, bar_width = 0.5
-  ),
-  width = unit(15, "cm"), height = unit(6, "cm")
-)
-
-
-png(filename = paste(outPrefix, ".SM_DEG_Upset.png", sep = ""), width = 6000, height = 4000, res = 400)
-
-draw(
-  pt_upset,
-  column_title = "SM OE strain DEG overlap with SM cluster genes and TF",
-)
-
-dev.off()
-
-###########################################################################
-
-
 
 

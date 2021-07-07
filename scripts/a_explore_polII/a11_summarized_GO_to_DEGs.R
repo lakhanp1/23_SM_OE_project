@@ -41,15 +41,10 @@ cutoff_down <- cutoff_lfc * -1
 
 productionData <- suppressMessages(readr::read_tsv(file = file_productionData)) %>% 
   dplyr::filter(has_polII_ChIP == "has_data", has_TF_ChIP == "has_data", copyNumber == "sCopy") %>% 
-  dplyr::arrange(SM_ID, geneId)
-
-productionData$OESMTF_name <- AnnotationDbi::mapIds(
-  x = orgDb, keys = productionData$geneId, column = "GENE_NAME", keytype = "GID"
-)
+  dplyr::arrange(SM_ID, SMTF)
 
 rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath) %>% 
   dplyr::filter(comparison %in% productionData$degId)
-
 
 rnaseqInfoList <- purrr::transpose(rnaseqInfo)  %>% 
   purrr::set_names(nm = purrr::map(., "comparison"))
@@ -101,8 +96,8 @@ for (rowId in 1:nrow(productionData)) {
   degGoMap <- dplyr::bind_rows(upGoMap, downGoMap) %>% 
     dplyr::mutate(
       comparison = degId,
-      OESMTF = !!productionData$geneId[rowId],
-      OESMTF_name = !!productionData$OESMTF_name[rowId]
+      OESMTF = !!productionData$SMTF[rowId],
+      OESMTF_name = !!productionData$SMTF_name[rowId]
     ) %>% 
     dplyr::filter(count != 0) %>% 
     dplyr::group_by(GOID) %>% 

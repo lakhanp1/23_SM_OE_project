@@ -44,7 +44,8 @@ productionData <- suppressMessages(readr::read_tsv(file = file_productionData)) 
 peakStats <- suppressMessages(readr::read_tsv(file = file_peakStats)) %>% 
   dplyr::select(sampleId, peaks_pval20)
 
-degStats <- suppressMessages(readr::read_tsv(file = file_degStats))
+degStats <- suppressMessages(readr::read_tsv(file = file_degStats)) %>% 
+  dplyr::select(comparison, up, down, total)
 
 selfLfc <- suppressMessages(readr::read_tsv(file = file_SMTF_selfFoldChange)) %>% 
   dplyr::select(degId, log2FoldChange, pvalue, padj, log10_padj, significant)
@@ -57,8 +58,8 @@ dataSummary <- dplyr::left_join(x = productionData, y = peakStats, by = c("tfId"
   dplyr::mutate(degTotal = up + down) %>% 
   dplyr::arrange(peaks_pval20, degTotal) %>% 
   dplyr::mutate(
-    geneId = forcats::as_factor(geneId),
-    geneName = forcats::as_factor(geneName)
+    SMTF = forcats::as_factor(SMTF),
+    SMTF_name = forcats::as_factor(SMTF_name)
   )
 
 readr::write_tsv(file = paste(outPrefix, ".stats.tab", sep = ""), x = dataSummary)
@@ -72,7 +73,7 @@ ptTheme <- theme_bw() +
   )
 
 pt_peaks <- ggplot(data = dataSummary) +
-  geom_bar(mapping = aes(y = geneName, x = peaks_pval20),
+  geom_bar(mapping = aes(y = SMTF_name, x = peaks_pval20),
            stat = "identity", fill = "black") +
   labs(title = "TF ChIPseq peak count") +
   ptTheme +
@@ -82,7 +83,7 @@ pt_peaks <- ggplot(data = dataSummary) +
 
 
 pt_deg <- dplyr::mutate(dataSummary, down = -1*down) %>% 
-  ggplot(mapping = aes(y = geneName)) +
+  ggplot(mapping = aes(y = SMTF_name)) +
   geom_bar(mapping = aes(x = down), stat = "identity", fill = "#313695") +
   geom_bar(mapping = aes(x = up), stat = "identity", fill = "#d73027") +
   labs(title = "OE/WT polII ChIPseq DEG count") +

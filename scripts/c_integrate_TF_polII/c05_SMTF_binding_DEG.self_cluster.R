@@ -45,7 +45,7 @@ col_pval <- "pvalue"
 productionData <- suppressMessages(readr::read_tsv(file = file_productionData)) %>% 
   dplyr::filter(has_polII_ChIP == "has_data", has_TF_ChIP == "has_data", copyNumber == "sCopy") %>% 
   dplyr::filter(!is.na(SM_ID)) %>% 
-  dplyr::arrange(SM_ID, geneId)
+  dplyr::arrange(SM_ID, SMTF)
 
 
 tfInfo <- get_sample_information(
@@ -65,7 +65,7 @@ rnaseqInfoList <- purrr::transpose(rnaseqInfo)  %>%
 genesDf <- as.data.frame(GenomicFeatures::genes(x = txDb)) %>% 
   dplyr::select(geneId = gene_id, strand)
 
-genePos <- as.data.frame(genes(txDb)) %>% 
+genePos <- as.data.frame(GenomicFeatures::genes(x = txDb)) %>% 
   dplyr::select(geneId = gene_id, chr = seqnames, start, end, strand)
 
 combinedDegs <- suppressMessages(readr::read_tsv(file = file_polIIDegs))
@@ -108,16 +108,14 @@ for (rowId in 1:nrow(productionData)) {
   ) %>% 
     dplyr::left_join(y = peakAn, by = "geneId") %>% 
     dplyr::mutate(
-      OESMTF = !!productionData$geneId[rowId]
+      OESMTF = !!productionData$SMTF[rowId],
+      OESMTF_name = !!productionData$SMTF_name[rowId]
     )
   
   mergedData <- dplyr::bind_rows(mergedData, bindingDegData)
   
 }
 
-mergedData$OESMTF_name <- AnnotationDbi::mapIds(
-  x = orgDb, keys = mergedData$OESMTF, column = "GENE_NAME", keytype = "GID"
-)
 
 mergedData2 <- dplyr::mutate(
   mergedData,
@@ -142,7 +140,7 @@ pt_bindingLfc <- ggplot(
 ) +
   geom_tile(
     mapping = aes(x = index, y = tf_cluster_grp, fill = log2FoldChange, alpha = significance),
-    size = 0.2, height = 1, color = "grey") +
+    size = 0.2, height = 1, color = "black") +
   geom_point(
     mapping = aes(x = index , y = "peak", color = binding, shape = tfGene),
     size = 3
@@ -193,7 +191,8 @@ pt_bindingLfc <- ggplot(
   )
 
 
-ggsave(filename = paste(outPrefix, ".tiles.png", sep = ""), plot = pt_bindingLfc, width = 14, height = 8)
+ggsave(filename = paste(outPrefix, ".tiles.png", sep = ""),
+       plot = pt_bindingLfc, width = 14, height = 8)
 
 
 

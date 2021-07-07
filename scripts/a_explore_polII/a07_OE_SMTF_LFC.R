@@ -36,7 +36,8 @@ col_geneId <- "GID"
 productionData <- suppressMessages(readr::read_tsv(file = file_productionData)) %>% 
   dplyr::filter(has_polII_ChIP == "has_data", has_TF_ChIP == "has_data", copyNumber == "sCopy")
 
-degStats <- suppressMessages(readr::read_tsv(file = file_degStats))
+degStats <- suppressMessages(readr::read_tsv(file = file_degStats)) %>% 
+  dplyr::select(comparison, up, down, total)
 
 productionData <- dplyr::left_join(
   x = productionData, y = degStats, by = c("degId" = "comparison")
@@ -74,8 +75,8 @@ plotData <-  productionData %>%
   dplyr::mutate(
     log10_padj = -log10(padj),
     significant = if_else(condition = padj <= 0.05, "significant", "non-significant"),
-    SM_TF = forcats::as_factor(SM_TF),
-    geneName = forcats::as_factor(geneName)
+    SMTF = forcats::as_factor(SMTF),
+    SMTF_name = forcats::as_factor(SMTF_name)
   )
 
 readr::write_tsv(
@@ -95,7 +96,7 @@ scaleLabels <- c(format(1/(10^c(1, 1.30103, 2:scaleLim)), drop0trailing = T, sci
 
 pt_lfc <- ggplot(
   data = plotData,
-  mapping = aes(x = log2FoldChange, y = geneName)) +
+  mapping = aes(x = log2FoldChange, y = SMTF_name)) +
   geom_point(mapping = aes(fill = log10_padj, color = significant),
              shape = 21, size = 5, stroke = 1) +
   scale_fill_gradientn(

@@ -19,12 +19,12 @@ source("D:/work_lakhan/github/omics_utils/04_GO_enrichment/s01_enrichment_functi
 ##################################################################################
 
 analysisName <- "DEG_peak_GSEA.leading_edge.GO"
-outDir <- here::here("analysis", "10_TF_polII_integration", "peakset_enrichmet_in_DEG")
+outDir <- here::here("analysis", "10_TF_polII_integration", "03_peakset_enrichmet_in_DEG")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 gseaPtOutDir <- paste(outDir, "/GSEA_plots", sep = "")
-file_topGO <- "E:/Chris_UM/Database/A_Nidulans/annotation_resources/geneid2go.ANidulans.topGO.map"
+file_topGO <- "D:/work_lakhan/database/A_Nidulans/annotation_resources/geneid2go.ANidulans.topGO.map"
 
-file_gseaRes <- paste(outDir, "/peakset_enrichmet_in_DEG.fgsea.tab", sep = "")
+file_gseaRes <- paste(outDir, "/peakset_enrichmet_in_DEG.2.fgsea.tab", sep = "")
 
 orgDb <- org.Anidulans.FGSCA4.eg.db
 txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
@@ -44,7 +44,7 @@ gseaRes <- suppressMessages(readr::read_tsv(file = file_gseaRes)) %>%
   dplyr::mutate(
     leadingEdge = stringr::str_split(string = leadingEdge, pattern = ";")
   ) %>% 
-  dplyr::filter(pathway == smTf)
+  dplyr::filter(SM_TF == smTf)
 
 
 
