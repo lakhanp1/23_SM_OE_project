@@ -38,14 +38,18 @@ geneDesc <- select(x = orgDb, keys = geneSet$geneId, columns = "DESCRIPTION", ke
 
 geneSet <- dplyr::left_join(x = geneSet, y = geneDesc, by = c("geneId" = "GID"))
 
+cdsGr <- unlist(range(x = GenomicFeatures::cdsBy(x = txDb, by = "gene")))
+mcols(cdsGr)$geneId <- names(cdsGr)
+
 ##################################################################################
 ## process individual polII data
-polIISampleList <- readr::read_tsv(file = file_polIISamples, comment = "#")
+polIISampleList <- suppressMessages(readr::read_tsv(file = file_polIISamples, comment = "#"))
 
-polII_info <- get_sample_information(exptInfoFile = file_exptInfo,
-                                     samples = polIISampleList$sampleId,
-                                     dataPath = polII_dataPath,
-                                     profileMatrixSuffix = "normalizedmatrix")
+polII_info <- get_sample_information(
+  exptInfoFile = file_exptInfo,
+  samples = polIISampleList$sampleId,
+  dataPath = polII_dataPath
+)
 
 
 polIICols <- list(
@@ -56,27 +60,29 @@ polIICols <- list(
 
 ##################################################################################
 
-i <- 117
+rowId <- 1
 
-for (i in 1:nrow(polII_info)) {
+for (rowId in 1:nrow(polII_info)) {
   
-  cat(i, ":", polII_info$sampleId[i], "\n")
+  cat(rowId, ":", polII_info$sampleId[rowId], "\n")
   
   ## make gene level polII signal file for each sample
   polIIDf <- chipmine::preProcess_polII_expression(
-    expMat = polII_info$polIIExpMat[i],
-    sampleId = polII_info$sampleId[i],
+    expMat = polII_info$polIIExpMat[rowId],
+    sampleId = polII_info$sampleId[rowId],
     expFraction = 10,
-    polIIExpFile = polII_info$polIIExpFile[i])
+    polIIExpFile = polII_info$polIIExpFile[rowId])
   
-  # ## create 2kb - 2kb - 1kb matrix
-  # bwMat <- chipmine::bigwig_profile_matrix(bwFile = polII_info$bwFile[i],
-  #                                          regions = file_genes,
-  #                                          signalName = polII_info$sampleId[i],
-  #                                          extend = c(2000, 1000), w = 10,
-  #                                          storeLocal = TRUE,
-  #                                          localPath = polII_info$matFile[i],
-  #                                          target_ratio = 0.4)
+  ## create 2kb - 2kb - 1kb matrix
+  bwMat <- chipmine::bigwig_profile_matrix(
+    bwFile = polII_info$bwFile[rowId],
+    regions = file_cds,
+    signalName = polII_info$sampleId[rowId],
+    extend = c(2000, 1000), w = 10,
+    storeLocal = TRUE,
+    localPath = polII_info$matFile[rowId],
+    target_ratio = 0.4
+  )
   
 }
 
@@ -84,7 +90,7 @@ for (i in 1:nrow(polII_info)) {
 ##################################################################################
 ## create polII data matrix
 
-polIIMat <- get_polII_expressions(genesDf = geneSet, exptInfo = polII_info) %>% 
+polIIMat <- get_polII_expressions(genesDf = geneSet, exptInfo = polII_info) %>%
   # dplyr::select(-starts_with("is_expressed")) %>%
   dplyr::select(chr, start, end, geneId, strand, length, DESCRIPTION, everything())
 
@@ -130,23 +136,23 @@ cdsData <- suppressMessages(
 deeptoolsMat <- suppressMessages(readr::read_tsv(file = file_deeptolsMat))
 
 colnames(deeptoolsMat) <- stringr::str_replace(
-  string = colnames(deeptoolsMat), pattern = "#?'(.*)'", replacement = "\\1") %>% 
+  string = colnames(deeptoolsMat), pattern = "#?'(.*)'", replacement = "\\1") %>%
   stringr::str_replace(pattern = "_bt2", replacement = "")
 
 
 if(!setequal(
   paste(cdsData$chr, cdsData$start, cdsData$end, sep = ":"),
   paste(deeptoolsMat$chr, deeptoolsMat$start, deeptoolsMat$end, sep = ":"))){
-  
+
   stop("geneSet genes and deeptools matrix genes does not match")
-  
+
 } else{
   rawCountMat <- dplyr::left_join(
     x = deeptoolsMat, y = cdsData, by = c("chr" , "start", "end")
-  ) %>% 
-    dplyr::arrange(chr, start) %>% 
+  ) %>%
+    dplyr::arrange(chr, start) %>%
     dplyr::select(geneId, polII_info$sampleId)
-  
+
   readr::write_tsv(x = rawCountMat,
                    path = paste(polII_dataPath, "/polII_raw_counts.cds.tab", sep = ""))
 }
