@@ -19,7 +19,6 @@ file_smBed <- "E:/Chris_UM/Database/A_Nidulans/SM_genes.bed"
 orgDb <- org.Anidulans.FGSCA4.eg.db
 txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
 
-
 ##################################################################################
 ## process the data
 productionData <- suppressMessages(readr::read_tsv(file = file_productionData))
@@ -89,6 +88,47 @@ rtracklayer::export.bed(
 )
 
 ##################################################################################
+## combine SM genes into regions
+regionsGr <- sort(reduce(clusterGr), ignore.strand = TRUE)
+mcols(regionsGr)$regionId <- paste(
+  "region_", sprintf(fmt = "%02d",1:length(regionsGr)), sep = ""
+)
+
+mcols(regionsGr)$region <- as.character(regionsGr, ignore.strand = TRUE)
+
+genePos <- sort(
+  GenomicFeatures::genes(x = txDb, filter = list(gene_id = unique(smInfo$geneId))),
+  ignore.strand = TRUE
+)
+
+ovlp_genes <- GenomicRanges::findOverlaps(
+  query = genePos, subject = regionsGr, type = "within"
+)
+
+ovlp_clusters <- GenomicRanges::findOverlaps(
+  query = clusterGr, subject = regionsGr
+)
+
+genesToCluster <- dplyr::select(smInfo, geneId, SM_ID) %>% 
+  dplyr::group_by(geneId) %>% 
+  dplyr::summarise(
+    SM_IDs = paste(SM_ID, collapse = ";"),
+    nClusters = n()
+  )
+
+mcols(genePos)$regionId[ovlp_genes@from] <- mcols(regionsGr)$regionId[ovlp_genes@to]
+mcols(genePos)$region <- mcols(regionsGr)$region[ovlp_genes@to]
+
+geneRegions <- as.data.frame(mcols(genePos)) %>% 
+  dplyr::rename(geneId = gene_id) %>% 
+  dplyr::left_join(y = genesToCluster, by = "geneId")
+
+readr::write_tsv(
+  x = geneRegions,
+  file = here::here("data", "reference_data", "SM_genes_regions.tab")
+)
+
+##################################################################################
 ## plot the data
 pt_theme <- theme(
   plot.title = element_text(size = 18, face = "bold", hjust = 1),
@@ -150,4 +190,7 @@ pt_data <- autoplot(object = seqinfo(smGr), layout = "karyogram") +
 pdf(file = paste(outPrefix, ".data.pdf", sep = ""), width = 12, height = 6)
 pt_data
 dev.off()
+
+
+
 
