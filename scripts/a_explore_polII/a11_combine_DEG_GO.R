@@ -42,32 +42,63 @@ rnaseqInfoList <- purrr::transpose(rnaseqInfo)  %>%
 
 ## get topGO data for each DEG set
 rowId <- 1
-mergedData <- NULL
-
+mergedGO <- NULL
+mergedKegg <- NULL
+mergedGsea <- NULL
 
 for (rowId in 1:nrow(productionData)) {
   
   tfSampleId <- productionData$tfId[rowId]
   degId <- productionData$degId[rowId]
   
-  goData <- suppressMessages(readr::read_tsv(file = rnaseqInfoList[[degId]]$topGO)) %>% 
+  goData <- suppressMessages(readr::read_tsv(file = rnaseqInfoList[[degId]]$topGO)) %>%
     dplyr::mutate(
       OESMTF = !!productionData$SMTF[rowId],
       OESMTF_name = !!productionData$SMTF_name[rowId]
-    ) %>% 
+    ) %>%
     dplyr::select(
       OESMTF, OESMTF_name, contrast, everything()
     )
+
+  mergedGO <- dplyr::bind_rows(mergedGO, goData)
+
+  keggData <- suppressMessages(readr::read_tsv(file = rnaseqInfoList[[degId]]$kegg)) %>%
+    dplyr::mutate(
+      OESMTF = !!productionData$SMTF[rowId],
+      OESMTF_name = !!productionData$SMTF_name[rowId]
+    ) %>%
+    dplyr::select(
+      OESMTF, OESMTF_name, contrast, everything()
+    )
+
+  mergedKegg <- dplyr::bind_rows(mergedKegg, keggData)
+
+  fgseaData <- suppressMessages(readr::read_tsv(file = rnaseqInfoList[[degId]]$fgsea)) %>%
+    dplyr::mutate(
+      OESMTF = !!productionData$SMTF[rowId],
+      OESMTF_name = !!productionData$SMTF_name[rowId]
+    ) %>%
+    dplyr::select(
+      OESMTF, OESMTF_name, contrast, everything()
+    ) %>% 
+    dplyr::arrange(pval)
+
+  mergedGsea <- dplyr::bind_rows(mergedGsea, fgseaData)
   
-  mergedData <- dplyr::bind_rows(mergedData, goData)
 }
 
 
 readr::write_tsv(
-  file = paste(outPrefix, ".data.tab", sep = ""), x = mergedData
+  file = paste(outPrefix, ".combined_GO.tab", sep = ""), x = mergedGO
 )
 
+readr::write_tsv(
+  file = paste(outPrefix, ".combined_KEGG.tab", sep = ""), x = mergedKegg
+)
 
+readr::write_tsv(
+  file = paste(outPrefix, ".combined_GSEA.tab", sep = ""), x = mergedGsea
+)
 
 
 
