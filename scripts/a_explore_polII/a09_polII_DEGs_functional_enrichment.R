@@ -4,7 +4,6 @@ suppressPackageStartupMessages(library(fgsea))
 suppressPackageStartupMessages(library(msigdbr))
 suppressPackageStartupMessages(library(DT))
 suppressPackageStartupMessages(library(clusterProfiler))
-# suppressPackageStartupMessages(library(KEGGprofile))
 suppressPackageStartupMessages(library(org.Anidulans.FGSCA4.eg.db))
 suppressPackageStartupMessages(require(openxlsx))
 suppressPackageStartupMessages(library(argparse))
@@ -71,7 +70,7 @@ file_RNAseq_info <- args$config
 degResult <- args$deg
 
 # file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
-# degResult <- "apdR_sCopy_OE_vs_WT"
+# degResult <- "AN10295_sCopy_OE_vs_WT"
 
 outDir <- paste(diffDataPath, "/", degResult, sep = "")
 outPrefix <- paste(outDir, "/", degResult, sep = "")
@@ -95,7 +94,7 @@ degs <- suppressMessages(readr::read_tsv(file = file_degs)) %>%
     ),
     rankMetric = (-log10(pvalue) * sign(shrinkLog2FC))
   ) %>%
-  dplyr::arrange(desc(fpkmFilterSign), desc(rankMetric)) %>% 
+  dplyr::arrange(desc(rankMetric)) %>% 
   dplyr::filter(!is.na(rankMetric))
 
 missingCols <- setdiff(c(col_gsea, col_kegg), colnames(degs))
@@ -113,10 +112,14 @@ if(!is.null(missingCols)){
   degs <- dplyr::left_join(x = degs, y = gseaInfo, by = "geneId")
 }
 
-downDegs <- dplyr::filter(degs, padj <= cutoff_fdr & !!sym(col_lfc) <= cutoff_down) %>% 
+downDegs <- dplyr::filter(
+  degs, padj <= cutoff_fdr & !!sym(col_lfc) <= cutoff_down, maxFpkm >= cutoff_fpkm
+) %>% 
   dplyr::mutate(category = "down")
 
-upDegs <- dplyr::filter(degs, padj <= cutoff_fdr & !!sym(col_lfc) >= cutoff_up) %>% 
+upDegs <- dplyr::filter(
+  degs, padj <= cutoff_fdr & !!sym(col_lfc) >= cutoff_up, maxFpkm >= cutoff_fpkm
+) %>% 
   dplyr::mutate(category = "up")
 
 degData <- dplyr::bind_rows(upDegs, downDegs)
@@ -132,238 +135,164 @@ geneList[is.infinite(geneList) & geneList > 0] <- max(geneList[is.finite(geneLis
 
 geneList[is.infinite(geneList) & geneList < 0] <- min(geneList[is.finite(geneList)]) - 1
 
-# ###########################################################################
-# ## clusterProfiler: GO enrichment
-# ego_up <- enrichGO(gene = unique(upDegs$geneId),
-#                    OrgDb = orgDb,
-#                    ont = "BP", pAdjustMethod = "BH",
-#                    pvalueCutoff = 0.05,
-#                    qvalueCutoff = 0.05,
-#                    keyType = "ENSEMBL",
-#                    readable = FALSE)
-# 
-# barplot(ego_up, showCategory=20)
-# emapplot(ego_up, pie_scale=1.5,layout="kk", )
-# cnetplot(ego_up, showCategory = 10, node_label="category")
-# 
-# ego_up <- simplify(x = ego_up)
-# 
-# ego_down <- enrichGO(gene = unique(downDegs$geneId),
-#                      OrgDb = orgDb,
-#                      ont = "BP", pAdjustMethod = "BH",
-#                      pvalueCutoff = 0.05,
-#                      qvalueCutoff = 0.05,
-#                      keyType = "ENSEMBL",
-#                      readable = FALSE)
-# 
-# ego_down <- simplify(x = ego_down)
-# 
-# ego_res <- dplyr::bind_rows(
-#   dplyr::mutate(.data = as.data.frame(ego_up), category = "up"),
-#   dplyr::mutate(.data = as.data.frame(ego_down), category = "down")
-# ) %>%
-#   dplyr::mutate(contrast = contrast)
-# 
-# 
-# readr::write_tsv(x = ego_res, file = paste(outPrefix, ".clusterProfiler.GO.tab", sep = ""))
-# 
-# 
-# ego_degs <- compareCluster(geneClusters = geneId ~ category,
-#                fun = "enrichGO", data = degData,
-#                OrgDb = orgDb,
-#                ont = "BP", pAdjustMethod = "BH",
-#                pvalueCutoff = 0.05,
-#                qvalueCutoff = 0.05,
-#                keyType = "ENSEMBL",
-#                readable = FALSE)
-# 
-# dotplot(ego_degs,
-#         showCategory = 20)
-# emapplot(ego_degs)
-
-
-
+###########################################################################
 ## topGO GO enrichment
 topgo_up <- topGO_enrichment(
   goMapFile = file_topGO,
   genes = unique(upDegs$geneId),
   type = "BP", goNodeSize = 5,
-  orgdb = orgDb, keytype = col_degOrgdbKey,
-  topgoColumn = col_topGO, geneNameColumn = col_geneName
+  orgdb = orgDb, inKeytype = col_degOrgdbKey,
+  topgoKeytype = col_topGO, genenameKeytype = col_geneName
 )
 
 topgo_down <- topGO_enrichment(
   goMapFile = file_topGO,
   genes = unique(downDegs$geneId),
   type = "BP", goNodeSize = 5,
-  orgdb = orgDb, keytype = col_degOrgdbKey,
-  topgoColumn = col_topGO, geneNameColumn = col_geneName
+  orgdb = orgDb, inKeytype = col_degOrgdbKey,
+  topgoKeytype = col_topGO, genenameKeytype = col_geneName
 )
 
 topgo_res <- dplyr::bind_rows(
-  dplyr::mutate(.data = as.data.frame(topgo_up), category = "up"),
-  dplyr::mutate(.data = as.data.frame(topgo_down), category = "down")
-) %>%
-  dplyr::mutate(contrast = contrast)
+  if(!is.null(topgo_up)) dplyr::mutate(.data = as.data.frame(topgo_up), category = "up"),
+  if(!is.null(topgo_down)) dplyr::mutate(.data = as.data.frame(topgo_down), category = "down")
+)
 
 # dplyr::glimpse(topgo_res)
+out_topGO <- paste(outPrefix, ".topGO.tab", sep = "")
 
-readr::write_tsv(x = topgo_res, file = paste(outPrefix, ".topGO.tab", sep = ""))
+if(nrow(topgo_res) != 0){
+  topgo_res <- dplyr::mutate(topgo_res, contrast = contrast)
+  readr::write_tsv(x = topgo_res, file = out_topGO)
+} else{
+  readr::write_file(x = topgo_res, file = out_topGO)
+}
 
 # ## top 10 GO term bar plot
-# topgoPlotDf <- dplyr::group_by(topgo_res, category) %>% 
-#   dplyr::arrange(pvalue, .by_group = TRUE) %>% 
-#   dplyr::slice(1:10) %>% 
+# topgoPlotDf <- dplyr::group_by(topgo_res, category) %>%
+#   dplyr::arrange(pvalue, .by_group = TRUE) %>%
+#   dplyr::slice(1:10) %>%
 #   dplyr::ungroup()
-# 
-# 
+#
+#
 # topgo_bar <- enrichment_bar(
 #   df = topgoPlotDf,
 #   title = paste(degResult, "\ntop 10 enriched GO terms in up and down DEGs")
 # )
-# 
+#
 # png(filename = paste(outPrefix, ".topGO_bar.png", sep = ""),
 #     width = 2500, height = 2500, res = 250)
-# 
+#
 # topgo_bar
 # dev.off()
 
 ###########################################################################
-## clusterProfiler: KEGG pathway enrichment
-ekegg_up <- clusterProfiler::enrichKEGG(
-  gene = na.omit(unique(upDegs[[col_kegg]])),
-  keyType = "kegg",
-  organism = keggOrg,
-  pvalueCutoff = 0.05
+
+kegg_up <- fgsea_kegg_overrepresentation(
+  genes = unique(upDegs$geneId), keggOrg = keggOrg, orgdb = orgDb,
+  inKeytype = col_degOrgdbKey, keggKeytype = col_kegg,
+  genenameKeytype = col_geneName, pvalueCutoff = 0.05
 )
 
-ekegg_down <- clusterProfiler::enrichKEGG(
-  gene = na.omit(unique(downDegs[[col_kegg]])),
-  keyType = "kegg",
-  organism = keggOrg,
-  pvalueCutoff = 0.05
+kegg_down <- fgsea_kegg_overrepresentation(
+  genes = unique(downDegs$geneId), keggOrg = keggOrg, orgdb = orgDb,
+  inKeytype = col_degOrgdbKey, keggKeytype = col_kegg,
+  genenameKeytype = col_geneName, pvalueCutoff = 0.05
 )
 
-ekegg_res <- dplyr::bind_rows(
-  dplyr::mutate(.data = as.data.frame(ekegg_up), category = "up"),
-  dplyr::mutate(.data = as.data.frame(ekegg_down), category = "down")
-) %>%
-  dplyr::mutate(contrast = contrast)
+
+kegg_res <- dplyr::bind_rows(
+  if(!is.null(kegg_up)) dplyr::mutate(.data = as.data.frame(kegg_up), category = "up"),
+  if(!is.null(kegg_down)) dplyr::mutate(.data = as.data.frame(kegg_down), category = "down")
+)
+
+out_kegg <- paste(outPrefix, ".KEGG_fora.tab", sep = "")
+
+if(nrow(kegg_res) != 0){
+  kegg_res <- dplyr::mutate(kegg_res, contrast = contrast)
+
+  ## use data.table::fwrite because of list columns
+  data.table::fwrite(
+    x = kegg_res, file = out_kegg,
+    sep = "\t", sep2 = c("",";",""), eol = "\n"
+  )
+} else{
+  readr::write_file(x = kegg_res, file = out_kegg)
+}
 
 
-readr::write_tsv(x = ekegg_res, file = paste(outPrefix, ".kegg_clusterProfiler.tab", sep = ""))
-
-
-# ## up and down DEG
-# cp_kegg <- compareCluster(
-#   geneClusters = list(up = na.omit(unique(upDegs$NCBI)),
-#                       down = na.omit(unique(downDegs$NCBI))),
-#   fun = "enrichKEGG",
-#   organism = keggOrg
-# )
-# 
-# gg_cp_kegg <- dotplot(cp_kegg, showCategory = 100) +
-#   labs(title = paste(analysisName, "KEGG pathway enrichment")) +
-#   theme(
-#     plot.title = element_text(hjust = 1)
-#   )
-# 
-# 
-# png(filename = paste(outPrefix, ".clusterProfiler.kegg.png", sep = ""),
-#     width = 1500, height = 1500, res = 200)
-# 
-# gg_cp_kegg
-# 
-# dev.off()
-
-
-# ## KEGGprofile::find_enriched_pathway
-# keggp_up <- keggprofile_enrichment(
-#   genes = unique(upDegs$geneId), orgdb = orgDb, geneNameCol = col_geneName,
-#   keytype = col_degOrgdbKey, keggIdColumn = col_kegg, keggOrg = keggOrg
-# )
-# 
-# keggp_down <- keggprofile_enrichment(
-#   genes = unique(downDegs$geneId), orgdb = orgDb, geneNameCol = col_geneName,
-#   keytype = col_degOrgdbKey, keggIdColumn = col_kegg, keggOrg = keggOrg
-# )
-# 
-# keggp_res <- dplyr::bind_rows(
-#   dplyr::mutate(.data = as.data.frame(keggp_up), category = "up"),
-#   dplyr::mutate(.data = as.data.frame(keggp_down), category = "down")
-# ) %>%
-#   dplyr::mutate(contrast = contrast)
-# 
-# # dplyr::glimpse(keggp_res)
-# 
-# readr::write_tsv(x = keggp_res, file = paste(outPrefix, ".keggProfile.tab", sep = ""))
-# 
 # ## top 10 KEGG pathway bar plot
-# keggPlotDf <- dplyr::group_by(keggp_res, category) %>% 
-#   dplyr::arrange(pvalue, .by_group = TRUE) %>% 
-#   dplyr::slice(1:10) %>% 
+# keggPlotDf <- dplyr::group_by(kegg_res, category) %>%
+#   dplyr::arrange(pvalue, .by_group = TRUE) %>%
+#   dplyr::slice(1:10) %>%
 #   dplyr::ungroup()
-# 
-# 
+#
+#
 # kegg_bar <- enrichment_bar(
-#   df = keggPlotDf, 
+#   df = keggPlotDf,
 #   title = paste(degResult, "\ntop 10 enriched KEGG pathways in up and down DEGs"),
-#   pvalCol = "pvalue", termCol = "Pathway_Name",
+#   pvalCol = "pval", termCol = "description",
 #   colorCol = "category", countCol = "Significant"
 # )
-# 
+#
 # png(filename = paste(outPrefix, ".KEGG_bar.png", sep = ""),
 #     width = 2500, height = 2500, res = 250)
-# 
+#
 # kegg_bar
 # dev.off()
 
 ###########################################################################
 ## GSEA enrichment using fgsea
-goGsea <- go_fgsea(genelist = geneList, orgdb = orgDb, column = col_degOrgdbKey)
+goGsea <- fgsea_orgdb_GO_KEGG(
+  genelist = geneList, orgdb = orgDb, inKeytype = col_degOrgdbKey,
+  keggOrg = keggOrg, keggKeytype = col_kegg, genenameKeytype = col_geneName,
+  minNodeSize = 10, maxNodeSize = 1000, eps = 0
+)
 
-goGsea_res <- dplyr::mutate(
-    goGsea$gsea,
-    contrast = contrast,
-    leadingEdgeIds = fgsea::mapIdsList(
-      x = orgDb, keys = leadingEdge, column = col_degOrgdbKey, keytype = col_degOrgdbKey
-    ),
-    leadingEdgeNames = fgsea::mapIdsList(
-      x = orgDb, keys = leadingEdge, column = col_geneName, keytype = col_degOrgdbKey
-    )
-  ) %>%
-  dplyr::arrange(padj) %>%
-  dplyr::select(pathway, description = TERM, ONTOLOGY, everything(), -starts_with("leadingEdge"),
+goGsea_res <- dplyr::mutate(goGsea, contrast = contrast) %>%
+  dplyr::arrange(pval) %>%
+  dplyr::select(pathway, description, pathway_type, everything(), -starts_with("leadingEdge"),
                 starts_with("leadingEdge"), -contrast, contrast)
 
 # topPathways <- uniqueFgsea[head(order(pval), n=20)][order(NES), pathway]
-# 
+#
 # pt_gsea <- plotGseaTable(
 #   goGsea$goGeneset[topPathways], geneList,
 #   uniqueFgsea, gseaParam=0.5,
 #   colwidths = c(10, 5, 1, 1.5, 1.5),
 #   render = FALSE
 # )
-# 
+#
 # png(filename = paste(outPrefix, ".fgsea_plot.png", sep = ""),
 #     width = 2500, height = 2500, res = 250)
 # grid::grid.draw(pt_gsea)
 # dev.off()
 
+out_gsea <- paste(outPrefix, ".GO_KEGG_fgsea.tab", sep = "")
+
 ## use data.table::fwrite because of list columns
-data.table::fwrite(
-  x = goGsea_res, file = paste(outPrefix, ".GO_fgsea.tab", sep = ""),
-  sep = "\t", sep2 = c("",";",""), eol = "\n"
-)
+if(nrow(goGsea_res) != 0){
+  data.table::fwrite(
+    x = goGsea_res, file = out_gsea,
+    sep = "\t", sep2 = c("",";",""), eol = "\n"
+  )
+} else{
+  readr::write_file(x = kegg_res, file = out_gsea)
+}
+
 
 ###########################################################################
 ## write data to excel file
-descString <- paste("## log2FoldChange cutoff =", cutoff_up, "(up) /", cutoff_down, "(down)",
-                    "; q-value cutoff =", cutoff_fdr)
+descString <- paste(
+  "## log2FoldChange cutoff =", cutoff_up, "(up) /", cutoff_down, "(down)",
+  "; FPKM cutoff =", cutoff_fpkm, "; q-value cutoff =", cutoff_fdr)
 
 wb <- openxlsx::createWorkbook(creator = "Lakhansing Pardeshi Genomics Core")
 headerStyle <- openxlsx::createStyle(textDecoration = "bold", fgFill = "#e6e6e6")
 
+# topgo_res <- suppressMessages(readr::read_tsv(file = paste(outPrefix, ".topGO.tab", sep = "")))
+# kegg_res <- suppressMessages(readr::read_tsv(file = paste(outPrefix, ".KEGG_fora.tab", sep = "")))
+# goGsea_res <- suppressMessages(readr::read_tsv(file = paste(outPrefix, ".GO_KEGG_fgsea.tab", sep = "")))
 
 wrkSheet <- "topGO"
 openxlsx::addWorksheet(wb = wb, sheetName = wrkSheet)
@@ -386,24 +315,24 @@ wrkSheet <- "KEGG"
 openxlsx::addWorksheet(wb = wb, sheetName = wrkSheet)
 openxlsx::writeData(
   wb = wb, sheet = wrkSheet, startCol = 2, startRow = 1,
-  x = paste("KEGG pathway enrichment using clusterProfiler:", degResult, descString)
+  x = paste("KEGG pathway enrichment using fgsea::fora:", degResult, descString)
 )
 openxlsx::writeData(
-  wb = wb, sheet = wrkSheet, x = ekegg_res,
+  wb = wb, sheet = wrkSheet, x = kegg_res,
   startCol = 1, startRow = 2, withFilter = TRUE,
   keepNA = TRUE, na.string = "NA"
 )
-openxlsx::addStyle(wb = wb, sheet = wrkSheet, style = headerStyle, rows = 2, cols = 1:ncol(ekegg_res))
+openxlsx::addStyle(wb = wb, sheet = wrkSheet, style = headerStyle, rows = 2, cols = 1:ncol(kegg_res))
 openxlsx::setColWidths(wb = wb, sheet = wrkSheet, cols = 1, widths = "auto")
 openxlsx::setColWidths(wb = wb, sheet = wrkSheet, cols = 2, widths = 60)
 openxlsx::freezePane(wb = wb, sheet = wrkSheet, firstActiveRow = 3, firstActiveCol = 2)
 
 
-wrkSheet <- "go_fgsea"
+wrkSheet <- "fgsea"
 openxlsx::addWorksheet(wb = wb, sheetName = wrkSheet)
 openxlsx::writeData(
   wb = wb, sheet = wrkSheet, startCol = 2, startRow = 1,
-  x = paste("preranked gene set enrichment analysis (GSEA) of GO terms:", degResult)
+  x = paste("preranked gene set enrichment analysis (GSEA) of GO terms and KEGG pathways:", degResult)
 )
 openxlsx::writeData(
   wb = wb, sheet = wrkSheet, x = goGsea_res,
