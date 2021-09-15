@@ -34,9 +34,7 @@ col_degId <- "geneId"
 col_degOrgdbKey <- "GID"
 col_kegg <- "KEGG_ID"
 col_gsea <- "geneId"
-col_topGO <- "GID"
 col_geneName <- "GENE_NAME"
-file_topGO <- "D:/work_lakhan/database/A_Nidulans/annotation_resources/geneid2go.ANidulans.topGO.map"
 # file_msigDesc <- "E:/Chris_UM/Database/Human/GRCh38p12.gencode30/annotation_resources/msigDB_geneset_desc.tab"
 
 ###########################################################################
@@ -138,19 +136,17 @@ geneList[is.infinite(geneList) & geneList < 0] <- min(geneList[is.finite(geneLis
 ###########################################################################
 ## topGO GO enrichment
 topgo_up <- topGO_enrichment(
-  goMapFile = file_topGO,
   genes = unique(upDegs$geneId),
-  type = "BP", goNodeSize = 5,
   orgdb = orgDb, inKeytype = col_degOrgdbKey,
-  topgoKeytype = col_topGO, genenameKeytype = col_geneName
+  type = "BP", goNodeSize = 5,
+  genenameKeytype = col_geneName
 )
 
 topgo_down <- topGO_enrichment(
-  goMapFile = file_topGO,
   genes = unique(downDegs$geneId),
-  type = "BP", goNodeSize = 5,
   orgdb = orgDb, inKeytype = col_degOrgdbKey,
-  topgoKeytype = col_topGO, genenameKeytype = col_geneName
+  type = "BP", goNodeSize = 5,
+  genenameKeytype = col_geneName
 )
 
 topgo_res <- dplyr::bind_rows(
