@@ -17,8 +17,8 @@ rm(list = ls())
 
 ##################################################################################
 
-analysisName <- "TF_polII_integration"
-outDir <- here::here("analysis", "10_TF_polII_integration")
+analysisName <- "OE_vs_peakCounts"
+outDir <- here::here("analysis", "10_TF_polII_integration", "stats")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
 file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
@@ -37,6 +37,9 @@ orgDb <- org.Anidulans.FGSCA4.eg.db
 txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
 
 ##################################################################################
+if(!dir.exists(outDir)){
+  dir.create(outDir)
+}
 
 productionData <- suppressMessages(readr::read_tsv(file = file_productionData)) %>% 
   dplyr::filter(has_polII_ChIP == "has_data", has_TF_ChIP == "has_data", copyNumber == "sCopy")
@@ -62,45 +65,13 @@ dataSummary <- dplyr::left_join(x = productionData, y = peakStats, by = c("tfId"
     SMTF_name = forcats::as_factor(SMTF_name)
   )
 
-readr::write_tsv(file = paste(outPrefix, ".stats.tab", sep = ""), x = dataSummary)
-
-ptTheme <- theme_bw() +
-  theme(
-    axis.text.y = element_text(size = 14),
-    axis.text.x = element_text(size = 16),
-    title = element_text(size = 18),
-    panel.grid = element_blank()
-  )
-
-pt_peaks <- ggplot(data = dataSummary) +
-  geom_bar(mapping = aes(y = SMTF_name, x = peaks_pval20),
-           stat = "identity", fill = "black") +
-  labs(title = "TF ChIPseq peak count") +
-  ptTheme +
-  theme(
-    axis.title = element_blank()
-  )
-
-
-pt_deg <- dplyr::mutate(dataSummary, down = -1*down) %>% 
-  ggplot(mapping = aes(y = SMTF_name)) +
-  geom_bar(mapping = aes(x = down), stat = "identity", fill = "#313695") +
-  geom_bar(mapping = aes(x = up), stat = "identity", fill = "#d73027") +
-  labs(title = "OE/WT polII ChIPseq DEG count") +
-  ptTheme
-
-pt_merged <- ggarrange(pt_peaks, pt_deg, widths = c(1, 1), ncol = 2, align = "h")
-
-png(filename = paste(outPrefix, ".stats.png", sep = ""), width = 4000, height = 3000, res = 300)
-pt_merged
-dev.off()
-
-#############
 ## scatter plot of over-expression level (DEG-LFC) vs number of peak
 pt_scatter <- ggplot(data = dataSummary, mapping = aes(x = peaks_pval20, y = log2FoldChange)) +
   geom_point(size = 4) +
+  geom_smooth(method=lm, se = FALSE, formula = y ~ x, color = "red") +
+  ggpubr::stat_cor(method = "pearson", size = 10, label.x.npc = 0.5, color = "red") +
   labs(
-    title = "correlation between scale of over expression and number of peaks",
+    title = "correlation between level of SMTF over expression and number of peaks",
     y = "log2(OE/WT)", x = "# of peaks"
   ) +
   theme_bw() +
@@ -112,8 +83,8 @@ pt_scatter <- ggplot(data = dataSummary, mapping = aes(x = peaks_pval20, y = log
   )
 
 ggsave(
-  filename = paste(outPrefix, ".LFC_vs_peak_count_corr.pdf", sep = ""),
-  plot = pt_scatter, width = 8, height = 8
+  filename = paste(outPrefix, ".corr.pdf", sep = ""),
+  plot = pt_scatter, width = 9, height = 9
 )
 
 
