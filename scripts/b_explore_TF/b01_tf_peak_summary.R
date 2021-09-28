@@ -21,8 +21,9 @@ outDir <- here::here("analysis", "09_TF_binding", "01_summary")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
 file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
-file_tfSamples <- here::here("data", "reference_data", "production_data.tf_samples.txt")
+file_productionData <- here::here("data", "reference_data", "production_data.summary.tab")
 file_peakSummary <- here::here("analysis", "02_QC_TF", "TF_ChIP_summary.best_replicates.tab")
+
 TF_dataPath <- here::here("data", "TF_data")
 
 orgDb <- org.Anidulans.FGSCA4.eg.db
@@ -31,15 +32,13 @@ txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
 cutoff_macs2Pval <- 20
 
 ##################################################################################
-
-tfSampleList <- suppressMessages(readr::read_tsv(file = file_tfSamples))
+productionData <- suppressMessages(readr::read_tsv(file = file_productionData)) %>% 
+  dplyr::filter(has_polII_ChIP == "has_data", has_TF_ChIP == "has_data", copyNumber == "sCopy")
 
 tfInfo <- get_sample_information(
   exptInfoFile = file_exptInfo,
-  samples = tfSampleList$sampleId,
+  samples = productionData$tfId,
   dataPath = TF_dataPath)
-
-# glimpse(tfInfo)
 
 tfInfoList <- purrr::transpose(tfInfo)  %>% 
   purrr::set_names(nm = purrr::map(., "sampleId"))
