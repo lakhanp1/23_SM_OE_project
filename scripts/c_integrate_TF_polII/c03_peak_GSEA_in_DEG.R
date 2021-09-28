@@ -14,19 +14,19 @@ suppressPackageStartupMessages(library(fgsea))
 rm(list = ls())
 
 source("D:/work_lakhan/github/omics_utils/02_RNAseq_scripts/s02_DESeq2_functions.R")
+source("D:/work_lakhan/github/omics_utils/04_GO_enrichment/s01_enrichment_functions.R")
+
 ##################################################################################
 
 analysisName <- "peakset_enrichmet_in_DEG"
-outDir <- here::here("analysis", "10_TF_polII_integration", "peakset_enrichmet_in_DEG")
+outDir <- here::here("analysis", "10_TF_polII_integration", "peak_GSEA_in_DEGs")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 gseaPtOutDir <- paste(outDir, "/GSEA_plots", sep = "")
 
+file_productionData <- here::here("data", "reference_data", "production_data.summary.tab")
 file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
-file_dataSummary <- here::here("data", "reference_data", "raw_data_summary.tab")
 file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
-
-file_peakSummary <- here::here("analysis", "02_QC_TF", "TF_ChIP_summary.best_replicates.tab")
-file_degSummary <- here::here("analysis", "08_polII_diff_downstream", "01_polII_DEGs_summary", "polII_DEGs_summary.stats.tab")
+file_polIIDegs <- here::here("analysis", "06_polII_diff", "polII_DEGs.fpkm_filtered.combined.tab")
 
 TF_dataPath <- here::here("data", "TF_data")
 diffDataPath <- here::here("analysis", "06_polII_diff")
@@ -36,11 +36,14 @@ txDb <- TxDb.Anidulans.FGSCA4.AspGD.GFF
 
 cutoff_macs2Pval <- 20
 
-col_lfc <- "log2FoldChange"
+cutoff_fpkm <- 10
 cutoff_fdr <- 0.05
 cutoff_lfc <- 1
 cutoff_up <- cutoff_lfc
 cutoff_down <- cutoff_lfc * -1
+
+col_lfc <- "log2FoldChange"
+col_pval <- "pvalue"
 
 ##################################################################################
 
@@ -52,22 +55,29 @@ if(!dir.exists(gseaPtOutDir)){
   dir.create(path = gseaPtOutDir)
 }
 
-dataSummary <- suppressMessages(readr::read_tsv(file = file_dataSummary)) %>% 
-  dplyr::filter(has_TF_ChIP == "has_data", has_polII_ChIP == "has_data")
+productionData <- suppressMessages(readr::read_tsv(file = file_productionData)) %>% 
+  dplyr::filter(has_polII_ChIP == "has_data", has_TF_ChIP == "has_data", copyNumber == "sCopy") %>% 
+  dplyr::arrange(SM_ID, SMTF)
 
-rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath)
-
-rnaseqInfoList <- purrr::transpose(rnaseqInfo) %>% 
-  purrr::set_names(nm = purrr::map(., "comparison"))
+productionDataList <- purrr::transpose(productionData) %>% 
+  purrr::set_names(nm = purrr::map(., "SMTF"))
 
 tfInfo <- get_sample_information(
   exptInfoFile = file_exptInfo,
-  samples = dataSummary$tfId,
+  samples = productionData$tfId,
   dataPath = TF_dataPath)
 
 tfInfoList <- purrr::transpose(tfInfo)  %>% 
   purrr::set_names(nm = purrr::map(., "sampleId"))
 
+rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath) %>% 
+  dplyr::filter(comparison %in% productionData$degId)
+
+
+rnaseqInfoList <- purrr::transpose(rnaseqInfo)  %>% 
+  purrr::set_names(nm = purrr::map(., "comparison"))
+
+combinedDegs <- suppressMessages(readr::read_tsv(file = file_polIIDegs))
 
 ##################################################################################
 
@@ -86,25 +96,33 @@ ptTheme <- theme_bw() +
 masterCombDf <- NULL
 peakGseaRes <- NULL
 
-rowId <- 21
+ptGseaLineDf <- NULL
+ptGseaGeneDf <- NULL
+ptGseaYlimDf <- NULL
 
-for (rowId in 1:nrow(dataSummary)) {
+rowId <- 1
+
+for (rowId in 1:nrow(productionData)) {
   
-  smTf <- dataSummary$geneId[rowId]
-  tfId <- dataSummary$tfId[rowId]
-  degId <- dataSummary$degId[rowId]
+  smTf <- productionData$SMTF[rowId]
+  tfId <- productionData$tfId[rowId]
+  degId <- productionData$degId[rowId]
+  smTfName <- productionData$SMTF_name[rowId]
   
   ## prepare ranked polII DEG list
-  degs <- suppressMessages(readr::read_tsv(file = rnaseqInfoList[[degId]]$deg)) %>% 
-    dplyr::mutate(rankMetric = (-log10(pvalue) * sign(shrinkLog2FC))) %>%
-    dplyr::arrange(desc(rankMetric)) %>% 
+  degs <- dplyr::filter(combinedDegs, comparison == degId) %>% 
+    dplyr::mutate(
+      fpkmFilterSign = dplyr::if_else(
+        condition = maxFpkm >= cutoff_fpkm, true = 1 * sign(shrinkLog2FC),
+        false = 0, missing = 0
+      ),
+      rankMetric = -log10(pvalue) * sign(shrinkLog2FC)
+    ) %>%
+    dplyr::arrange(desc(rankMetric)) %>%
     dplyr::filter(!is.na(rankMetric))
-  
-  downDegs <- dplyr::filter(degs, padj <= cutoff_fdr & !!sym(col_lfc) <= cutoff_down) %>% 
-    dplyr::mutate(category = "down")
-  
-  upDegs <- dplyr::filter(degs, padj <= cutoff_fdr & !!sym(col_lfc) >= cutoff_up) %>% 
-    dplyr::mutate(category = "up")
+  # dplyr::mutate(rankMetric = (-log10(pvalue) * sign(shrinkLog2FC))) %>%
+  # dplyr::arrange(desc(rankMetric)) %>%
+  # dplyr::filter(!is.na(rankMetric))
   
   geneList <- dplyr::select(degs, geneId, rankMetric) %>% 
     tibble::deframe()
@@ -114,31 +132,73 @@ for (rowId in 1:nrow(dataSummary)) {
   
   geneList[is.infinite(geneList) & geneList < 0] <- min(geneList[is.finite(geneList)]) - 1
   
+  # barplot(geneList)
+  
   ## prepare TF target gene list
   peakAn <- suppressMessages(readr::read_tsv(file = tfInfoList[[tfId]]$peakAnno)) %>% 
     dplyr::filter(peakPval >= cutoff_macs2Pval) %>% 
-    dplyr::filter(!peakCategory %in% c("intergenic", "blacklist"))
+    dplyr::filter(!peakCategory %in% c("intergenic", "blacklist")) %>% 
+    dplyr::filter(peakChr != "mito_A_nidulans_FGSC_A4")
   
   # table(peakAn$peakCategory)
-  peakTargets <- unique(peakAn$geneId)
+  peakTargets <- list(unique(peakAn$geneId)) %>% purrr::set_names(nm = smTf)
+  
+  if(length(peakTargets[[smTf]]) == 0){
+    next
+  }
   
   cat("Running GSEA for ", smTf,"\n")
   
-  # fgseaRes <- fgsea::fgsea(
-  #   pathways = list(peakTargets) %>% purrr::set_names(nm = smTf),
-  #   stats = geneList,
-  #   eps = 0.0
-  # )
-  # 
-  # peakGseaRes <- data.table::rbindlist(list(peakGseaRes, fgseaRes))
+  fgseaRes <- fgsea::fgsea(
+    pathways = peakTargets,
+    stats = geneList,
+    eps = 0,
+    nPermSimple = 10000
+  )
   
-  pt_gsea <- plotEnrichment(
-    pathway = peakTargets,
+  fgseaRes$SM_TF <- smTf
+  fgseaRes$SMTF_name <- smTfName
+  
+  peakGseaRes <- data.table::rbindlist(list(peakGseaRes, fgseaRes))
+  
+  ptData <- gsea_plot_data(geneset = peakTargets[[smTf]], stats = geneList)
+  
+  ptGseaLineDf <- dplyr::mutate(
+    ptData$df,
+    SM_TF = smTf,
+    SMTF_name = smTfName,
+    significance = if_else(
+      condition = fgseaRes$pval <= 0.05,
+      true = "significant", false = "non-significant"
+    )
+  ) %>% 
+    dplyr::bind_rows(ptGseaLineDf)
+  
+  ptGseaGeneDf <- dplyr::mutate(
+    ptData$genes, SM_TF = smTf, SMTF_name = smTfName,
+  ) %>% 
+    dplyr::bind_rows(ptGseaGeneDf)
+  
+  ptGseaYlimDf <- tibble::tibble(
+    top = ptData$top, bottom = ptData$bottom,
+    SM_TF = smTf, SMTF_name = smTfName,
+  ) %>% 
+    dplyr::bind_rows(ptGseaYlimDf)
+  
+  
+  # plotGseaTable(pathways = peakTargets, stats = geneList, fgseaRes = fgseaRes)
+  
+  pt_gsea <- fgsea::plotEnrichment(
+    pathway = peakTargets[[smTf]],
     stats = geneList,
     ticksSize = 0.1
   ) +
     labs(
-      title = paste(smTf, "bound gene set GSEA on ranked DEG list"),
+      title = paste(smTfName, "peak targets' GSEA on OE/WT DEG list"),
+      subtitle = paste(
+        "NES =", round(fgseaRes$NES, digits = 4),
+        "|| pval =", format(fgseaRes$pval, digits = 5)
+      ),
       x = "Rank",
       y = "Enrichment Score"
     ) +
@@ -147,34 +207,33 @@ for (rowId in 1:nrow(dataSummary)) {
   gseaPtOutPrefix <- paste(gseaPtOutDir, "/", smTf, ".GSEA_plot", sep = "")
   
   png(filename = paste(gseaPtOutPrefix, ".fgsea_plot.png", sep = ""),
-      width = 3000, height = 1500, res = 400)
+      width = 3500, height = 1500, res = 400)
+
   print(pt_gsea)
+
   dev.off()
-  
   
 }
 
-
-peakGseaRes <- as.data.frame(peakGseaRes) %>% 
+peakGseaResDf <- as.data.frame(peakGseaRes) %>% 
   dplyr::mutate(
     leadingEdgeLen = purrr::map_dbl(.x = leadingEdge, .f = length),
     leadingEdge = purrr::map_chr(.x = leadingEdge, .f = ~ paste(.x, collapse = ";"))
   ) %>% 
-  dplyr::select(-leadingEdge, everything(), leadingEdge)
+  dplyr::select(SM_TF, SMTF_name, -leadingEdge, everything(), leadingEdge)
 
-readr::write_tsv(x = peakGseaRes, path = paste(outPrefix, ".fgsea.tab", sep = ""))
+readr::write_tsv(x = peakGseaResDf, file = paste(outPrefix, ".fgsea.tab", sep = ""))
 
-peakGseaRes <- dplyr::arrange(peakGseaRes, NES) %>% 
+peakGseaResDf <- dplyr::arrange(peakGseaResDf, NES) %>% 
   dplyr::mutate(
-    pathway = forcats::as_factor(pathway),
+    SMTF_name = forcats::as_factor(SMTF_name),
     log10Padj = -log10(padj),
     sig = if_else(condition = padj <= 0.05, true = "**", false = "-", missing = "GSEA failed")
   )
 
 
 
-
-pt_nes <- ggplot(data = peakGseaRes, mapping = aes(x = NES, y = pathway)) +
+pt_nes <- ggplot(data = peakGseaResDf, mapping = aes(x = NES, y = SMTF_name)) +
   geom_bar(mapping = aes(fill = sig), stat = "identity") +
   scale_fill_manual(
     name = "Significance",
@@ -196,7 +255,66 @@ png(filename = paste(outPrefix, ".fgsea_NES_bar.png", sep = ""), width = 2500, h
 pt_nes
 dev.off()
 
+##################################################################################
 
+ptGseaLineDf <- dplyr::mutate(
+  ptGseaLineDf,
+  SMTF_name = forcats::fct_relevel(.f = SMTF_name, levels(peakGseaResDf$SMTF_name))
+)
+
+ptGseaYlimDf <- dplyr::mutate(
+  ptGseaYlimDf,
+  SMTF_name = forcats::fct_relevel(.f = SMTF_name, levels(peakGseaResDf$SMTF_name))
+)
+
+ptGseaGeneDf <- dplyr::mutate(
+  ptGseaGeneDf,
+  SMTF_name = forcats::fct_relevel(.f = SMTF_name, levels(peakGseaResDf$SMTF_name))
+)
+
+pt_combined <- ggplot(data = ptGseaLineDf, mapping = aes(x = x, y = y)) +
+  ggbeeswarm::geom_beeswarm(
+    data = ptGseaGeneDf, mapping = aes(x = x, y = 0),
+    groupOnX = FALSE
+  ) +
+  geom_point(mapping = aes(color = significance), size = 0.1) +
+  geom_line(mapping = aes(color = significance)) +
+  geom_hline(
+    data = ptGseaYlimDf, mapping = aes(yintercept = top),
+    colour = "red", linetype = "dashed"
+  ) +
+  geom_hline(
+    data = ptGseaYlimDf, mapping = aes(yintercept = bottom),
+    colour = "red", linetype = "dashed"
+  ) +
+  geom_hline(yintercept = 0, colour = "black") +
+  scale_color_manual(
+    values = c("significant" = "green", "non-significant" = "blue")
+  ) +
+  facet_wrap(
+    facets = vars(SMTF_name), ncol = 4,
+    scales = "free_y", strip.position = "right", dir = "h"
+  ) +
+  theme_bw() +
+  theme(
+    axis.title = element_blank(),
+    legend.position = c(1, 0),
+    legend.direction = "horizontal",
+    legend.justification = c(1, 0),
+    legend.text = element_text(size = 14),
+    legend.title = element_text(size = 14, face = "bold"),
+    panel.grid = element_blank()
+  )
+
+png(filename = paste(outPrefix, ".fgsea_combined.png", sep = ""),
+    width = 7000, height = 4000, res = 500)
+
+print(pt_combined)
+
+dev.off()
+
+
+##################################################################################
 
 
 
