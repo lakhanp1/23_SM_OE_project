@@ -30,6 +30,7 @@ file_polIIDegs <- here::here("analysis", "06_polII_diff", "polII_DEGs.fpkm_filte
 
 useAllGroupsSamples <- FALSE
 
+cutoff_fpkm <- 10
 cutoff_fdr <- 0.05
 cutoff_lfc <- 1
 cutoff_up <- cutoff_lfc
@@ -66,7 +67,7 @@ degData <- dplyr::mutate(
     TRUE ~ "noDEG"
   )
 ) %>% 
-  dplyr::filter(diff != "noDEG", fpkmFilter == "pass")
+  dplyr::filter(diff != "noDEG", maxFpkm >= cutoff_fpkm)
 
 
 ## a dataframe with DEG status column for each comparison

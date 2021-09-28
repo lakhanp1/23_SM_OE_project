@@ -17,7 +17,7 @@ source("D:/work_lakhan/github/omics_utils/02_RNAseq_scripts/s02_DESeq2_functions
 ##################################################################################
 
 analysisName <- "SM_clusters_binding_DEG.SMTFOE"
-outDir <- here::here("analysis", "10_TF_polII_integration", "03_SM_cluster_level_analysis")
+outDir <- here::here("analysis", "10_TF_polII_integration", "SM_cluster_regulation_tiles")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
 file_productionData <- here::here("data", "reference_data", "production_data.summary.tab")

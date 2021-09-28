@@ -17,7 +17,7 @@ source("D:/work_lakhan/github/omics_utils/02_RNAseq_scripts/s02_DESeq2_functions
 ##################################################################################
 
 analysisName <- "OESMTF_binding_DEG.SM_clusters"
-outDir <- here::here("analysis", "10_TF_polII_integration", "02_OESMTF_binding_DEG")
+outDir <- here::here("analysis", "10_TF_polII_integration", "OESMTF_self_regulation")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
 file_productionData <- here::here("data", "reference_data", "production_data.summary.tab")
@@ -44,7 +44,7 @@ col_pval <- "pvalue"
 
 productionData <- suppressMessages(readr::read_tsv(file = file_productionData)) %>% 
   dplyr::filter(has_polII_ChIP == "has_data", has_TF_ChIP == "has_data", copyNumber == "sCopy") %>% 
-  dplyr::arrange(SM_ID, SMTF)
+  dplyr::arrange(SMTF_name, SMTF)
 
 tfInfo <- get_sample_information(
   exptInfoFile = file_exptInfo,
@@ -171,7 +171,7 @@ for (rowId2 in 1:nrow(productionData)) {
   ) +
     geom_tile(
       mapping = aes(x = index, y = "DEG", fill = log2FoldChange, alpha = significance),
-      size = 0.2, height = 1, color = "grey") +
+      size = 0.2, height = 1, color = "black") +
     geom_point(
       # data = dplyr::filter(plotData, binding == "bound"),
       mapping = aes(x = index , y = "peak", color = binding, shape = tfGene),

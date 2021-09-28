@@ -67,7 +67,7 @@ sraMetadata <- suppressMessages(readr::read_tsv(file = file_sraMetadata)) %>%
   )
 
 ##################################################################################
-## prepare the data
+## prepare polII rank data
 polIIData <- get_polII_expressions(genesDf = geneSet, exptInfo = polIIInfo)
 
 polIIRanks <- dplyr::select(polIIData, geneId, !!!polIIsamples) %>% 
@@ -82,7 +82,7 @@ smtf_polIIRanks <- dplyr::select(rnaseqInfo, geneId = SM_TF) %>%
     cols = -geneId, names_to = "sampleId", values_to = "rank"
   )
 
-plotData <- dplyr::left_join(
+poltData_polII <- dplyr::left_join(
   x = smtf_polIIRanks,
   y = dplyr::select(polIIInfo, sampleId, SM_TF, copyNumber, condition, timePoint),
   by = "sampleId"
@@ -95,16 +95,17 @@ plotData <- dplyr::left_join(
   dplyr::arrange(geneId, copyNumber)
 
 
-plotData$geneName <- AnnotationDbi::mapIds(
-  x = orgDb, keys = plotData$geneId, column = "GENE_NAME", keytype = "GID"
+poltData_polII$geneName <- AnnotationDbi::mapIds(
+  x = orgDb, keys = poltData_polII$geneId, column = "GENE_NAME", keytype = "GID"
 )
 
-plotData <- dplyr::mutate(
-  plotData,
+poltData_polII <- dplyr::mutate(
+  poltData_polII,
   geneLabel = paste(geneId, " (", geneName, ")", sep = ""),
   geneLabel = if_else(condition = geneId == geneName, true = geneId, false = geneLabel)
 )
 
+##################################################################################
 ## add SRA FPKM data
 sraData <- suppressMessages(readr::read_tsv(file = file_sraFpkm)) %>% 
   dplyr::select(geneId = geneName, sraMetadata$run_accession)
@@ -124,24 +125,37 @@ smtf_sraRanks$geneName <- AnnotationDbi::mapIds(
   x = orgDb, keys = smtf_sraRanks$geneId, column = "GENE_NAME", keytype = "GID"
 )
 
-smtf_sraRanks <- dplyr::mutate(
-  smtf_sraRanks,
-  geneLabel = paste(geneId, " (", geneName, ")", sep = ""),
-  geneLabel = if_else(condition = geneId == geneName, true = geneId, false = geneLabel)
+
+## to decide the order of TF
+sraRankSummary <- dplyr::group_by(smtf_sraRanks, geneName) %>% 
+  dplyr::summarise(
+    sraMedianRank = median(rank),
+    sraMeanRank = mean(rank)
+  ) %>% 
+  dplyr::arrange(sraMedianRank)
+
+polIIRankSummary <- dplyr::filter(
+  poltData_polII, condition == "WT"
+) %>% 
+  dplyr::group_by(geneName) %>% 
+  dplyr::summarise(
+    polIIMedianRank = median(rank),
+    polIIMeanRank = mean(rank)
+  )
+
+rankSummary <- dplyr::left_join(
+  x = sraRankSummary, y = polIIRankSummary, by = "geneName"
 )
 
-sraRankMedian <- dplyr::group_by(smtf_sraRanks, geneName) %>% 
-  dplyr::summarise(rankMedian = median(rank), rankMean = mean(rank)) %>% 
-  dplyr::arrange(rankMedian)
-
-plotData <- dplyr::mutate(
-  plotData,
-  geneName = forcats::fct_relevel(geneName, !!!sraRankMedian$geneName)
+## set factor levels in the plot data
+poltData_polII <- dplyr::mutate(
+  poltData_polII,
+  geneName = forcats::fct_relevel(geneName, !!!sraRankSummary$geneName)
 )
 
 smtf_sraRanks <- dplyr::mutate(
   smtf_sraRanks,
-  geneName = forcats::fct_relevel(geneName, !!!sraRankMedian$geneName)
+  geneName = forcats::fct_relevel(geneName, !!!sraRankSummary$geneName)
 )
 
 ##################################################################################
@@ -152,7 +166,7 @@ pt_sra_rank <- ggplot(
   geom_density_ridges(
     data = smtf_sraRanks
   ) +
-  # geom_point(data = plotData, mapping = aes(fill = copyNumber), size = 3, shape = 21) +
+  # geom_point(data = poltData_polII, mapping = aes(fill = copyNumber), size = 3, shape = 21) +
   geom_vline(xintercept = nrow(geneSet), linetype = "dashed") +
   coord_cartesian(xlim = c(0, nrow(geneSet))) +
   scale_x_continuous(
@@ -182,7 +196,7 @@ pt_sra_rank <- ggplot(
 
 ggsave(filename = paste(outPrefix, ".pdf", sep = ""), plot = pt_sra_rank, width = 14, height = 8)
 
-#################
+##################################################################################
 ## plot the data: RNAseq and polII ChIPseq
 pt_oe_gene_rank <- ggplot(
   mapping = aes(x = rank, y = geneName)
@@ -190,7 +204,7 @@ pt_oe_gene_rank <- ggplot(
   geom_density_ridges(
     data = smtf_sraRanks
   ) +
-  geom_point(data = plotData, mapping = aes(fill = copyNumber), size = 3, shape = 21) +
+  geom_point(data = poltData_polII, mapping = aes(fill = copyNumber), size = 3, shape = 21) +
   geom_vline(xintercept = nrow(geneSet), linetype = "dashed") +
   coord_cartesian(xlim = c(0, nrow(geneSet))) +
   scale_x_continuous(
@@ -223,10 +237,39 @@ pt_oe_gene_rank <- ggplot(
 # ggsave(filename = paste(outPrefix, "_and_polII.png", sep = ""), plot = pt_oe_gene_rank, width = 14, height = 8)
 ggsave(filename = paste(outPrefix, "_and_polII.pdf", sep = ""), plot = pt_oe_gene_rank, width = 14, height = 8)
 
+##################################################################################
+## scatter plot of polII rank vs mean(RNAseq-ranks)
+pt_scatter <- ggplot(
+  data = rankSummary,
+  mapping = aes(x = sraMedianRank, y = polIIMeanRank)
+) +
+  geom_point(size = 4) +
+  geom_smooth(method=lm, se = FALSE, formula = y ~ x, color = "red") +
+  ggpubr::stat_cor(method = "pearson", size = 10, label.x.npc = 0.1, color = "red") +
+  labs(
+    x = "RNAseq",
+    y = "RNA-polII ChIPseq",
+    title = paste(
+      "Correlation of SMTFs' ranks in ", "WT polII-ChIPseq data (n=2) ",
+      "vs RNAseq data from SRA (n=",nrow(sraMetadata), ")", sep = "")
+  ) +
+  theme_bw() +
+  theme(
+    plot.title = element_text(hjust = 1),
+    panel.grid = element_blank(),
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, face = "bold"),
+    title = element_text(size =14, face = "bold"),
+    legend.text = element_text(size = 12),
+    plot.margin = unit(c(1,1,1,1), "cm")
+  )
 
 
+ggsave(
+  filename = paste(outPrefix, "_and_polII.corr_scatter.pdf", sep = ""),
+  plot = pt_scatter, width = 12, height = 12
+)
 
 
-
-
+##################################################################################
 

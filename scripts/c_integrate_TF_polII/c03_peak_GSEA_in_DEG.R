@@ -275,7 +275,7 @@ ptGseaGeneDf <- dplyr::mutate(
 pt_combined <- ggplot(data = ptGseaLineDf, mapping = aes(x = x, y = y)) +
   ggbeeswarm::geom_beeswarm(
     data = ptGseaGeneDf, mapping = aes(x = x, y = 0),
-    groupOnX = FALSE
+    size = 0.7, groupOnX = FALSE
   ) +
   geom_point(mapping = aes(color = significance), size = 0.1) +
   geom_line(mapping = aes(color = significance)) +

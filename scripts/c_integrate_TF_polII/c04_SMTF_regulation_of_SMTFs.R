@@ -14,7 +14,7 @@ source("D:/work_lakhan/github/omics_utils/02_RNAseq_scripts/s02_DESeq2_functions
 
 ##################################################################################
 
-outDir <- here::here("analysis", "10_TF_polII_integration", "02_OESMTF_binding_DEG")
+outDir <- here::here("analysis", "10_TF_polII_integration", "OESMTF_self_regulation")
 outPrefix <- paste(outDir, "/", sep = "")
 
 file_productionData <- here::here("data", "reference_data", "production_data.summary.tab")

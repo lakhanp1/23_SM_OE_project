@@ -19,7 +19,7 @@ source("D:/work_lakhan/github/omics_utils/02_RNAseq_scripts/s02_DESeq2_functions
 ##################################################################################
 
 analysisName <- "SM_clusters_binding_DEG.curve_links"
-outDir <- here::here("analysis", "10_TF_polII_integration", "03_SM_cluster_level_analysis")
+outDir <- here::here("analysis", "10_TF_polII_integration", "SM_cluster_regulation_links")
 outPrefix <- paste(outDir, "/", analysisName, sep = "")
 
 file_productionData <- here::here("data", "reference_data", "production_data.summary.tab")
@@ -469,7 +469,7 @@ pt_box_factets <- ggplot2::ggplot(
   geom_point(
     data = dplyr::arrange(mergedData2, desc(selfCluster)),
     mapping = aes(x = xArc, y = yArc, color = selfCluster),
-    shape = 16
+    shape = 16, size = 0.7
   ) +
   geom_text(
     data = dplyr::filter(mergedData2, x == 115, side == "bottom"),
@@ -493,7 +493,7 @@ pt_box_factets <- ggplot2::ggplot(
     axis.text = element_blank(),
     axis.title = element_blank(),
     panel.grid = element_blank(),
-    legend.position = "bottom",
+    legend.position = "null",
     strip.text = element_blank()
     # strip.text = element_text(size = 16, face = "bold", margin = margin(0,0,0,0))
   )
