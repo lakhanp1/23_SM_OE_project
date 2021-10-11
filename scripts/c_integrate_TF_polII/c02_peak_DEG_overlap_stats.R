@@ -24,7 +24,7 @@ outPrefix <- paste(outDir, "/", analysisName, sep = "")
 file_productionData <- here::here("data", "reference_data", "production_data.summary.tab")
 file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
 file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
-file_polIIDegs <- here::here("analysis", "06_polII_diff", "polII_DEGs.fpkm_filtered.combined.tab")
+file_bindDeg <- here::here("analysis", "10_TF_polII_integration", "binding_DEG_data.merged.tab")
 
 TF_dataPath <- here::here("data", "TF_data")
 diffDataPath <- here::here("analysis", "06_polII_diff")
@@ -56,23 +56,25 @@ productionData <- suppressMessages(readr::read_tsv(file = file_productionData)) 
 productionDataList <- purrr::transpose(productionData) %>% 
   purrr::set_names(nm = purrr::map(., "SMTF"))
 
-tfInfo <- get_sample_information(
-  exptInfoFile = file_exptInfo,
-  samples = productionData$tfId,
-  dataPath = TF_dataPath)
+# tfInfo <- get_sample_information(
+#   exptInfoFile = file_exptInfo,
+#   samples = productionData$tfId,
+#   dataPath = TF_dataPath)
+# 
+# tfInfoList <- purrr::transpose(tfInfo)  %>% 
+#   purrr::set_names(nm = purrr::map(., "sampleId"))
+# 
+# rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath) %>% 
+#   dplyr::filter(comparison %in% productionData$degId)
+# 
+# 
+# rnaseqInfoList <- purrr::transpose(rnaseqInfo)  %>% 
+#   purrr::set_names(nm = purrr::map(., "comparison"))
 
-tfInfoList <- purrr::transpose(tfInfo)  %>% 
-  purrr::set_names(nm = purrr::map(., "sampleId"))
+genePos <- as.data.frame(GenomicFeatures::genes(txDb)) %>% 
+  dplyr::select(geneId = gene_id, chr = seqnames, start, end, strand)
 
-rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath) %>% 
-  dplyr::filter(comparison %in% productionData$degId)
-
-
-rnaseqInfoList <- purrr::transpose(rnaseqInfo)  %>% 
-  purrr::set_names(nm = purrr::map(., "comparison"))
-
-combinedDegs <- suppressMessages(readr::read_tsv(file = file_polIIDegs))
-
+bindingDegs <- data.table::fread(file = file_bindDeg, sep = "\t", data.table = FALSE)
 
 ##################################################################################
 
@@ -91,34 +93,23 @@ for (rowId in 1:nrow(productionData)) {
   degId <- productionData$degId[rowId]
   smTfName <- productionData$SMTF_name[rowId]
   
-  ## prepare ranked polII DEG list
-  degs <- dplyr::filter(combinedDegs, comparison == degId) %>%
-    dplyr::mutate(rankMetric = (-log10(pvalue) * sign(shrinkLog2FC))) %>%
-    dplyr::arrange(desc(rankMetric)) %>% 
-    dplyr::filter(!is.na(rankMetric))
+  subData <- dplyr::filter(
+    bindingDegs, OESMTF == smTf
+  ) %>% 
+    dplyr::left_join(y = genePos, by = "geneId") %>% 
+    dplyr::filter(chr != "mito_A_nidulans_FGSC_A4")
   
   downDegs <- dplyr::filter(
-    degs, padj <= cutoff_fdr & !!sym(col_lfc) <= cutoff_down, maxFpkm >= cutoff_fpkm
+    subData, padj <= cutoff_fdr & !!sym(col_lfc) <= cutoff_down, maxFpkm >= cutoff_fpkm
   ) %>% 
     dplyr::mutate(category = "down")
   
   upDegs <- dplyr::filter(
-    degs, padj <= cutoff_fdr & !!sym(col_lfc) >= cutoff_up, maxFpkm >= cutoff_fpkm
+    subData, padj <= cutoff_fdr & !!sym(col_lfc) >= cutoff_up, maxFpkm >= cutoff_fpkm
   ) %>% 
     dplyr::mutate(category = "up")
   
-  ## extract peak annotation
-  peakAn <- suppressMessages(readr::read_tsv(tfInfoList[[tfId]]$peakAnno)) %>%
-    dplyr::filter(
-      peakPval >= cutoff_macs2Pval,
-      !peakCategory %in% c("intergenic", "blacklist")
-    ) %>%
-    dplyr::mutate(hasPeak = TRUE) %>%
-    dplyr::group_by(geneId) %>%
-    dplyr::arrange(desc(peakPval), .by_group = TRUE) %>%
-    dplyr::slice(1L) %>%
-    dplyr::ungroup() %>%
-    dplyr::select(geneId, peakPval, peakAnnotation, peakCategory, peakPosition, hasPeak)
+  peakAn <- dplyr::filter(subData, !is.na(peakId))
   
   # table(peakAn$peakCategory)
   peakTargets <- unique(peakAn$geneId)
@@ -175,6 +166,7 @@ masterCombDf <- dplyr::arrange(masterCombDf, desc(peaks)) %>%
     SMTF_name = forcats::as_factor(SMTF_name)
   )
 
+readr::write_tsv(x = masterCombDf, file = paste(outPrefix, ".tab", sep = ""))
 
 degPeakOvlpDf <- dplyr::select(
   masterCombDf, SMTF, SMTF_name, up_peak, up_noPeak, down_peak, down_noPeak
@@ -298,16 +290,17 @@ pt_mergedAll <- ggarrange(
   common.legend = TRUE, legend = "right"
 )
 
-# png(filename = paste(outPrefix, ".overlap.png", sep = ""), width = 6000, height = 3500, res = 320)
-# # pdf(file = paste(outPrefix, ".overlap.pdf", sep = ""), width = 20, height = 10)
-# pt_mergedAll
-# dev.off()
 
 ggsave(
   filename = paste(outPrefix, ".overlap.png", sep = ""),
   plot = pt_mergedAll, width = 18, height = 10
 )
 
+
+ggsave(
+  filename = paste(outPrefix, ".overlap.pdf", sep = ""),
+  plot = pt_mergedAll, width = 18, height = 10
+)
 
 pt_peakDeg <- ggarrange(
   pt_peakCount, pt_deg,
