@@ -26,7 +26,8 @@ gseaPtOutDir <- paste(outDir, "/GSEA_plots", sep = "")
 file_productionData <- here::here("data", "reference_data", "production_data.summary.tab")
 file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
 file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
-file_polIIDegs <- here::here("analysis", "06_polII_diff", "polII_DEGs.fpkm_filtered.combined.tab")
+file_bindDeg <- here::here("analysis", "10_TF_polII_integration", "binding_DEG_data.merged.tab")
+
 
 TF_dataPath <- here::here("data", "TF_data")
 diffDataPath <- here::here("analysis", "06_polII_diff")
@@ -62,22 +63,10 @@ productionData <- suppressMessages(readr::read_tsv(file = file_productionData)) 
 productionDataList <- purrr::transpose(productionData) %>% 
   purrr::set_names(nm = purrr::map(., "SMTF"))
 
-tfInfo <- get_sample_information(
-  exptInfoFile = file_exptInfo,
-  samples = productionData$tfId,
-  dataPath = TF_dataPath)
+genePos <- as.data.frame(GenomicFeatures::genes(txDb)) %>% 
+  dplyr::select(geneId = gene_id, chr = seqnames, start, end, strand)
 
-tfInfoList <- purrr::transpose(tfInfo)  %>% 
-  purrr::set_names(nm = purrr::map(., "sampleId"))
-
-rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath) %>% 
-  dplyr::filter(comparison %in% productionData$degId)
-
-
-rnaseqInfoList <- purrr::transpose(rnaseqInfo)  %>% 
-  purrr::set_names(nm = purrr::map(., "comparison"))
-
-combinedDegs <- suppressMessages(readr::read_tsv(file = file_polIIDegs))
+bindingDegs <- data.table::fread(file = file_bindDeg, sep = "\t", data.table = FALSE)
 
 ##################################################################################
 
@@ -109,20 +98,24 @@ for (rowId in 1:nrow(productionData)) {
   degId <- productionData$degId[rowId]
   smTfName <- productionData$SMTF_name[rowId]
   
+  subData <- dplyr::filter(
+    bindingDegs, OESMTF == smTf
+  ) %>% 
+    dplyr::left_join(y = genePos, by = "geneId") %>% 
+    dplyr::filter(chr != "mito_A_nidulans_FGSC_A4")
+  
   ## prepare ranked polII DEG list
-  degs <- dplyr::filter(combinedDegs, comparison == degId) %>% 
-    dplyr::mutate(
-      fpkmFilterSign = dplyr::if_else(
-        condition = maxFpkm >= cutoff_fpkm, true = 1 * sign(shrinkLog2FC),
-        false = 0, missing = 0
-      ),
-      rankMetric = -log10(pvalue) * sign(shrinkLog2FC)
-    ) %>%
+  degs <- dplyr::mutate(
+    subData,
+    fpkmFilterSign = dplyr::if_else(
+      condition = maxFpkm >= cutoff_fpkm, true = 1 * sign(shrinkLog2FC),
+      false = 0, missing = 0
+    ),
+    rankMetric = -log10(pvalue) * sign(shrinkLog2FC)
+  ) %>%
     dplyr::arrange(desc(rankMetric)) %>%
     dplyr::filter(!is.na(rankMetric))
-  # dplyr::mutate(rankMetric = (-log10(pvalue) * sign(shrinkLog2FC))) %>%
-  # dplyr::arrange(desc(rankMetric)) %>%
-  # dplyr::filter(!is.na(rankMetric))
+  
   
   geneList <- dplyr::select(degs, geneId, rankMetric) %>% 
     tibble::deframe()
@@ -135,10 +128,7 @@ for (rowId in 1:nrow(productionData)) {
   # barplot(geneList)
   
   ## prepare TF target gene list
-  peakAn <- suppressMessages(readr::read_tsv(file = tfInfoList[[tfId]]$peakAnno)) %>% 
-    dplyr::filter(peakPval >= cutoff_macs2Pval) %>% 
-    dplyr::filter(!peakCategory %in% c("intergenic", "blacklist")) %>% 
-    dplyr::filter(peakChr != "mito_A_nidulans_FGSC_A4")
+  peakAn <- dplyr::filter(subData, !is.na(peakId))
   
   # table(peakAn$peakCategory)
   peakTargets <- list(unique(peakAn$geneId)) %>% purrr::set_names(nm = smTf)
@@ -161,6 +151,7 @@ for (rowId in 1:nrow(productionData)) {
   
   peakGseaRes <- data.table::rbindlist(list(peakGseaRes, fgseaRes))
   
+  ## collect GSEA data for custom enrichment plot
   ptData <- gsea_plot_data(geneset = peakTargets[[smTf]], stats = geneList)
   
   ptGseaLineDf <- dplyr::mutate(
@@ -204,13 +195,13 @@ for (rowId in 1:nrow(productionData)) {
     ) +
     ptTheme
   
-  gseaPtOutPrefix <- paste(gseaPtOutDir, "/", smTf, ".GSEA_plot", sep = "")
+  gseaPtOutPrefix <- paste(gseaPtOutDir, "/", smTfName, ".GSEA_plot", sep = "")
   
   png(filename = paste(gseaPtOutPrefix, ".fgsea_plot.png", sep = ""),
       width = 3500, height = 1500, res = 400)
-
+  
   print(pt_gsea)
-
+  
   dev.off()
   
 }
