@@ -13,8 +13,8 @@ suppressPackageStartupMessages(library(fgsea))
 
 rm(list = ls())
 
-source("D:/work_lakhan/github/omics_utils/02_RNAseq_scripts/s02_DESeq2_functions.R")
-source("D:/work_lakhan/github/omics_utils/04_GO_enrichment/s01_enrichment_functions.R")
+source("https://raw.githubusercontent.com/lakhanp1/omics_utils/main/RNAseq_scripts/DESeq2_functions.R")
+source("https://raw.githubusercontent.com/lakhanp1/omics_utils/main/GO_enrichment/enrichment_functions.R")
 
 ##################################################################################
 

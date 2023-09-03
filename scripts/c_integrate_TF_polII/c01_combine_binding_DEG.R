@@ -7,7 +7,7 @@ suppressPackageStartupMessages(library(here))
 
 rm(list = ls())
 
-source("D:/work_lakhan/github/omics_utils/02_RNAseq_scripts/s02_DESeq2_functions.R")
+source("https://raw.githubusercontent.com/lakhanp1/omics_utils/main/RNAseq_scripts/DESeq2_functions.R")
 
 ##################################################################################
 
@@ -53,15 +53,7 @@ tfInfo <- get_sample_information(
 tfInfoList <- purrr::transpose(tfInfo)  %>% 
   purrr::set_names(nm = purrr::map(., "sampleId"))
 
-rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath) %>% 
-  dplyr::filter(comparison %in% productionData$degId)
-
-
-rnaseqInfoList <- purrr::transpose(rnaseqInfo)  %>% 
-  purrr::set_names(nm = purrr::map(., "comparison"))
-
 combinedDegs <- suppressMessages(readr::read_tsv(file = file_polIIDegs))
-
 
 ##################################################################################
 
@@ -75,6 +67,7 @@ for (rowId in 1:nrow(productionData)) {
   smTfName <- productionData$SMTF_name[rowId]
   tfId <- productionData$tfId[rowId]
   degId <- productionData$degId[rowId]
+  smTfCluster <- productionData$SM_ID[rowId]
   
   cat(rowId, ": ", smTf, "\n", sep = "")
   
@@ -120,17 +113,17 @@ for (rowId in 1:nrow(productionData)) {
     peakAn <- dplyr::select(peakAn, geneId)
   }
   
-  
-  
   bindingDegData <- dplyr::left_join(
     x = degs, y = peakAn, by = "geneId"
   ) %>% 
     dplyr::mutate(
       OESMTF = smTf,
-      OESMTF_name = smTfName
+      OESMTF_name = smTfName,
+      OESMTF_cluster = smTfCluster
     ) %>% 
     dplyr::select(
-      OESMTF, OESMTF_name, geneId, geneName = GENE_NAME, everything()
+      OESMTF, OESMTF_name, OESMTF_cluster, geneId,
+      geneName = GENE_NAME, everything()
     )
   
   mergedData <- dplyr::bind_rows(mergedData, bindingDegData)

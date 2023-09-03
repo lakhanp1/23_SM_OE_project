@@ -1,7 +1,6 @@
 suppressPackageStartupMessages(library(devtools))
 suppressPackageStartupMessages(library(topGO))
 suppressPackageStartupMessages(library(scales))
-suppressPackageStartupMessages(library(KEGGprofile))
 suppressPackageStartupMessages(library(clusterProfiler))
 suppressPackageStartupMessages(library(tm))  # for text mining
 suppressPackageStartupMessages(library(SnowballC)) # for text stemming

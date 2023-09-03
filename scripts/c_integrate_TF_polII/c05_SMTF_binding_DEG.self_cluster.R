@@ -12,8 +12,7 @@ suppressPackageStartupMessages(library(gginnards))
 
 rm(list = ls())
 
-source("D:/work_lakhan/github/omics_utils/02_RNAseq_scripts/s02_DESeq2_functions.R")
-
+source("https://raw.githubusercontent.com/lakhanp1/omics_utils/main/RNAseq_scripts/DESeq2_functions.R")
 ##################################################################################
 
 analysisName <- "OESMTF_binding_DEG.self_clusters"
@@ -24,6 +23,7 @@ file_productionData <- here::here("data", "reference_data", "production_data.sum
 file_exptInfo <- here::here("data", "reference_data", "sample_info.txt")
 file_RNAseq_info <- here::here("data", "reference_data", "polII_DESeq2_DEG_info.txt")
 file_polIIDegs <- here::here("analysis", "06_polII_diff", "polII_DEGs.fpkm_filtered.combined.tab")
+file_bindDeg <- here::here("analysis", "10_TF_polII_integration", "binding_DEG_data.merged.tab")
 
 TF_dataPath <- here::here("data", "TF_data")
 diffDataPath <- here::here("analysis", "06_polII_diff")
@@ -47,29 +47,12 @@ productionData <- suppressMessages(readr::read_tsv(file = file_productionData)) 
   dplyr::filter(!is.na(SM_ID)) %>% 
   dplyr::arrange(SM_ID, SMTF)
 
-
-tfInfo <- get_sample_information(
-  exptInfoFile = file_exptInfo,
-  samples = productionData$tfId,
-  dataPath = TF_dataPath)
-
-tfInfoList <- purrr::transpose(tfInfo)  %>% 
-  purrr::set_names(nm = purrr::map(., "sampleId"))
-
-rnaseqInfo <- get_diff_info(degInfoFile = file_RNAseq_info, dataPath = diffDataPath) %>% 
-  dplyr::filter(comparison %in% productionData$degId)
-
-rnaseqInfoList <- purrr::transpose(rnaseqInfo)  %>% 
-  purrr::set_names(nm = purrr::map(., "comparison"))
-
-genesDf <- as.data.frame(GenomicFeatures::genes(x = txDb)) %>% 
-  dplyr::select(geneId = gene_id, strand)
-
 genePos <- as.data.frame(GenomicFeatures::genes(x = txDb)) %>% 
   dplyr::select(geneId = gene_id, chr = seqnames, start, end, strand)
 
 combinedDegs <- suppressMessages(readr::read_tsv(file = file_polIIDegs))
 
+bindingDegs <- data.table::fread(file = file_bindDeg, sep = "\t", data.table = FALSE)
 
 ##################################################################################
 
@@ -84,59 +67,23 @@ smGenes <- AnnotationDbi::select(
   dplyr::mutate(index = row_number()) %>% 
   dplyr::ungroup()
 
-rowId <- 1
 
-mergedData <- NULL
-
-for (rowId in 1:nrow(productionData)) {
-  
-  tfSampleId <- productionData$tfId[rowId]
-  degId <- productionData$degId[rowId]
-  
-  clusterGenes <- dplyr::filter(smGenes, SM_ID == productionData$SM_ID[rowId])
-  
-  ## extract peak annotation
-  peakAn <- suppressMessages(readr::read_tsv(tfInfoList[[tfSampleId]]$peakAnno)) %>% 
-    dplyr::filter(peakPval >= cutoff_macs2Pval)
-  
-  ## extract DEG data
-  diffData <- dplyr::filter(combinedDegs, comparison == degId) %>% 
-    dplyr::select(geneId, !!col_lfc, shrinkLog2FC, pvalue, padj, maxFpkm, fpkmFilter)
-  
-  bindingDegData <- dplyr::left_join(
-    x = clusterGenes, y = diffData, by = "geneId"
-  ) %>% 
-    dplyr::left_join(y = peakAn, by = "geneId") %>% 
-    dplyr::mutate(
-      OESMTF = !!productionData$SMTF[rowId],
-      OESMTF_name = !!productionData$SMTF_name[rowId]
-    )
-  
-  mergedData <- dplyr::bind_rows(mergedData, bindingDegData)
-  
-}
-
-
-mergedData2 <- dplyr::mutate(
-  mergedData,
-  significance = dplyr::case_when(
-    !!sym(col_pval) <= cutoff_fdr & fpkmFilter == "pass" ~ "significant",
-    TRUE ~ "non-significant"
-  ),
-  binding = if_else(
-    condition = !is.na(peakId), true = "bound", false = "not-bound"
-  ),
-  tfGene = if_else(
-    condition = !is.na(TF_GENE), true = "TF", false = "non-TF"
-  )
+mergedData <- dplyr::left_join(
+  x = smGenes, y = bindingDegs, by = "geneId"
 ) %>% 
+  dplyr::filter(SM_ID == OESMTF_cluster) %>% 
+  dplyr::mutate(
+    tfGene = if_else(
+      condition = !is.na(TF_GENE), true = "TF", false = "non-TF"
+    )
+  ) %>% 
   tidyr::unite(col = "tf_cluster_grp", OESMTF_name, SM_CLUSTER, sep = ": ")
 
 
 pltTitle <- "RNA-polII ChIPseq log2(SMTF-OE/WT) of SM clusters in its own TF overexpression data and SMTF ChIPseq binding"
 
 pt_bindingLfc <- ggplot(
-  data = mergedData2,
+  data = mergedData,
 ) +
   geom_tile(
     mapping = aes(x = index, y = tf_cluster_grp, fill = log2FoldChange, alpha = significance),
@@ -191,7 +138,7 @@ pt_bindingLfc <- ggplot(
   )
 
 
-ggsave(filename = paste(outPrefix, ".tiles.png", sep = ""),
+ggsave(filename = paste(outPrefix, ".tiles.pdf", sep = ""),
        plot = pt_bindingLfc, width = 14, height = 8)
 
 
